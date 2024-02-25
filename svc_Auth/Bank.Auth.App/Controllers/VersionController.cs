@@ -8,7 +8,6 @@ namespace Bank.Auth.App.Controllers
     [ApiController]
     public class VersionController : ControllerBase
     {
-        [AllowAnonymous]
         [HttpGet]
         public string Version() =>
             typeof(VersionController)
@@ -16,6 +15,7 @@ namespace Bank.Auth.App.Controllers
                 ?.InformationalVersion ?? "";
 
         [HttpGet("authenticated")]
+        [Authorize]
         public string VersionAuthenticated() => Version();
     }
 }

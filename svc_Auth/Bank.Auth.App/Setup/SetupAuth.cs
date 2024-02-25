@@ -1,5 +1,6 @@
 ﻿using Bank.Auth.App.Setup.Seeders;
 using Bank.Auth.Domain;
+using Bank.Auth.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Validation.AspNetCore;
 
@@ -10,6 +11,16 @@ namespace Bank.Auth.App.Setup
         public static WebApplicationBuilder ConfigureAuth(this WebApplicationBuilder builder)
         {
             var services = builder.Services;
+
+            services
+                .AddIdentity<User, UserRole>(options =>
+                {
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.User.RequireUniqueEmail = true;
+                })
+                .AddEntityFrameworkStores<BankAuthDbContext>()
+                .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
             {

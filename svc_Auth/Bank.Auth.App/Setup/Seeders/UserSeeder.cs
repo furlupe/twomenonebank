@@ -1,8 +1,6 @@
 ﻿using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using OpenIddict.Abstractions;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Bank.Auth.App.Setup.Seeders
 {

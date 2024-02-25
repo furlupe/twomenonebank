@@ -21,15 +21,6 @@ builder.Services.AddDbContext<BankAuthDbContext>(options =>
     options.UseOpenIddict();
 });
 
-builder
-    .Services.AddIdentity<User, UserRole>(options =>
-    {
-        options.Lockout.AllowedForNewUsers = true;
-        options.SignIn.RequireConfirmedAccount = false;
-    })
-    .AddEntityFrameworkStores<BankAuthDbContext>()
-    .AddDefaultTokenProviders();
-
 builder.ConfigureAuth().AddServices();
 
 var app = builder.Build();
@@ -47,6 +38,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // same as applying [Authorize] attribute to all controllers
-app.MapControllers().RequireAuthorization();
+app.MapControllers();
 
 app.Run();
