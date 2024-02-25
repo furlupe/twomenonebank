@@ -13,7 +13,6 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 namespace Bank.Auth.App.Controllers
 {
     [Route("api/[controller]")]
-    [AllowAnonymous]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
