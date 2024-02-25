@@ -1,0 +1,7 @@
+services:
+  postgres:
+    env_file: postgres.env
+    image: postgres
+    restart: always
+    ports:
+      - ${POSTGRES_COMPUTER_PORT}:5432
