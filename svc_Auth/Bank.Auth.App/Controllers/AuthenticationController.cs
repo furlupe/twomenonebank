@@ -21,7 +21,8 @@ namespace Bank.Auth.App.Controllers
 
         public AuthenticationController(
             GrantValidatorFactory grantValidatorFactory,
-            SignInManager<User> signInManager
+            SignInManager<User> signInManager,
+            UserManager<User> userManager
         )
         {
             _grantValidatorFactory = grantValidatorFactory;
@@ -50,15 +51,8 @@ namespace Bank.Auth.App.Controllers
                 return Unauthorized(new { error = result.ErrorKey, info = result.AdditionalInfo });
             }
 
-            List<Claim> claims =
-            [
-                new Claim(Claims.Subject, result.User.Id.ToString()),
-                new Claim(Claims.Name, result.User.UserName)
-            ];
-
             var principal = await _signInManager.CreateUserPrincipalAsync(result.User);
 
-            principal.Identities.First().AddClaims(claims);
             principal.SetDestinations(claim =>
                 claim.Type switch
                 {

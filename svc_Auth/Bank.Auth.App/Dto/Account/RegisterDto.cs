@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Bank.Auth.App.Enumerations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bank.Auth.App.Dto.Account
 {
@@ -11,5 +12,8 @@ namespace Bank.Auth.App.Dto.Account
         [Required]
         [MinLength(5)]
         public string Password { get; set; }
+
+        [Required]
+        public Role Role { get; set; }
     }
 }
