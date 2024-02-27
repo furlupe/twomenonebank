@@ -1,7 +1,17 @@
 services:
   postgres:
-    env_file: postgres.env
-    image: postgres
-    restart: always
+      env_file: postgres.env
+      image: postgres
+      restart: always
+      ports:
+        - ${POSTGRES_COMPUTER_PORT}:5432 
+         
+  rabbit:
+    image: rabbitmq:management
+    build: ./rabbit
     ports:
-      - ${POSTGRES_COMPUTER_PORT}:5432
+      - "${RABBIT_COMPUTER_PORT}:5672"
+      - "${RABBIT_MANAGEMENT_COMPUTER_PORT}:15672"
+    volumes:
+      - ./rabbit/definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./rabbit/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro

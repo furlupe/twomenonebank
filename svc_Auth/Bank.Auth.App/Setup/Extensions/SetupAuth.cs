@@ -4,7 +4,7 @@ using Bank.Auth.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Validation.AspNetCore;
 
-namespace Bank.Auth.App.Setup
+namespace Bank.Auth.App.Setup.Extensions
 {
     public static class SetupAuth
     {

@@ -1,7 +1,7 @@
 ﻿using Bank.Auth.App.Services.Auth.Validators;
 using Bank.Auth.App.Services.Auth.Validators.Result;
 
-namespace Bank.Auth.App.Setup
+namespace Bank.Auth.App.Setup.Extensions
 {
     public static class SetupServices
     {

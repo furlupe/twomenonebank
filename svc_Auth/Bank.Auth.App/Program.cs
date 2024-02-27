@@ -1,7 +1,5 @@
-using Bank.Auth.App.Setup;
+using Bank.Auth.App.Setup.Extensions;
 using Bank.Auth.Domain;
-using Bank.Auth.Domain.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +19,10 @@ builder.Services.AddDbContext<BankAuthDbContext>(options =>
     options.UseOpenIddict();
 });
 
-builder.ConfigureAuth().AddServices();
+builder
+    .ConfigureAuth()
+    .AddServices()
+    .AddMassTransit();
 
 var app = builder.Build();
 

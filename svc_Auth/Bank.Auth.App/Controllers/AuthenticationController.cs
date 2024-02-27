@@ -1,9 +1,7 @@
-﻿using System.Security.Claims;
-using Bank.Auth.App.Services.Auth.Validators;
+﻿using Bank.Auth.App.Services.Auth.Validators;
 using Bank.Auth.App.Services.Auth.Validators.Result;
 using Bank.Auth.Domain.Models;
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
@@ -21,8 +19,7 @@ namespace Bank.Auth.App.Controllers
 
         public AuthenticationController(
             GrantValidatorFactory grantValidatorFactory,
-            SignInManager<User> signInManager,
-            UserManager<User> userManager
+            SignInManager<User> signInManager
         )
         {
             _grantValidatorFactory = grantValidatorFactory;
