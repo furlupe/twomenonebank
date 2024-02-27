@@ -1,5 +1,7 @@
 ﻿using Bank.Auth.App.Dto.Account;
 using Bank.Auth.Domain.Models;
+using Bank.Auth.Messages;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -12,10 +14,12 @@ namespace Bank.Auth.App.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public UserController(UserManager<User> userManager)
+        public UserController(UserManager<User> userManager, IPublishEndpoint publishEndpoint)
         {
             _userManager = userManager;
+            _publishEndpoint = publishEndpoint;
         }
 
         [HttpPost("register")]
@@ -38,6 +42,9 @@ namespace Bank.Auth.App.Controllers
             ];
 
             await _userManager.AddClaimsAsync(user, claims);
+
+            await _publishEndpoint.Publish<IUserCreated>(new { user.Id });
+
             return Ok();
         }
     }
