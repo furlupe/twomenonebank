@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_navigation.xml"
+    app:startDestination="@+id/navigation_sign_in">
+
+    <fragment
+        android:id="@+id/navigation_sign_in"
+        android:name="com.example.employeeclient.ui.auth.signin.SignInFragment"
+        android:label="@string/label_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_navigation_sign_in_to_bottom_bar_navigation"
+            app:destination="@id/bottomBarActivity" />
+    </fragment>
+
+    <activity
+        android:id="@+id/bottomBarActivity"
+        android:name="com.example.employeeclient.ui.bottombar.BottomBarActivity"
+        android:label="BottomBarActivity" />
+
+</navigation>
