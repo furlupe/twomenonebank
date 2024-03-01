@@ -1,4 +1,4 @@
-﻿namespace Bank.Auth.App.Enumerations
+﻿namespace Bank.Auth.Common.Enumerations
 {
     public enum Role
     {

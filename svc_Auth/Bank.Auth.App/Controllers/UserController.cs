@@ -1,10 +1,8 @@
-﻿using Bank.Auth.App.Dto.Account;
+﻿using System.Security.Claims;
+using Bank.Auth.App.Dto.Account;
 using Bank.Auth.Domain.Models;
-using Bank.Auth.Messages;
-using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Bank.Auth.App.Controllers
@@ -14,12 +12,10 @@ namespace Bank.Auth.App.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
-        private readonly IPublishEndpoint _publishEndpoint;
 
-        public UserController(UserManager<User> userManager, IPublishEndpoint publishEndpoint)
+        public UserController(UserManager<User> userManager)
         {
             _userManager = userManager;
-            _publishEndpoint = publishEndpoint;
         }
 
         [HttpPost("register")]
@@ -35,15 +31,14 @@ namespace Bank.Auth.App.Controllers
 
             await _userManager.AddPasswordAsync(user, registerDto.Password);
 
-            List<Claim> claims = [
+            List<Claim> claims =
+            [
                 new Claim(Claims.Subject, user.Id.ToString()),
                 new Claim(Claims.Name, user.UserName),
                 new Claim(ClaimTypes.Role, registerDto.Role.ToString())
             ];
 
             await _userManager.AddClaimsAsync(user, claims);
-
-            await _publishEndpoint.Publish<IUserCreated>(new { user.Id });
 
             return Ok();
         }

@@ -2,6 +2,7 @@
 using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
 
 namespace Bank.Auth.App.Setup.Extensions
@@ -11,6 +12,11 @@ namespace Bank.Auth.App.Setup.Extensions
         public static WebApplicationBuilder ConfigureAuth(this WebApplicationBuilder builder)
         {
             var services = builder.Services;
+            string key =
+                builder.Configuration.GetValue<string>("Auth:Key")
+                ?? throw new ArgumentNullException(
+                    "No signing key specified, check appsettings for Auth:Key"
+                );
 
             services
                 .AddIdentity<User, UserRole>(options =>
@@ -43,10 +49,16 @@ namespace Bank.Auth.App.Setup.Extensions
                     options.AllowPasswordFlow().AllowRefreshTokenFlow();
 
                     options
+                        .DisableAccessTokenEncryption()
                         .AddDevelopmentEncryptionCertificate()
                         .AddDevelopmentSigningCertificate();
 
-                    options.UseAspNetCore().EnableTokenEndpointPassthrough();
+                    options.AddSigningKey(new SymmetricSecurityKey(Convert.FromBase64String(key)));
+
+                    options
+                        .UseAspNetCore()
+                        .DisableTransportSecurityRequirement()
+                        .EnableTokenEndpointPassthrough();
                 })
                 .AddValidation(options =>
                 {
