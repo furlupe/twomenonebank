@@ -1,4 +1,4 @@
-﻿using Bank.Auth.App.Enumerations;
+﻿using Bank.Auth.Common.Enumerations;
 using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
 using Microsoft.AspNetCore.Identity;

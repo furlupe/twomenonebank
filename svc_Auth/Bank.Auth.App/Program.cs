@@ -19,10 +19,7 @@ builder.Services.AddDbContext<BankAuthDbContext>(options =>
     options.UseOpenIddict();
 });
 
-builder
-    .ConfigureAuth()
-    .AddServices()
-    .AddMassTransit();
+builder.ConfigureAuth().AddServices();
 
 var app = builder.Build();
 
