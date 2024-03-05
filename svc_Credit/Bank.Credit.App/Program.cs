@@ -1,4 +1,8 @@
-using Bank.Auth.Extensions;
+using Bank.Auth.Shared.Extensions;
+using Bank.Auth.Shared.Policies.Handlers;
+using Bank.Credit.App.Services;
+using Bank.Credit.Persistance;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +14,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder
+    .Services.AddTransient<TariffService>()
+    .AddScoped<IUserService, AuthHandlerUserService>()
+    .AddTransient<CreditService>();
+
 builder.ConfigureAuth();
+
+builder.Services.AddDbContext<BankCreditDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 var app = builder.Build();
 

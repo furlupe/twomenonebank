@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Bank.Auth.App.Dto.Account;
 using Bank.Auth.Domain.Models;
+using Bank.Auth.Shared.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -35,7 +36,8 @@ namespace Bank.Auth.App.Controllers
             [
                 new Claim(Claims.Subject, user.Id.ToString()),
                 new Claim(Claims.Name, user.UserName),
-                new Claim(ClaimTypes.Role, registerDto.Role.ToString())
+                new Claim(ClaimTypes.Role, registerDto.Role.ToString()),
+                new Claim(BankClaims.Id, user.Id.ToString())
             ];
 
             await _userManager.AddClaimsAsync(user, claims);

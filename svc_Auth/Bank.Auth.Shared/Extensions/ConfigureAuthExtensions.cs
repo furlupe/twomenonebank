@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Bank.Auth.Shared.Policies.Handlers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
 
-namespace Bank.Auth.Extensions
+namespace Bank.Auth.Shared.Extensions
 {
     public static class ConfigureAuthExtensions
     {
@@ -81,7 +83,26 @@ namespace Bank.Auth.Extensions
                     }
                 );
 
-            services.AddAuthorization();
+            services.AddScoped<IAuthorizationHandler, CreateUserAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, RoleAuthorizationHandler>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.Policies.EmployeeOrHigher, builder =>
+                 {
+                     builder.AddRequirements(
+                         new RoleAuthorizationRequirement([Enumerations.Role.Admin, Enumerations.Role.Employee])
+                     );
+                 });
+
+                 options.AddPolicy(Policies.Policies.CreateUserIfNeeded, builder =>
+                    {
+                        builder.AddRequirements(
+                            new CreateUserAuthorizationRequirement()
+                        );
+                    });
+            });
+
 
             return builder;
         }

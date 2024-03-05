@@ -33,6 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Bank.Auth.Domain\Bank.Auth.Domain.csproj" />
     <ProjectReference Include="..\Bank.Auth.Messages\Bank.Auth.Messages.csproj" />
+    <ProjectReference Include="..\Bank.Auth.Shared\Bank.Auth.Shared.csproj" />
   </ItemGroup>
 
 </Project>
