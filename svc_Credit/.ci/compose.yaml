@@ -1,7 +1,5 @@
 services:
   credit_db:
-      env_file: postgres.env
-      image: postgres
-      restart: always
-      ports:
-        - ${POSTGRES_COMPUTER_PORT}:5432 
+      extends:
+        file: ./postgresql/compose.yaml
+        service: credit_db

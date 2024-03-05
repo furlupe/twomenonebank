@@ -39,6 +39,8 @@ namespace Bank.Credit.Domain.Credit
             NextPaymentDate = now + Tariff.Period;
         }
 
+        public bool IsActive() => !IsClosed && !IsDeleted;
+
         public void AddPenalty()
         {
             var now = DateTime.UtcNow;
@@ -52,19 +54,26 @@ namespace Bank.Credit.Domain.Credit
         public void MoveNextPaymentDate()
         {
             var now = DateTime.UtcNow;
-            if (DateTime.UtcNow - LastPaymentDate > Tariff.Period)
-            {
-                ApplyAndRecord(new CreditPaymentMissedEvent(Id, now));
-            }
 
             ApplyAndRecord(
                 new CreditPaymentDateMovedEvent(Id, NextPaymentDate.Add(Tariff.Period), now)
             );
+
+            if (DateTime.UtcNow - LastPaymentDate > Tariff.Period)
+            {
+                ApplyAndRecord(new CreditPaymentMissedEvent(Id, now));
+            }
         }
 
         public void Pay(int amount)
         {
             var @event = new CreditPaymentMadeEvent(Id, amount, DateTime.UtcNow);
+            ApplyAndRecord(@event);
+        }
+
+        public void PayPenalty(int amount)
+        {
+            var @event = new CreditPenaltyPaidEvent(Id, amount, DateTime.UtcNow);
             ApplyAndRecord(@event);
         }
 
@@ -107,6 +116,9 @@ namespace Bank.Credit.Domain.Credit
                 case CreditPenaltyAddedEvent creditPenaltyAddedEvent:
                     Apply(creditPenaltyAddedEvent);
                     break;
+                case CreditPenaltyPaidEvent creditPenaltyPaidEvent:
+                    Apply(creditPenaltyPaidEvent);
+                    break;
                 default:
                     throw new InvalidDataException(
                         $"{@event.GetType()} event can't be applied to {nameof(Credit)}"
@@ -132,6 +144,11 @@ namespace Bank.Credit.Domain.Credit
 
             MissedPaymentPeriods = 0;
             Amount -= @event.Amount;
+
+            if (Amount == 0)
+            {
+                Close();
+            }
         }
 
         private void Apply(CreditRateAppliedEvent @event)
@@ -171,6 +188,21 @@ namespace Bank.Credit.Domain.Credit
             }
 
             Penalty += @event.Amount;
+        }
+
+        private void Apply(CreditPenaltyPaidEvent @event)
+        {
+            if (@event.Amount < Penalty)
+            {
+                throw new InvalidOperationException("Penalty must be paid fully at once");
+            }
+
+            if (@event.Amount > Penalty)
+            {
+                throw new InvalidOperationException("Cannot overpay the penalty");
+            }
+
+            Penalty = 0;
         }
 
         private void Apply(CreditClosedEvent @event)

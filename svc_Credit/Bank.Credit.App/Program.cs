@@ -1,7 +1,9 @@
 using Bank.Auth.Shared.Extensions;
 using Bank.Auth.Shared.Policies.Handlers;
 using Bank.Credit.App.Services;
+using Bank.Credit.App.Setup;
 using Bank.Credit.Persistance;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,14 +19,15 @@ builder.Services.AddSwaggerGen();
 builder
     .Services.AddTransient<TariffService>()
     .AddScoped<IUserService, AuthHandlerUserService>()
-    .AddTransient<CreditService>();
-
-builder.ConfigureAuth();
+    .AddTransient<CreditService>()
+    .AddTransient<CreditBackroundService>();
 
 builder.Services.AddDbContext<BankCreditDbContext>(options =>
-{
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+
+builder.ConfigureAuth();
+builder.ConfigureHangfire();
 
 var app = builder.Build();
 
@@ -39,6 +42,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseHangfireDashboard();
+app.SetupCreditJobs();
 
 app.MapControllers();
 

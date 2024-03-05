@@ -14,6 +14,7 @@
         public bool CanApplyRate(TimeSpan timeSinceLastPayment) => timeSinceLastPayment > Period;
 
         private Tariff() { }
+
         public Tariff(string name, int rate)
         {
             Name = name;

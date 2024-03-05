@@ -4,7 +4,8 @@
     {
         public DateTime To { get; }
 
-        private CreditPaymentDateMovedEvent() : base() { }
+        private CreditPaymentDateMovedEvent()
+            : base() { }
 
         public CreditPaymentDateMovedEvent(Guid aggregateId, DateTime to, DateTime happendAt)
             : base(aggregateId, happendAt)

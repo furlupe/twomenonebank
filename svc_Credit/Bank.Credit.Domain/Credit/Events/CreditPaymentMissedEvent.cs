@@ -2,7 +2,8 @@
 {
     public class CreditPaymentMissedEvent : CreditEvent
     {
-        private CreditPaymentMissedEvent() : base() { }
+        private CreditPaymentMissedEvent()
+            : base() { }
 
         public CreditPaymentMissedEvent(Guid aggregateId, DateTime happenedAt)
             : base(aggregateId, happenedAt) { }

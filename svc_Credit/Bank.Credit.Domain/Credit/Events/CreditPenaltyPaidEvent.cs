@@ -1,13 +1,13 @@
 ﻿namespace Bank.Credit.Domain.Credit.Events
 {
-    public class CreditPenaltyAddedEvent : CreditEvent
+    public class CreditPenaltyPaidEvent : CreditEvent
     {
         public int Amount { get; }
 
-        private CreditPenaltyAddedEvent()
+        public CreditPenaltyPaidEvent()
             : base() { }
 
-        public CreditPenaltyAddedEvent(Guid aggregateId, int amount, DateTime happenedAt)
+        public CreditPenaltyPaidEvent(Guid aggregateId, int amount, DateTime happenedAt)
             : base(aggregateId, happenedAt)
         {
             Amount = amount;

@@ -76,7 +76,7 @@ namespace Bank.Credit.Persistance.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Credits");
+                    b.ToTable("Credits", (string)null);
                 });
 
             modelBuilder.Entity("Bank.Credit.Domain.Credit.Events.CreditEvent", b =>
@@ -106,7 +106,7 @@ namespace Bank.Credit.Persistance.Migrations
 
                     b.HasIndex("CreditId");
 
-                    b.ToTable("CreditEvents");
+                    b.ToTable("CreditEvents", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("CreditEvent");
 
@@ -137,7 +137,7 @@ namespace Bank.Credit.Persistance.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Tariffs");
+                    b.ToTable("Tariffs", (string)null);
                 });
 
             modelBuilder.Entity("Bank.Credit.Domain.User", b =>
@@ -154,7 +154,7 @@ namespace Bank.Credit.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Bank.Credit.Domain.Credit.Events.CreditClosedEvent", b =>

@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{43D986E9-C7A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Credit.Domain", "Bank.Credit.Domain\Bank.Credit.Domain.csproj", "{BB2D2E05-6D53-46F6-B1B3-4B2AECD584DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.Credit.Persistance", "Bank.Credit.Persistance\Bank.Credit.Persistance.csproj", "{72ADE97B-BFCA-4F93-82B7-70098357D0F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Credit.Persistance", "Bank.Credit.Persistance\Bank.Credit.Persistance.csproj", "{72ADE97B-BFCA-4F93-82B7-70098357D0F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Auth.Shared", "..\svc_Auth\Bank.Auth.Shared\Bank.Auth.Shared.csproj", "{5D9117D8-8DCA-45CD-A18D-DD0A473BAB05}"
 EndProject
