@@ -16,6 +16,7 @@ namespace Bank.Credit.Persistance
         DbSet<CreditPaymentMissedEvent> creditPaymentMissedEvents { get; set; }
         DbSet<CreditPenaltyAddedEvent> creditPenaltyAddedEvents { get; set; }
         DbSet<CreditPaymentDateMovedEvent> creditPaymentDateMovedEvents { get; set; }
+        DbSet<CreditPenaltyPaidEvent> creditPenaltyPaidEvents { get; set; }
 
         public BankCreditDbContext(DbContextOptions<BankCreditDbContext> options)
             : base(options) { }
