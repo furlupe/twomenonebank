@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Bank.Auth.Common.Enumerations;
+using Bank.Auth.Shared.Enumerations;
 
 namespace Bank.Auth.App.Dto.Account
 {

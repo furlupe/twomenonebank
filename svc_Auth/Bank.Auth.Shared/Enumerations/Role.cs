@@ -1,5 +1,6 @@
-﻿namespace Bank.Auth.Common.Enumerations
+﻿namespace Bank.Auth.Shared.Enumerations
 {
+    [Flags]
     public enum Role
     {
         Admin,

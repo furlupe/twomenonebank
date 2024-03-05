@@ -1,5 +1,5 @@
 services:
-  postgres:
+  auth_db:
       env_file: postgres.env
       image: postgres
       restart: always

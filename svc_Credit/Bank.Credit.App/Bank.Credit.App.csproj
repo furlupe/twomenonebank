@@ -8,11 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
+      <PrivateAssets>none</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\svc_Auth\Bank.Auth.Extensions\Bank.Auth.Extensions.csproj" />
+    <ProjectReference Include="..\..\svc_Auth\Bank.Auth.Shared\Bank.Auth.Shared.csproj" />
+    <ProjectReference Include="..\Bank.Credit.Domain\Bank.Credit.Domain.csproj" />
+    <ProjectReference Include="..\Bank.Credit.Persistance\Bank.Credit.Persistance.csproj" />
   </ItemGroup>
 
 </Project>

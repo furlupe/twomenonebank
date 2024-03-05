@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Bank.Auth.Shared.Policies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,8 +15,16 @@ namespace Bank.Credit.App.Controllers
                 .Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
                 ?.InformationalVersion ?? "";
 
-        [HttpGet("authenticated")]
+        [Authorize, HttpGet("authenticated")]
         [Authorize]
         public string VersionAuthenticated() => Version();
+
+        [HttpGet("authenticated/user")]
+        [Authorize(Policy = Policies.CreateUserIfNeeded)]
+        public string VersionUser() => Version();
+
+        [HttpGet("authenticated/not-user")]
+        [Authorize(Policy = Policies.EmployeeOrHigher)]
+        public string VersionNotForUsers() => Version();
     }
 }

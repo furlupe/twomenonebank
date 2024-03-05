@@ -1,6 +1,6 @@
-﻿using Bank.Auth.Common.Enumerations;
-using Bank.Auth.Domain;
+﻿using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
+using Bank.Auth.Shared.Enumerations;
 using Microsoft.AspNetCore.Identity;
 
 namespace Bank.Auth.App.Setup.Seeders
