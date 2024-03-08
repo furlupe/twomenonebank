@@ -2,7 +2,6 @@
 {
     public interface IUserService
     {
-        Task<bool> Exists(Guid id);
-        Task Create(Guid id);
+        Task EnsureUserExists(Guid id);
     }
 }

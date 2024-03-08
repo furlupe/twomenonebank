@@ -6,31 +6,23 @@ using System.Security.Claims;
 namespace Bank.Auth.Shared.Policies.Handlers
 {
     public class CreateUserAuthorizationRequirement : IAuthorizationRequirement { }
-    public class CreateUserAuthorizationHandler : AuthorizationHandler<CreateUserAuthorizationRequirement>
+    public class CreateUserAuthorizationHandler(IUserService userService) : AuthorizationHandler<CreateUserAuthorizationRequirement>
     {
-        private readonly IUserService _userService;
-        public CreateUserAuthorizationHandler(IUserService userService)
-        {
-            _userService = userService;
-        }
-
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, CreateUserAuthorizationRequirement requirement)
         {
-            var id = context.User.GetIdOrDefault();
-
-            if (id == null)
+            Guid id;
+            try
+            {
+               id = context.User.GetId();
+            }
+            catch (ArgumentException)
             {
                 context.Fail();
                 return;
             }
 
-            if (!await _userService.Exists((Guid) id))
-            {
-                await _userService.Create((Guid) id);
-            }
-
+            await userService.EnsureUserExists(id);
             context.Succeed(requirement);
-            return;
         }
     }
 }
