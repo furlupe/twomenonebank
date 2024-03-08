@@ -1,5 +1,5 @@
-﻿using Bank.Auth.Shared.Claims;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+using Bank.Auth.Shared.Claims;
 
 namespace Bank.Auth.Shared.Extensions
 {

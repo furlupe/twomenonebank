@@ -10,7 +10,7 @@ namespace Bank.Credit.Domain.Credit
         public int Amount { get; set; }
         public int BaseAmount { get; set; }
         public int Penalty { get; set; } = 0;
-        public DateTime Until { get; set; }
+        public int Days { get; set; }
         public DateTime NextPaymentDate { get; set; }
         public DateTime LastPaymentDate { get; set; } = DateTime.UtcNow;
         public DateTime RateLastApplied { get; set; }
@@ -28,6 +28,8 @@ namespace Bank.Credit.Domain.Credit
             BaseAmount = amount;
             Amount = amount;
 
+            Days = days;
+
             var dailyRate = tariff.Rate / 100.0;
             PeriodicPayment = (int)
                 Math.Floor(
@@ -35,7 +37,6 @@ namespace Bank.Credit.Domain.Credit
                 );
 
             var now = DateTime.UtcNow;
-            Until = now.AddDays(days);
             NextPaymentDate = now + Tariff.Period;
         }
 

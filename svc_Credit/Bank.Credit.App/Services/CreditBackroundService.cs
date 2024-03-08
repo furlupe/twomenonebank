@@ -15,25 +15,37 @@ namespace Bank.Credit.App.Services
 
         public async Task ProcessOpenCredits()
         {
-            Console.WriteLine("Start processing credits");
             int creditsTotal = await _dbContext.Credits.CountAsync(x =>
                 !x.IsDeleted && !x.IsClosed
             );
 
             for (int index = 0; index < creditsTotal; index += Gap)
             {
-                await _dbContext
-                    .Credits.Where(credit => credit.IsActive())
-                    .Skip(index)
-                    .Take(Gap)
-                    .ForEachAsync(credit =>
-                    {
-                        credit.MoveNextPaymentDate();
-                        credit.ApplyRate();
-                        credit.AddPenalty();
-                    });
+                using var transaction = await _dbContext.Database.BeginTransactionAsync();
+                try
+                {
+                    await _dbContext
+                        .Credits.Where(credit => credit.IsActive())
+                        .Skip(index)
+                        .Take(Gap)
+                        .ForEachAsync(credit =>
+                        {
+                            credit.MoveNextPaymentDate();
+                            credit.ApplyRate();
+                            credit.AddPenalty();
+                        });
+
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(
+                        $"Credit transaction has prolapsed, exception: {ex.Message}, innerException: {ex.InnerException}"
+                    );
+                    await transaction.RollbackAsync();
+                }
             }
-            Console.WriteLine("Credits processed");
         }
     }
 }

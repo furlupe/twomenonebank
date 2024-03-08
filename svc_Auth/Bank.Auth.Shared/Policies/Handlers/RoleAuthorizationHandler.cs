@@ -1,6 +1,6 @@
-﻿using Bank.Auth.Shared.Enumerations;
+﻿using System.Security.Claims;
+using Bank.Auth.Shared.Enumerations;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 namespace Bank.Auth.Shared.Policies.Handlers
 {
@@ -13,9 +13,13 @@ namespace Bank.Auth.Shared.Policies.Handlers
             Roles = roles;
         }
     }
+
     public class RoleAuthorizationHandler : AuthorizationHandler<RoleAuthorizationRequirement>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, RoleAuthorizationRequirement requirement)
+        protected override Task HandleRequirementAsync(
+            AuthorizationHandlerContext context,
+            RoleAuthorizationRequirement requirement
+        )
         {
             var roleClaim = context.User.FindFirst(x => x.Type == ClaimTypes.Role);
             if (roleClaim == null)
