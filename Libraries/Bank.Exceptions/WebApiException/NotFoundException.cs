@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Bank.Attributes.Attributes;
 using Bank.Attributes.Utils;
-using Bank.Attributes.Attributes;
+using Microsoft.AspNetCore.Http;
 
-namespace Bank.Exceptions;
+namespace Bank.Exceptions.WebApiException;
 
 public class NotFoundException : WebApiException
 {
@@ -12,7 +12,8 @@ public class NotFoundException : WebApiException
             StatusCodes.Status404NotFound,
             "Requested resource was not found.",
             message
-        ) { }
+        )
+    { }
 
     public static NotFoundException ForModel<TEntity>(Guid id) =>
         new NotFoundException(

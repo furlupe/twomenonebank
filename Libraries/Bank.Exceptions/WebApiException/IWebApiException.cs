@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Bank.Exceptions;
+namespace Bank.Exceptions.WebApiException;
 
 public interface IWebApiException { }
 
