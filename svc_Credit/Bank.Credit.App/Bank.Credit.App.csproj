@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Bank.Common\Bank.Common.csproj" />
     <ProjectReference Include="..\..\svc_Auth\Bank.Auth.Shared\Bank.Auth.Shared.csproj" />
     <ProjectReference Include="..\Bank.Credit.Domain\Bank.Credit.Domain.csproj" />
     <ProjectReference Include="..\Bank.Credit.Persistance\Bank.Credit.Persistance.csproj" />

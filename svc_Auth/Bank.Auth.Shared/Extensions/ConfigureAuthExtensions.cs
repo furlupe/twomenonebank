@@ -88,21 +88,26 @@ namespace Bank.Auth.Shared.Extensions
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(Policies.Policies.EmployeeOrHigher, builder =>
-                 {
-                     builder.AddRequirements(
-                         new RoleAuthorizationRequirement([Enumerations.Role.Admin, Enumerations.Role.Employee])
-                     );
-                 });
-
-                 options.AddPolicy(Policies.Policies.CreateUserIfNeeded, builder =>
+                options.AddPolicy(
+                    Policies.Policies.EmployeeOrHigher,
+                    builder =>
                     {
                         builder.AddRequirements(
-                            new CreateUserAuthorizationRequirement()
+                            new RoleAuthorizationRequirement(
+                                [Enumerations.Role.Admin, Enumerations.Role.Employee]
+                            )
                         );
-                    });
-            });
+                    }
+                );
 
+                options.AddPolicy(
+                    Policies.Policies.CreateUserIfNeeded,
+                    builder =>
+                    {
+                        builder.AddRequirements(new CreateUserAuthorizationRequirement());
+                    }
+                );
+            });
 
             return builder;
         }

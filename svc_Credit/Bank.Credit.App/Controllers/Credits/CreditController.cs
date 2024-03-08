@@ -5,11 +5,11 @@ using Bank.Credit.App.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bank.Credit.App.Controllers
+namespace Bank.Credit.App.Controllers.Credits
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CreditController : ControllerBase
+    public partial class CreditController : ControllerBase
     {
         private readonly CreditService _creditService;
 
