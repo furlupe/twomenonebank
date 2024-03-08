@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using Bank.Auth.Shared.Claims;
-using Bank.Auth.Shared.Extensions;
+﻿using Bank.Auth.Shared.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Bank.Auth.Shared.Policies.Handlers

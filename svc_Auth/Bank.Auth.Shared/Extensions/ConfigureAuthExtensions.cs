@@ -1,7 +1,8 @@
-﻿using Bank.Auth.Shared.Policies.Handlers;
+﻿using Bank.Auth.Shared.Options;
+using Bank.Auth.Shared.Policies.Handlers;
+using Bank.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
@@ -18,24 +19,36 @@ namespace Bank.Auth.Shared.Extensions
         /// <exception cref="ArgumentNullException"></exception>
         public static WebApplicationBuilder ConfigureAuth(this WebApplicationBuilder builder)
         {
-            string? issuer = builder.Configuration.GetValue<string>("Auth:Host");
-            string? key = builder.Configuration.GetValue<string>("Auth:Key");
+            var authOptions = builder.GetConfigurationValue<AuthOptions>();
 
-            if (issuer == null)
-            {
-                throw new ArgumentNullException($"No issuer specified for {nameof(ConfigureAuth)}");
-            }
+            var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(authOptions.Key));
 
-            if (key == null)
-            {
-                throw new ArgumentNullException(
-                    $"No singing key specified for {nameof(ConfigureAuth)}"
-                );
-            }
+            return builder.ConfigureAuth(authOptions.Host, securityKey);
+        }
 
-            var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(key));
+        public static AuthorizationOptions RegisterPolicies(this AuthorizationOptions options)
+        {
+            options.AddPolicy(
+                Policies.Policies.EmployeeOrHigher,
+                builder =>
+                {
+                    builder.AddRequirements(
+                        new RoleAuthorizationRequirement(
+                            [Enumerations.Role.Admin, Enumerations.Role.Employee]
+                        )
+                    );
+                }
+            );
 
-            return builder.ConfigureAuth(issuer, securityKey);
+            options.AddPolicy(
+                Policies.Policies.CreateUserIfNeeded,
+                builder =>
+                {
+                    builder.AddRequirements(new CreateUserAuthorizationRequirement());
+                }
+            );
+
+            return options;
         }
 
         /// <summary>
@@ -88,25 +101,7 @@ namespace Bank.Auth.Shared.Extensions
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(
-                    Policies.Policies.EmployeeOrHigher,
-                    builder =>
-                    {
-                        builder.AddRequirements(
-                            new RoleAuthorizationRequirement(
-                                [Enumerations.Role.Admin, Enumerations.Role.Employee]
-                            )
-                        );
-                    }
-                );
-
-                options.AddPolicy(
-                    Policies.Policies.CreateUserIfNeeded,
-                    builder =>
-                    {
-                        builder.AddRequirements(new CreateUserAuthorizationRequirement());
-                    }
-                );
+                options.RegisterPolicies();
             });
 
             return builder;
