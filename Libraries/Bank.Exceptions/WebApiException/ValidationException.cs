@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bank.Exceptions;
+namespace Bank.Exceptions.WebApiException;
 
 public class ValidationException : WebApiException<ValidationProblemDetails>
 {

@@ -1,4 +1,4 @@
-﻿using Bank.Exceptions;
+﻿using Bank.Exceptions.WebApiException;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
