@@ -1,6 +1,9 @@
 ﻿using Bank.Auth.App.Setup.Seeders;
 using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
+using Bank.Auth.Shared.Extensions;
+using Bank.Auth.Shared.Options;
+using Bank.Common.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
@@ -12,11 +15,8 @@ namespace Bank.Auth.App.Setup.Extensions
         public static WebApplicationBuilder ConfigureAuth(this WebApplicationBuilder builder)
         {
             var services = builder.Services;
-            string key =
-                builder.Configuration.GetValue<string>("Auth:Key")
-                ?? throw new ArgumentNullException(
-                    "No signing key specified, check appsettings for Auth:Key"
-                );
+
+            var authOptions = builder.GetConfigurationValue<AuthOptions>();
 
             services
                 .AddIdentity<User, UserRole>(options =>
@@ -53,7 +53,9 @@ namespace Bank.Auth.App.Setup.Extensions
                         .AddDevelopmentEncryptionCertificate()
                         .AddDevelopmentSigningCertificate();
 
-                    options.AddSigningKey(new SymmetricSecurityKey(Convert.FromBase64String(key)));
+                    options.AddSigningKey(
+                        new SymmetricSecurityKey(Convert.FromBase64String(authOptions.Key))
+                    );
 
                     options
                         .UseAspNetCore()
@@ -73,7 +75,7 @@ namespace Bank.Auth.App.Setup.Extensions
                 options.DefaultChallengeScheme =
                     OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
             });
-            services.AddAuthorization();
+            services.AddAuthorization(options => options.RegisterPolicies());
 
             services
                 .AddHostedService<OpenIdClientsSeeder>()

@@ -1,5 +1,7 @@
 using Bank.Auth.App.Setup.Extensions;
 using Bank.Auth.Domain;
+using Bank.Auth.Shared.Options;
+using Bank.Common.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,8 @@ builder.Services.AddDbContext<BankAuthDbContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
     options.UseOpenIddict();
 });
+
+builder.BindOptions<AuthOptions>();
 
 builder.ConfigureAuth().AddServices();
 
