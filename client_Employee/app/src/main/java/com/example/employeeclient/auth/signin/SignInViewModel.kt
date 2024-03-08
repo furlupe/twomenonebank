@@ -1,4 +1,4 @@
-package com.example.employeeclient.signin
+package com.example.employeeclient.auth.signin
 
 import androidx.lifecycle.ViewModel
 
