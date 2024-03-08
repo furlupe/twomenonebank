@@ -1,7 +1,11 @@
-﻿namespace Bank.Core.Domain.Events;
+﻿using System.Net.Sockets;
 
-public class Transfer : BalanceChange
+namespace Bank.Core.Domain.Events;
+
+public class Transfer : DomainEvent
 {
-    public Withdrawal Withdrawal { get; set; }
-    public Deposit Deposit { get; set; }
+    public long Value => Withdrawal.Value;
+    public string Comment { get; protected set; }
+    public Withdrawal Withdrawal { get; protected set; }
+    public Deposit Deposit { get; protected set; }
 }

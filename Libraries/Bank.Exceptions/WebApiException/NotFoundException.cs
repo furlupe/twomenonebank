@@ -12,8 +12,7 @@ public class NotFoundException : WebApiException
             StatusCodes.Status404NotFound,
             "Requested resource was not found.",
             message
-        )
-    { }
+        ) { }
 
     public static NotFoundException ForModel<TEntity>(Guid id) =>
         new NotFoundException(

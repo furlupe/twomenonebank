@@ -10,6 +10,9 @@ public class UserService(CoreDbContext db) : IUserService
     public Task<User> GetUser(Guid id)
         => db.Users.SingleAsync(u => u.Id == id);
 
+    public Task<User?> GetUserIfExists(Guid id)
+        => db.Users.SingleOrDefaultAsync(u => u.Id == id);
+
     public async Task EnsureUserExists(Guid id)
     {
         if (await db.Users.AnyAsync(u => u.Id == id))

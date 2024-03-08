@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bank.Common.DateTimeProvider;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
 namespace Bank.Core.Persistence;
@@ -13,6 +14,6 @@ internal class CoreDbContextDesignTimeFactory : IDesignTimeDbContextFactory<Core
             "Username=postgres;Password=beebra228;Host=localhost;Port=5432;Database=bank_core;Pooling=true;Keepalive=5;Command Timeout=60;"
         );
 
-        return new CoreDbContext(optionsBuilder.Options);
+        return new CoreDbContext(optionsBuilder.Options, new DateTimeProvider());
     }
 }

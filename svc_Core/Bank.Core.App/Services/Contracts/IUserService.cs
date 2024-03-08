@@ -1,3 +1,9 @@
-﻿namespace Bank.Core.App.Services.Contracts;
+﻿using Bank.Core.Domain;
 
-public interface IUserService { }
+namespace Bank.Core.App.Services.Contracts;
+
+public interface IUserService : Auth.Shared.Policies.Handlers.IUserService
+{
+    Task<User> GetUser(Guid id);
+    Task<User?> GetUserIfExists(Guid id);
+}

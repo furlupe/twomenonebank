@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Bank.Attributes\Bank.Attributes.csproj" />
+    <ProjectReference Include="..\..\Libraries\Bank.Common\Bank.Common.csproj" />
     <ProjectReference Include="..\Bank.Core.Domain\Bank.Core.Domain.csproj" />
   </ItemGroup>
 

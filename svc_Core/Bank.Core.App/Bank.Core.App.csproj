@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Admonish" Version="2.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Bank.Common\Bank.Common.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Exceptions\Bank.Exceptions.csproj" />
+    <ProjectReference Include="..\..\svc_Auth\Bank.Auth.Shared\Bank.Auth.Shared.csproj" />
     <ProjectReference Include="..\Bank.Core.Domain\Bank.Core.Domain.csproj" />
     <ProjectReference Include="..\Bank.Core.Persistence\Bank.Core.Persistence.csproj" />
   </ItemGroup>
