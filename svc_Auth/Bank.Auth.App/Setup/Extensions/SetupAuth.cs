@@ -7,6 +7,7 @@ using Bank.Common.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
+using System.Security.Claims;
 
 namespace Bank.Auth.App.Setup.Extensions
 {

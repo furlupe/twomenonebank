@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Bank.Auth.Shared.Claims;
+using Bank.Auth.Shared.Enumerations;
 
 namespace Bank.Auth.Shared.Extensions
 {
@@ -20,6 +21,19 @@ namespace Bank.Auth.Shared.Extensions
             }
 
             return id;
+        }
+
+        public static bool HasRole(this ClaimsPrincipal user, Role role)
+        {
+            Claim? roleClaim = user.FindFirst(ClaimTypes.Role);
+            if (roleClaim == null)
+            {
+                return false;
+            }
+
+            bool result = Enum.TryParse(roleClaim.Value, out Role parsed);
+            
+            return result && parsed == role;
         }
 
         public static Guid GetId(this ClaimsPrincipal user)

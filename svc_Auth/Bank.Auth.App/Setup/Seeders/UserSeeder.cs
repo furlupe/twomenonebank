@@ -1,6 +1,11 @@
-﻿using Bank.Auth.Domain;
+﻿using Bank.Auth.App.Dto.Account;
+using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
+using Bank.Auth.Shared.Claims;
 using Microsoft.AspNetCore.Identity;
+using static OpenIddict.Abstractions.OpenIddictConstants;
+using System.Security.Claims;
+using Bank.Auth.Shared.Enumerations;
 
 namespace Bank.Auth.App.Setup.Seeders
 {
@@ -28,6 +33,16 @@ namespace Bank.Auth.App.Setup.Seeders
 
                 await manager.CreateAsync(user);
                 await manager.AddPasswordAsync(user, "balls");
+
+                List<Claim> claims =
+                [
+                    new Claim(Claims.Subject, user.Id.ToString()),
+                    new Claim(Claims.Name, user.UserName),
+                    new Claim(ClaimTypes.Role, Role.Admin.ToString()),
+                    new Claim(BankClaims.Id, user.Id.ToString())
+                ];
+
+                await manager.AddClaimsAsync(user, claims);
             }
         }
 

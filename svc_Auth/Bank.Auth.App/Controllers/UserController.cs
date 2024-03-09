@@ -2,6 +2,8 @@
 using Bank.Auth.App.Dto.Account;
 using Bank.Auth.Domain.Models;
 using Bank.Auth.Shared.Claims;
+using Bank.Auth.Shared.Enumerations;
+using Bank.Auth.Shared.Extensions;
 using Bank.Auth.Shared.Policies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +15,7 @@ namespace Bank.Auth.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = Policies.EmployeeOrHigher)]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -32,7 +34,12 @@ namespace Bank.Auth.App.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            if (registerDto.Role == Shared.Enumerations.Role.Admin)
+            if (User.HasRole(Role.User))
+            {
+                return Forbid();
+            }
+
+            if (registerDto.Role == Role.Admin)
             {
                 return BadRequest("Can't create Admin");
             }
@@ -62,6 +69,11 @@ namespace Bank.Auth.App.Controllers
 
         private async Task<IActionResult> ToggleBan(Guid userId, bool on = true)
         {
+            if (User.HasRole(Role.User))
+            {
+                return Forbid();
+            }
+
             var user = await _userManager.Users.SingleOrDefaultAsync(x => x.Id == userId);
 
             if (user == null)
@@ -71,7 +83,7 @@ namespace Bank.Auth.App.Controllers
 
             var result = await _userManager.SetLockoutEndDateAsync(
                 user,
-                on ? DateTime.MaxValue : null
+                on ? DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc) : null
             );
             return result.Succeeded ? Ok() : BadRequest();
         }

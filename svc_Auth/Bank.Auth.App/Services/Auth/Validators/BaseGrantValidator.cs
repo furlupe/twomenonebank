@@ -16,7 +16,14 @@ namespace Bank.Auth.App.Services.Auth.Validators
         {
             try
             {
-                return await CommitValidation(request);
+                var result = await CommitValidation(request);
+
+                if (result.User != null && result.User.LockoutEnd != null)
+                {
+                    return _grantResultFactory.Banned();
+                }
+
+                return result;
             }
             catch (Exception ex)
             {
