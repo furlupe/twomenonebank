@@ -7,26 +7,14 @@ namespace Bank.Core.App.Controllers;
 
 [Route("accounts")]
 [Authorize]
-public class TransactionsController(IUserService userService, IAccountService accountService) : ControllerBase
+public class TransactionsController(IAccountService accountService) : ControllerBase
 {
-
     [HttpPost("{id}/deposit")]
-    public async Task Deposit()
-    {
-        var user = await userService.GetUser(User.GetId());
-    }
+    public async Task Deposit() { }
 
     [HttpPost("{id}/withdraw")]
-
-    public async Task Withdraw()
-    {
-        var user = await userService.GetUser(User.GetId());
-    }
+    public async Task Withdraw() { }
 
     [HttpPost("{id}/transfer")]
-
-    public async Task Transfer()
-    {
-        var user = await userService.GetUser(User.GetId());
-    }
+    public async Task Transfer() { }
 }

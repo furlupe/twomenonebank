@@ -30,9 +30,18 @@ public class CoreDbContext : DbContext
             s.Property(x => x.Version).IsRowVersion();
         });
 
-        modelBuilder.Entity<BalanceChange>().UseTphMappingStrategy();
-        modelBuilder.Entity<Deposit>();
-        modelBuilder.Entity<Withdrawal>();
+        modelBuilder.Entity<AccountEvent>(a =>
+        {
+            a.OwnsOne(x => x.BalanceChange, b => b.OwnsOne(x => x.CreditPayment));
+            a.OwnsOne(
+                x => x.Transfer,
+                t =>
+                {
+                    t.OwnsOne(x => x.Source, b => b.OwnsOne(x => x.CreditPayment));
+                    t.OwnsOne(x => x.Target, b => b.OwnsOne(x => x.CreditPayment));
+                }
+            );
+        });
 
         base.OnModelCreating(modelBuilder);
     }

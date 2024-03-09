@@ -1,11 +1,35 @@
-﻿using System.Net.Sockets;
+﻿using Bank.Common.Utils;
 
 namespace Bank.Core.Domain.Events;
 
-public class Transfer : DomainEvent
+public class Transfer
 {
-    public long Value => Withdrawal.Value;
-    public string Comment { get; protected set; }
-    public Withdrawal Withdrawal { get; protected set; }
-    public Deposit Deposit { get; protected set; }
+    public Guid Id { get; set; }
+    public BalanceChange Source { get; protected set; }
+    public BalanceChange Target { get; protected set; }
+
+    public Transfer(BalanceChange source, BalanceChange target)
+    {
+        Source = source;
+        Target = target;
+
+        ValidateCircuit();
+        ValidateEquality();
+    }
+
+    protected void ValidateCircuit() =>
+        Validation.Check(
+            ExceptionConstants.MsgInvalidAction,
+            Source.Account.Id != Target.Account.Id,
+            "Source and target can't be the same account."
+        );
+
+    protected void ValidateEquality() =>
+        Validation.Check(
+            ExceptionConstants.MsgInvalidAction,
+            Source.Value == Target.Value,
+            "Withdrawal and deposit values must be equal."
+        );
+
+    protected Transfer() { }
 }

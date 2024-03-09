@@ -1,6 +1,6 @@
 ﻿namespace Bank.Core.Domain.Events;
 
-public class CreditPayment : Withdrawal
+public class CreditPayment
 {
     public Guid CreditId { get; set; }
 }
