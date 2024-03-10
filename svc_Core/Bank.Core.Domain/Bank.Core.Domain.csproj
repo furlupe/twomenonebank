@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Admonish" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Bank.Attributes\Bank.Attributes.csproj" />
+    <ProjectReference Include="..\..\Libraries\Bank.Common\Bank.Common.csproj" />
   </ItemGroup>
 
 </Project>
