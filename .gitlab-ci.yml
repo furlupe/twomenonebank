@@ -16,22 +16,28 @@ build:
       when: manual
     - when: always
   image: docker:25.0
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
   services:
-    - docker:25.0-dind
+    - name: docker:25.0-dind
+      command: ["--tls=false"]
   before_script:
     - docker info
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  after_script:
+    - echo 'Initiating cleanup...'
+    - docker system prune -f
+    - docker logout
+    - echo 'Cleanup completed.'
+
+build-core:
+  extends: .build
   script:
     - echo 'Building Core service...'
     - docker build . --rm -f svc_Core/Core.dockerfile -t $IMAGE_NAME:$CORE_TAG
     - echo 'Builds completed, pushing to registry...'
     - docker push $IMAGE_NAME:$CORE_TAG
     - echo 'Build completed.'
-  after_script:
-    - echo 'Initiating cleanup...'
-    - docker system prune
-    - docker logout
-    - echo 'Cleanup completed.'
 
 deploy:
   tags:
@@ -41,17 +47,16 @@ deploy:
   rules:
     - if: $CI_COMMIT_REF_NAME != "develop"
       when: manual
-    - when: always
+    - when: on_success
   before_script:
     - docker info
   script:
     - echo 'Deploying services...'
     - docker compose create
-    - cat $CORE_APPSETTINGS
-    - docker cp $CORE_APPSETTINGS bank-core-app:/app/appsettings.Staging.json
-    - docker compose start -d
+    - docker cp $CORE_APPSETTINGS twomenonebank-core-app:/app/appsettings.Staging.json
+    - docker compose start
     - echo 'Deploy completed.'
   after_script:
     - echo 'Initiating cleanup...'
-    - docker system prune
+    - docker system prune -f
     - echo 'Cleanup completed.'
