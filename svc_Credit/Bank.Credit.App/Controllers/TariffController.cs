@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Bank.Auth.Shared.Policies;
+using Bank.Common.Pagination;
 using Bank.Credit.App.Dto;
 using Bank.Credit.App.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,6 @@ namespace Bank.Credit.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = Policies.EmployeeOrHigher)]
     public class TariffController : ControllerBase
     {
         private readonly TariffService _tariffService;
@@ -20,11 +20,12 @@ namespace Bank.Credit.App.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTariffs(
+        public async Task<ActionResult<PageDto<TariffDto>>> GetTariffs(
             [FromQuery, Range(1, int.MaxValue)] int page = 1
         ) => Ok(await _tariffService.GetTariffs(page));
 
         [HttpPost]
+        [Authorize(Policy = Policies.EmployeeOrHigher)]
         public async Task<IActionResult> Create([FromBody] CreateTariffDto dto)
         {
             await _tariffService.CreateTariff(dto);

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Bank.Auth.Shared.Enumerations;
 
-namespace Bank.Auth.App.Dto.Account
+namespace Bank.Auth.App.Dto
 {
     public class RegisterDto
     {
