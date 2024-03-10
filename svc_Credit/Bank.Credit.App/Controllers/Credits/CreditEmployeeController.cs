@@ -14,7 +14,7 @@ namespace Bank.Credit.App.Controllers.Credits
 
         public async Task<ActionResult<PageDto<CreditSmallDto>>> GetUserCredits(
             Guid userId,
-            [FromQuery, Range(1, int.MaxValue)] int page
+            [FromQuery, Range(1, int.MaxValue)] int page = 1
         ) => Ok(await _creditService.GetUserCredits(userId, page));
 
         [HttpGet("{creditId}")]
@@ -28,7 +28,7 @@ namespace Bank.Credit.App.Controllers.Credits
 
         public async Task<ActionResult<PageDto<CreditOperationDto>>> GetCreditOperations(
             Guid creditId,
-            [FromQuery, Range(1, int.MaxValue)] int page
+            [FromQuery, Range(1, int.MaxValue)] int page = 1
         ) => Ok(await _creditService.GetCreditOperationHistory(creditId, page));
     }
 }

@@ -11,7 +11,7 @@
         public int PenaltyRate => 1;
         public TimeSpan Period { get; } = TimeSpan.FromDays(1);
 
-        public bool CanApplyRate(TimeSpan timeSinceLastPayment) => timeSinceLastPayment > Period;
+        public bool CanApplyRate(TimeSpan timeSinceLastPayment) => timeSinceLastPayment >= Period;
 
         private Tariff() { }
 

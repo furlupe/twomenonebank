@@ -27,6 +27,22 @@ namespace Bank.Credit.App.Services
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task Pay(Guid userId, Guid creditId, int amount)
+        {
+            var credit = await _dbContext.Credits.Include(x => x.Tariff).SingleAsync(x => x.User.Id == userId && x.Id == creditId);
+            credit.Pay(amount);
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task PayPenalty(Guid userId, Guid creditId, int amount)
+        {
+            var credit = await _dbContext.Credits.Include(x => x.Tariff).SingleAsync(x => x.User.Id == userId && x.Id == creditId);
+            credit.PayPenalty(amount);
+
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<CreditDto> GetCredit(Guid creditId)
         {
             var credit = await _dbContext
@@ -52,6 +68,7 @@ namespace Bank.Credit.App.Services
         public Task<PageDto<CreditSmallDto>> GetUserCredits(Guid userId, int page) =>
             _dbContext
                 .Credits.Where(x => x.User.Id == userId)
+                .Include(credit => credit.Tariff)
                 .GetPage(
                     new() { PageNumber = page },
                     credit => new CreditSmallDto()

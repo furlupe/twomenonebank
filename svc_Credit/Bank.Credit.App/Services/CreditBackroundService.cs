@@ -21,29 +21,33 @@ namespace Bank.Credit.App.Services
 
             for (int index = 0; index < creditsTotal; index += Gap)
             {
-                using var transaction = await _dbContext.Database.BeginTransactionAsync();
-                try
-                {
-                    await _dbContext
-                        .Credits.Where(credit => credit.IsActive())
+                var credits = await _dbContext
+                        .Credits.Where(credit => !credit.IsClosed)
+                        .Include(credit => credit.Tariff)
                         .Skip(index)
                         .Take(Gap)
-                        .ForEachAsync(credit =>
-                        {
-                            credit.MoveNextPaymentDate();
-                            credit.ApplyRate();
-                            credit.AddPenalty();
-                        });
+                        .ToListAsync();
 
-                    await _dbContext.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
+                foreach(var credit in credits)
                 {
-                    Console.WriteLine(
-                        $"Credit transaction has prolapsed, exception: {ex.Message}, innerException: {ex.InnerException}"
-                    );
-                    await transaction.RollbackAsync();
+                    using var transaction = await _dbContext.Database.BeginTransactionAsync();
+                    try
+                    {
+                        credit.MoveNextPaymentDate();
+                        credit.ApplyRate();
+                        credit.AddPenalty();
+
+                        await _dbContext.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(
+                            $"Credit transaction (id = {credit.Id}) has prolapsed, exception: {ex.Message}, innerException: {ex.InnerException}"
+                        );
+                        await transaction.RollbackAsync();
+                    }
+
                 }
             }
         }

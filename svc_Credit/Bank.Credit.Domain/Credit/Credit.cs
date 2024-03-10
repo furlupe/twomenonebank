@@ -1,4 +1,5 @@
 ﻿using Bank.Credit.Domain.Credit.Events;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bank.Credit.Domain.Credit
 {
@@ -31,23 +32,24 @@ namespace Bank.Credit.Domain.Credit
             Days = days;
 
             var dailyRate = tariff.Rate / 100.0;
-            PeriodicPayment = (int)
-                Math.Floor(
-                    dailyRate * Math.Pow(1 + dailyRate, days) / (Math.Pow(1 + dailyRate, days) - 1)
-                );
+            PeriodicPayment = (int) Math.Floor(amount * dailyRate * Math.Pow(1 + dailyRate, days) / (Math.Pow(1 + dailyRate, days) - 1));
 
             var now = DateTime.UtcNow;
             NextPaymentDate = now + Tariff.Period;
         }
 
-        public bool IsActive() => !IsClosed && !IsDeleted;
+        [NotMapped]
+        public bool IsActive => !IsClosed && !IsDeleted;
 
         public void AddPenalty()
         {
             var now = DateTime.UtcNow;
             var amount =
-                (int)Math.Ceiling(Tariff.PenaltyRate * (now - LastPaymentDate).Days / 100.0)
+                (int)Math.Floor(Amount * Tariff.PenaltyRate * (now - LastPaymentDate).Days / 100.0)
                 - Penalty;
+
+            if (amount < 1) return;
+
             ApplyAndRecord(new CreditPenaltyAddedEvent(Id, amount, now));
         }
 
@@ -60,7 +62,7 @@ namespace Bank.Credit.Domain.Credit
                 new CreditPaymentDateMovedEvent(Id, NextPaymentDate.Add(Tariff.Period), now)
             );
 
-            if (DateTime.UtcNow - LastPaymentDate > Tariff.Period)
+            if (now.Date - LastPaymentDate.Date > Tariff.Period)
             {
                 ApplyAndRecord(new CreditPaymentMissedEvent(Id, now));
             }
@@ -131,10 +133,24 @@ namespace Bank.Credit.Domain.Credit
 
         private void Apply(CreditPaymentMadeEvent @event)
         {
-            if (@event.Amount < PeriodicPayment * MissedPaymentPeriods)
+            if (LastPaymentDate - NextPaymentDate < Tariff.Period)
+            {
+                throw new InvalidOperationException("Can't pay since period has not passed");
+            }
+
+            var amountToPay = PeriodicPayment * (MissedPaymentPeriods + 1);
+
+            if (@event.Amount < amountToPay)
             {
                 throw new InvalidOperationException(
                     $"Can't withdraw, since amount is less than required. Missed payments: ${MissedPaymentPeriods}"
+                );
+            }
+
+            if (@event.Amount > amountToPay)
+            {
+                throw new InvalidOperationException(
+                    $"Can't overpay the periodic amount. What are you, some sort of richman?"
                 );
             }
 
@@ -154,21 +170,22 @@ namespace Bank.Credit.Domain.Credit
 
         private void Apply(CreditRateAppliedEvent @event)
         {
-            var diff = DateTime.UtcNow - RateLastApplied;
+            var diff = DateTime.UtcNow.Date - RateLastApplied.Date;
             if (!Tariff.CanApplyRate(diff))
             {
                 throw new InvalidDataException("Can't apply rate since it's too early to do so");
             }
 
             var percent = Tariff.Rate / 100.0;
-            Amount += (int)Math.Ceiling(Amount * percent);
+            Amount += (int)Math.Floor(Amount * percent);
 
             RateLastApplied = @event.CreatedAt;
         }
 
         private void Apply(CreditPaymentDateMovedEvent @event)
         {
-            if (DateTime.UtcNow - NextPaymentDate < Tariff.Period)
+            
+            if (DateTime.UtcNow.Date - NextPaymentDate.Date < Tariff.Period)
             {
                 throw new InvalidOperationException("Can't move since period hasn't passed yet");
             }
@@ -183,11 +200,6 @@ namespace Bank.Credit.Domain.Credit
 
         private void Apply(CreditPenaltyAddedEvent @event)
         {
-            if (@event.Amount <= 0)
-            {
-                throw new InvalidDataException("Cannot add non-positive penalty amount");
-            }
-
             Penalty += @event.Amount;
         }
 

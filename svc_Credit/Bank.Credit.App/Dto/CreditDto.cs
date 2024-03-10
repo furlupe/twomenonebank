@@ -28,6 +28,11 @@ namespace Bank.Credit.App.Dto
         public int Days { get; set; }
     }
 
+    public class CreditPaymentDto
+    {
+        public int Amount { get; set; }
+    }
+
     public class CreditOperationDto
     {
         public Guid Id { get; set; }

@@ -25,5 +25,22 @@ namespace Bank.Credit.App.Controllers.Credits
             await _creditService.Create(User.GetId(), dto);
             return Ok();
         }
+
+        [HttpPost("{creditId}/pay")]
+        [Authorize(Policy = Policies.CreateUserIfNeeded)]
+        public async Task<IActionResult> Pay(Guid creditId, [FromBody] CreditPaymentDto dto)
+        {
+            await _creditService.Pay(User.GetId(), creditId, dto.Amount);
+            return Ok();
+        }
+
+        [HttpPost("{creditId}/pay-penalty")]
+        [Authorize(Policy = Policies.CreateUserIfNeeded)]
+        public async Task<IActionResult> PayPenalty(Guid creditId, [FromBody] CreditPaymentDto dto)
+        {
+            await _creditService.PayPenalty(User.GetId(), creditId, dto.Amount);
+            return Ok();
+        }
+
     }
 }
