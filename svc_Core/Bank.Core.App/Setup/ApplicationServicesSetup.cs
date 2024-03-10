@@ -1,6 +1,9 @@
-﻿using Bank.Core.App.Services;
+﻿using Bank.Common.DateTimeProvider;
+using Bank.Common.Extensions;
+using Bank.Core.App.Services;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.Persistence;
+using Bank.Exceptions.WebApiException;
 
 namespace Bank.Core.App.Setup;
 
@@ -24,15 +27,18 @@ public static class ApplicationServicesSetup
         builder.AddLocalConfiguration();
 
         var services = builder.Services;
-        services.AddCoreDbContext(builder.GetConfiguration<Configuration>());
+        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+        services.AddCoreDbContext(builder.GetConfigurationValue<Configuration>());
 
+        Admonish.Validator.UnsafeConfigureException(x => new ValidationException(x.ToDictionary()));
         return builder;
     }
 
     private static WebApplicationBuilder AddLocalConfiguration(this WebApplicationBuilder builder)
     {
         bool isDevelopment =
-            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+            == Environments.Development;
 
         if (isDevelopment)
         {
@@ -44,5 +50,10 @@ public static class ApplicationServicesSetup
         }
 
         return builder;
+    }
+
+    public static async Task UseApplicationServices(this WebApplication app)
+    {
+        await app.UseCoreDbContext();
     }
 }

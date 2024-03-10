@@ -1,7 +1,6 @@
 ﻿using Bank.Attributes.Attributes;
 using Bank.Attributes.Utils;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bank.Common.Extensions;

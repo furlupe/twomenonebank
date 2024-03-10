@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bank.Core.Persistence;
@@ -20,5 +21,16 @@ public static class PersistenceSetup
         );
 
         return services;
+    }
+
+    public static async Task UseCoreDbContext(this WebApplication app)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            using (var db = scope.ServiceProvider.GetRequiredService<CoreDbContext>())
+            {
+                await db.Database.MigrateAsync();
+            }
+        }
     }
 }
