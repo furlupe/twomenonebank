@@ -1,5 +1,4 @@
-﻿using Bank.Common.Constants;
-using Bank.Common.DateTimeProvider;
+﻿using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
 using Bank.Core.App.Services;
 using Bank.Core.App.Services.Contracts;
@@ -35,41 +34,6 @@ public static class ApplicationServicesSetup
         Admonish.Validator.UnsafeConfigureException(x => new ValidationException(x.ToDictionary()));
         return builder;
     }
-
-    private static WebApplicationBuilder AddConfiguration(this WebApplicationBuilder builder)
-    {
-        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-        switch (environment)
-        {
-            case Common.Constants.Environments.Development:
-            {
-                builder.AddLocalConfiguration();
-                break;
-            }
-            case Common.Constants.Environments.Staging:
-            {
-                builder.AddStagingConfiguration();
-                break;
-            }
-        }
-
-        return builder;
-    }
-
-    private static void AddLocalConfiguration(this WebApplicationBuilder builder) =>
-        builder.Configuration.AddJsonFile(
-            "appsettings.Local.json",
-            optional: true,
-            reloadOnChange: true
-        );
-
-    private static void AddStagingConfiguration(this WebApplicationBuilder builder) =>
-        builder.Configuration.AddJsonFile(
-            "appsettings.Staging.json",
-            optional: false,
-            reloadOnChange: true
-        );
 
     public static async Task UseApplicationServices(this WebApplication app)
     {

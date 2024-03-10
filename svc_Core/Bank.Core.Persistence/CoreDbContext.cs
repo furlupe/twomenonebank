@@ -28,6 +28,7 @@ public class CoreDbContext : DbContext
         {
             s.UseTpcMappingStrategy();
             s.Property(x => x.Version).IsRowVersion();
+            s.HasQueryFilter(x => x.DeletedAt == null);
         });
 
         modelBuilder.Entity<AccountEvent>(a =>
