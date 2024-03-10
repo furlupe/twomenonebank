@@ -1,0 +1,57 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_NAME: happypiece/twomenonebank
+  CORE_TAG: core
+
+build:
+  tags:
+    - build
+    - docker
+  stage: build
+  rules:
+    - if: $CI_COMMIT_REF_NAME != "develop"
+      when: manual
+    - when: always
+  image: docker:25.0
+  services:
+    - docker:25.0-dind
+  before_script:
+    - docker info
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  script:
+    - echo 'Building Core service...'
+    - docker build . --rm -f svc_Core/Core.dockerfile -t $IMAGE_NAME:$CORE_TAG
+    - echo 'Builds completed, pushing to registry...'
+    - docker push $IMAGE_NAME:$CORE_TAG
+    - echo 'Build completed.'
+  after_script:
+    - echo 'Initiating cleanup...'
+    - docker system prune
+    - docker logout
+    - echo 'Cleanup completed.'
+
+deploy:
+  tags:
+    - deploy
+    - shell
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_REF_NAME != "develop"
+      when: manual
+    - when: always
+  before_script:
+    - docker info
+  script:
+    - echo 'Deploying services...'
+    - docker compose create
+    - cat $CORE_APPSETTINGS
+    - docker cp $CORE_APPSETTINGS bank-core-app:/app/appsettings.Staging.json
+    - docker compose start -d
+    - echo 'Deploy completed.'
+  after_script:
+    - echo 'Initiating cleanup...'
+    - docker system prune
+    - echo 'Cleanup completed.'

@@ -1,0 +1,27 @@
+version: "3.4"
+
+include:
+  - svc_Core/docker-compose.yml
+
+services:
+  db:
+    container_name: twomenonebank-db
+    hostname: twomenonebank-db-host
+    image: postgres:latest
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: ${DB_USER:-twomenonebank}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-twomenonebank}
+      POSTGRES_DB: twomenonebank
+    volumes:
+      - twomenonebank-db:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - twomenonebank-network
+
+volumes:
+  twomenonebank-db:
+
+networks:
+  twomenonebank-network:

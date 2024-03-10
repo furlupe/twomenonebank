@@ -1,4 +1,5 @@
-﻿using Bank.Common.DateTimeProvider;
+﻿using Bank.Common.Constants;
+using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
 using Bank.Core.App.Services;
 using Bank.Core.App.Services.Contracts;
@@ -24,33 +25,51 @@ public static class ApplicationServicesSetup
         this WebApplicationBuilder builder
     )
     {
-        builder.AddLocalConfiguration();
+        builder.AddConfiguration();
 
         var services = builder.Services;
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+
         services.AddCoreDbContext(builder.GetConfigurationValue<Configuration>());
 
         Admonish.Validator.UnsafeConfigureException(x => new ValidationException(x.ToDictionary()));
         return builder;
     }
 
-    private static WebApplicationBuilder AddLocalConfiguration(this WebApplicationBuilder builder)
+    private static WebApplicationBuilder AddConfiguration(this WebApplicationBuilder builder)
     {
-        bool isDevelopment =
-            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
-            == Environments.Development;
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-        if (isDevelopment)
+        switch (environment)
         {
-            builder.Configuration.AddJsonFile(
-                "appsettings.local.json",
-                optional: true,
-                reloadOnChange: true
-            );
+            case Common.Constants.Environments.Development:
+            {
+                builder.AddLocalConfiguration();
+                break;
+            }
+            case Common.Constants.Environments.Staging:
+            {
+                builder.AddStagingConfiguration();
+                break;
+            }
         }
 
         return builder;
     }
+
+    private static void AddLocalConfiguration(this WebApplicationBuilder builder) =>
+        builder.Configuration.AddJsonFile(
+            "appsettings.Local.json",
+            optional: true,
+            reloadOnChange: true
+        );
+
+    private static void AddStagingConfiguration(this WebApplicationBuilder builder) =>
+        builder.Configuration.AddJsonFile(
+            "appsettings.Staging.json",
+            optional: false,
+            reloadOnChange: true
+        );
 
     public static async Task UseApplicationServices(this WebApplication app)
     {
