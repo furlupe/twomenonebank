@@ -6,7 +6,7 @@ variables:
   IMAGE_NAME: happypiece/twomenonebank
   CORE_TAG: core
 
-build:
+.build:
   tags:
     - build
     - docker
