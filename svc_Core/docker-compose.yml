@@ -1,7 +1,7 @@
 version: "3.4"
 
 services:
-  app:
+  core-app:
     container_name: twomenonebank-core-app
     image: happypiece/twomenonebank:core
     depends_on:
@@ -12,13 +12,7 @@ services:
     environment:
       ASPNETCORE_HTTP_PORT: https://+:27001
       ASPNETCORE_URLS: http://+:27000
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Staging
     restart: always
     networks:
       - twomenonebank-network
-
-volumes:
-  twomenonebank-db:
-
-networks:
-  twomenonebank-network:
