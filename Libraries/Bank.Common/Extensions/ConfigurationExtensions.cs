@@ -18,4 +18,39 @@ public static class ConfigurationExtensions
         ?? throw new ConfigurationException(
             $"Configuration failed: could not get value for {typeof(T).Name} by section key '{key}'"
         );
+
+    public static WebApplicationBuilder AddConfiguration(this WebApplicationBuilder builder)
+    {
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        switch (environment)
+        {
+            case Constants.Environments.Development:
+            {
+                builder.AddLocalConfiguration();
+                break;
+            }
+            case Constants.Environments.Staging:
+            {
+                builder.AddStagingConfiguration();
+                break;
+            }
+        }
+
+        return builder;
+    }
+
+    private static void AddLocalConfiguration(this WebApplicationBuilder builder) =>
+        builder.Configuration.AddJsonFile(
+            "appsettings.Local.json",
+            optional: true,
+            reloadOnChange: true
+        );
+
+    private static void AddStagingConfiguration(this WebApplicationBuilder builder) =>
+        builder.Configuration.AddJsonFile(
+            "appsettings.Staging.json",
+            optional: false,
+            reloadOnChange: true
+        );
 }
