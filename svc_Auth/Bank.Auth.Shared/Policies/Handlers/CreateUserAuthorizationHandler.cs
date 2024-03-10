@@ -24,6 +24,12 @@ namespace Bank.Auth.Shared.Policies.Handlers
                 return;
             }
 
+            if (!context.User.HasRole(Enumerations.Role.User))
+            {
+                context.Fail();
+                return;
+            }
+
             await userService.EnsureUserExists(id);
             context.Succeed(requirement);
         }

@@ -13,12 +13,6 @@ namespace Bank.Credit.App.Services
             _dbContext = dbContext;
         }
 
-        public async Task Create(Guid id)
-        {
-            await _dbContext.Users.AddAsync(new Domain.User(id));
-            await _dbContext.SaveChangesAsync();
-        }
-
         public async Task EnsureUserExists(Guid id)
         {
             var exists = await _dbContext.Users.AnyAsync(x => x.Id == id);

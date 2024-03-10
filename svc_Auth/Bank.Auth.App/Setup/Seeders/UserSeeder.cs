@@ -1,5 +1,4 @@
-﻿using Bank.Auth.App.Dto.Account;
-using Bank.Auth.Domain;
+﻿using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
 using Bank.Auth.Shared.Claims;
 using Microsoft.AspNetCore.Identity;

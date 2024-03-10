@@ -1,10 +1,11 @@
 ﻿using System.Security.Claims;
-using Bank.Auth.App.Dto.Account;
+using Bank.Auth.App.Dto;
 using Bank.Auth.Domain.Models;
 using Bank.Auth.Shared.Claims;
 using Bank.Auth.Shared.Enumerations;
 using Bank.Auth.Shared.Extensions;
 using Bank.Auth.Shared.Policies;
+using Bank.Common.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +66,17 @@ namespace Bank.Auth.App.Controllers
             await _userManager.AddClaimsAsync(user, claims);
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<PageDto<UserDto>>> GetUserList([FromQuery] int page = 1)
+        {
+            if (User.HasRole(Role.User))
+            {
+                return Forbid();
+            }
+
+            return await _userManager.Users.GetPage(new() { PageNumber = page }, user => new UserDto() { Id = user.Id, Email = user.Email });
         }
 
         private async Task<IActionResult> ToggleBan(Guid userId, bool on = true)
