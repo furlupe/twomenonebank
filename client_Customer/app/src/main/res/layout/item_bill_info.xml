@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bill"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/billIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_bill_purple_32dp" />
+
+    <TextView
+        android:id="@+id/typeOfBillTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Сберегательный счет"
+        app:layout_constraintStart_toEndOf="@+id/billIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/balanceBillTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="40,4$"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/typeOfBillTitle"
+        app:layout_constraintTop_toBottomOf="@+id/typeOfBillTitle" />
+
+    <TextView
+        android:id="@+id/billDurationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="бессрочный"
+        app:layout_constraintStart_toStartOf="@+id/balanceBillTitle"
+        app:layout_constraintTop_toBottomOf="@+id/balanceBillTitle"
+        android:textColor="@color/gray"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/numberOfBillTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="****2606"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/gray"
+        android:textSize="12sp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Employee Client"
+rootProject.name = "Customer Client"
 include(":app")
  

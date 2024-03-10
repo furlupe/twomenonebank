@@ -1,6 +1,20 @@
 <resources>
-    <string name="app_name">Employee Client</string>
+    <string name="app_name">Customer Client</string>
+
+    <!-- Экран входа -->
     <string name="label_sign_in">Вход</string>
+
+    <!-- Главный экран -->
     <string name="title_home">Главная</string>
+    <string name="title_bills">Счета</string>
+    <string name="description_for_adding_bill_button">Кнопка для создания нового счета</string>
+    <string name="title_all_bills">Все счета</string>
+    <string name="title_credits">Кредиты</string>
+    <string name="description_for_adding_credit_button">Кнопка для создания нового кредита</string>
+    <string name="title_all_credits">Все кредиты</string>
+
+    <!-- Экран с историей -->
     <string name="title_history">История</string>
+    <string name="open_bill_title">Открыть счёт</string>
+    <string name="take_out_loan_title">Взять кредит</string>
 </resources>

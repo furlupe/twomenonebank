@@ -2,21 +2,378 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
+    android:background="@drawable/gradient_background"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".ui.bottombar.home.HomeFragment">
 
     <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
+        android:id="@+id/userWelcome"
+
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/exchangeRate"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+
+        android:textColor="@color/white"
+        android:textSize="14sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userWelcome" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/billView"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+
+        android:background="@drawable/card_background"
+        android:elevation="8dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exchangeRate">
+
+
+        <TextView
+            android:id="@+id/billTitle"
+
+            android:text="Счета"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+
+            app:layout_constraintStart_toStartOf="@+id/billView"
+            app:layout_constraintTop_toTopOf="@+id/billView" />
+
+        <ImageButton
+            android:id="@+id/addBillButton"
+
+            android:src="@drawable/ic_add_blue_24dp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/description_for_adding_bill_button"
+
+            app:layout_constraintBottom_toBottomOf="@+id/billTitle"
+            app:layout_constraintEnd_toEndOf="@+id/billView"
+            app:layout_constraintTop_toTopOf="@+id/billTitle" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/createNewBillCard"
+
+            android:layout_width="144dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+
+            android:background="@drawable/card_background"
+            android:elevation="8dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/billTitle">
+
+            <ImageView
+                android:id="@+id/createNewBillButton"
+
+                app:srcCompat="@drawable/ic_add_in_circle_purple_20dp"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/createNewBillTitle"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="4dp"
+
+                android:text="@string/open_bill_title"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+
+                app:layout_constraintStart_toStartOf="@+id/createNewBillButton"
+                app:layout_constraintTop_toBottomOf="@+id/createNewBillButton" />
+
+            <TextView
+                android:id="@+id/createNewBillDescription"
+
+                android:layout_width="152dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="16dp"
+
+                android:text="Откройте счёт на\nлучших условиях"
+                android:minLines="2"
+                android:textColor="@color/gray"
+                android:textSize="11sp"
+
+                app:layout_constraintStart_toStartOf="@+id/createNewBillTitle"
+                app:layout_constraintTop_toBottomOf="@+id/createNewBillTitle"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/billInfoRecyclerView"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+
+            android:scrollbars="vertical"
+            android:visibility="gone"
+
+            app:layout_constraintEnd_toEndOf="@id/addBillButton"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/billTitle"
+            app:layout_constraintTop_toBottomOf="@id/billTitle"
+
+            tools:listitem="@layout/item_bill_info" />
+
+        <TextView
+            android:id="@+id/openAllBillsButton"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+
+            android:text="Все счета"
+            android:background="@android:color/transparent"
+            android:letterSpacing="0"
+            android:textColor="@color/blue"
+            android:textSize="14sp"
+            android:textStyle="bold"
+
+            android:visibility="gone"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/billView"
+            app:layout_constraintTop_toBottomOf="@+id/billInfoRecyclerView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/creditView"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+
+        android:background="@drawable/card_background"
+        android:elevation="8dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/billView">
+
+
+        <TextView
+            android:id="@+id/creditTitle"
+
+            android:text="Кредиты"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+
+            app:layout_constraintStart_toStartOf="@+id/creditView"
+            app:layout_constraintTop_toTopOf="@+id/creditView" />
+
+        <ImageButton
+            android:id="@+id/addCreditButton"
+
+            android:src="@drawable/ic_add_blue_24dp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/description_for_adding_bill_button"
+
+            app:layout_constraintBottom_toBottomOf="@+id/creditTitle"
+            app:layout_constraintEnd_toEndOf="@+id/creditView"
+            app:layout_constraintTop_toTopOf="@+id/creditTitle" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/createNewCreditCard"
+
+            android:layout_width="144dp"
+            android:layout_height="96dp"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+
+            android:background="@drawable/card_background"
+            android:elevation="8dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/creditTitle">
+
+            <ImageView
+                android:id="@+id/createNewCreditButton"
+
+                app:srcCompat="@drawable/ic_add_in_circle_purple_20dp"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/createNewCreditTitle"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="4dp"
+
+                android:text="@string/take_out_loan_title"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+
+                app:layout_constraintStart_toStartOf="@+id/createNewCreditButton"
+                app:layout_constraintTop_toBottomOf="@+id/createNewCreditButton" />
+
+            <TextView
+                android:id="@+id/createNewCreditDescription"
+
+                android:layout_width="152dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="16dp"
+
+                android:text="Подобрать кредит\nна любые цели"
+                android:minLines="2"
+                android:textColor="@color/gray"
+                android:textSize="11sp"
+
+                app:layout_constraintStart_toStartOf="@+id/createNewCreditTitle"
+                app:layout_constraintTop_toBottomOf="@+id/createNewCreditTitle"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/creditInfoRecyclerView"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+
+            android:scrollbars="vertical"
+            android:visibility="gone"
+
+            app:layout_constraintEnd_toEndOf="@id/addCreditButton"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/creditTitle"
+            app:layout_constraintTop_toBottomOf="@id/creditTitle"
+
+            tools:listitem="@layout/item_credit_info" />
+
+        <TextView
+            android:id="@+id/openAllCreditsButton"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+
+            android:text="Все кредиты"
+            android:background="@android:color/transparent"
+            android:letterSpacing="0"
+            android:textColor="@color/blue"
+            android:textSize="14sp"
+            android:textStyle="bold"
+
+            android:visibility="gone"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/creditView"
+            app:layout_constraintTop_toBottomOf="@+id/creditInfoRecyclerView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
