@@ -1,0 +1,42 @@
+package com.example.customerclient.ui.bottombar.home
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.customerclient.R
+import com.example.customerclient.databinding.ItemCreditInfoBinding
+
+class CreditsInfoRecyclerAdapter(
+    private val items: List<CreditInfo>,
+    private val onCreditClick: (String) -> Unit
+) : RecyclerView.Adapter<CreditsInfoRecyclerAdapter.CreditInfoViewHolder>() {
+
+    class CreditInfoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val binding = ItemCreditInfoBinding.bind(itemView)
+
+        val creditItem = binding.credit
+        val type = binding.creditTypeTitle
+        val balance = binding.balanceCreditTitle
+        val nextWithdrawDate = binding.nextWithdrawDateTitle
+        val nextFee = binding.nextFeeTitle
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreditInfoViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_credit_info, parent, false)
+        return CreditInfoViewHolder(itemView)
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    override fun onBindViewHolder(holder: CreditInfoViewHolder, position: Int) {
+        holder.creditItem.setOnClickListener {
+            onCreditClick(items[position].id)
+        }
+        holder.type.text = items[position].type
+        holder.balance.text = items[position].balance
+        holder.nextWithdrawDate.text = items[position].nextWithdrawDate
+        holder.nextFee.text = items[position].nextFee
+    }
+}

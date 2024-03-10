@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_sign_in"
-        android:name="com.example.employeeclient.ui.auth.signin.SignInFragment"
+        android:name="com.example.customerclient.ui.auth.signin.SignInFragment"
         android:label="@string/label_sign_in"
         tools:layout="@layout/fragment_sign_in" >
         <action
@@ -17,7 +17,7 @@
 
     <activity
         android:id="@+id/bottomBarActivity"
-        android:name="com.example.employeeclient.ui.bottombar.BottomBarActivity"
+        android:name="com.example.customerclient.ui.bottombar.BottomBarActivity"
         android:label="BottomBarActivity" />
 
 </navigation>

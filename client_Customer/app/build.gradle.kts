@@ -1,14 +1,15 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
-    namespace = "com.example.employeeclient"
+    namespace = "com.example.customerclient"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.employeeclient"
+        applicationId = "com.example.customerclient"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -39,6 +40,13 @@ android {
 }
 
 dependencies {
+
+    implementation("io.insert-koin:koin-android:3.5.3")
+
+    val nav_version = "2.7.7"
+    // Kotlin
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

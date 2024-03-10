@@ -7,14 +7,71 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.employeeclient.ui.bottombar.home.HomeFragment"
+        android:name="com.example.customerclient.ui.bottombar.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_navigation_home_to_createCreditActivity"
+            app:destination="@id/createCreditActivity" />
+        <action
+            android:id="@+id/action_navigation_home_to_createBillActivity"
+            app:destination="@id/createBillActivity" />
+        <action
+            android:id="@+id/action_navigation_home_to_allCreditsActivity"
+            app:destination="@id/allCreditsActivity" />
+        <action
+            android:id="@+id/action_navigation_home_to_allBillsActivity"
+            app:destination="@id/allBillsActivity" />
+        <action
+            android:id="@+id/action_navigation_home_to_creditInfoActivity"
+            app:destination="@id/creditInfoActivity" />
+        <action
+            android:id="@+id/action_navigation_home_to_billInfoActivity"
+            app:destination="@id/billInfoActivity" />
+    </fragment>
 
 
     <fragment
         android:id="@+id/navigation_history"
-        android:name="com.example.employeeclient.ui.bottombar.history.HistoryFragment"
+        android:name="com.example.customerclient.ui.bottombar.history.HistoryFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
+
+    <activity
+        android:id="@+id/createCreditActivity"
+        android:name="com.example.customerclient.ui.credit.CreateCreditActivity"
+        android:label="CreateCreditActivity" />
+
+    <activity
+        android:id="@+id/createBillActivity"
+        android:name="com.example.customerclient.ui.bill.CreateBillActivity"
+        android:label="CreateBillActivity" />
+
+    <activity
+        android:id="@+id/allCreditsActivity"
+        android:name="com.example.customerclient.ui.credit.AllCreditsActivity"
+        android:label="AllCreditsActivity" />
+
+    <activity
+        android:id="@+id/allBillsActivity"
+        android:name="com.example.customerclient.ui.bill.AllBillsActivity"
+        android:label="AllBillsActivity" />
+
+    <activity
+        android:id="@+id/billInfoActivity"
+        android:name="com.example.customerclient.ui.bill.BillInfoActivity"
+        android:label="BillInfoActivity">
+        <argument
+            android:name="billId"
+            app:argType="string" />
+    </activity>
+
+    <activity
+        android:id="@+id/creditInfoActivity"
+        android:name="com.example.customerclient.ui.credit.CreditInfoActivity"
+        android:label="CreditInfoActivity">
+        <argument
+            android:name="creditId"
+            app:argType="string" />
+    </activity>
 </navigation>
