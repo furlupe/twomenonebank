@@ -1,4 +1,4 @@
-package com.example.customerclient.data.repository
+package com.example.customerclient.domain.repositories
 
 import com.example.customerclient.ui.bottombar.home.CreditInfo
 

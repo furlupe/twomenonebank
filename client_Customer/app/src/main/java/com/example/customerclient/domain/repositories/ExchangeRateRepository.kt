@@ -1,4 +1,4 @@
-package com.example.customerclient.data.repository
+package com.example.customerclient.domain.repositories
 
 interface ExchangeRateRepository {
     fun getDollarExchangeRate(): Double

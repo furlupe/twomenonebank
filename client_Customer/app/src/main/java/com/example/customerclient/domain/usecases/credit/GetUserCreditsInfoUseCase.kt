@@ -1,6 +1,6 @@
 package com.example.customerclient.domain.usecases.credit
 
-import com.example.customerclient.data.repository.CreditRepository
+import com.example.customerclient.domain.repositories.CreditRepository
 import com.example.customerclient.ui.bottombar.home.CreditInfo
 
 class GetUserCreditsInfoUseCase(
