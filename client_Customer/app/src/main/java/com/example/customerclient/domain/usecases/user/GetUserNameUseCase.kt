@@ -1,6 +1,6 @@
 package com.example.customerclient.domain.usecases.user
 
-import com.example.customerclient.data.repository.UserRepository
+import com.example.customerclient.domain.repositories.UserRepository
 
 class GetUserNameUseCase(
     private val userRepository: UserRepository

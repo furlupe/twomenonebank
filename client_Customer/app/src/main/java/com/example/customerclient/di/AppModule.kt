@@ -1,13 +1,13 @@
 package com.example.customerclient.di
 
-import com.example.customerclient.data.repository.BillRepository
-import com.example.customerclient.data.repository.CreditRepository
-import com.example.customerclient.data.repository.ExchangeRateRepository
-import com.example.customerclient.data.repository.UserRepository
-import com.example.customerclient.domain.repositories.BillRepositoryImpl
-import com.example.customerclient.domain.repositories.CreditRepositoryImpl
-import com.example.customerclient.domain.repositories.ExchangeRateRepositoryImpl
-import com.example.customerclient.domain.repositories.UserRepositoryImpl
+import com.example.customerclient.data.repository.BillRepositoryImpl
+import com.example.customerclient.data.repository.CreditRepositoryImpl
+import com.example.customerclient.data.repository.ExchangeRateRepositoryImpl
+import com.example.customerclient.data.repository.UserRepositoryImpl
+import com.example.customerclient.domain.repositories.BillRepository
+import com.example.customerclient.domain.repositories.CreditRepository
+import com.example.customerclient.domain.repositories.ExchangeRateRepository
+import com.example.customerclient.domain.repositories.UserRepository
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoUseCase
 import com.example.customerclient.domain.usecases.exchangeRate.GetDollarExchangeRateUseCase
