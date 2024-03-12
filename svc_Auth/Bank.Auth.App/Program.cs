@@ -1,8 +1,5 @@
 using Bank.Auth.App.Setup.Extensions;
-using Bank.Auth.Domain;
-using Bank.Auth.Shared.Options;
 using Bank.Common.Extensions;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -15,17 +12,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<BankAuthDbContext>(options =>
-{
-    options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-    options.UseOpenIddict();
-});
+builder.AddConfiguration();
 
-builder.BindOptions<AuthOptions>();
-
-builder.ConfigureAuth().AddServices();
+builder.AddPersistance().ConfigureAuth().AddServices();
 
 var app = builder.Build();
+await app.UsePersistance();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

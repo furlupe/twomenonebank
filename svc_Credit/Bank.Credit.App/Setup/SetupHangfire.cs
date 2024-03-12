@@ -1,4 +1,5 @@
-﻿using Bank.Credit.App.Services;
+﻿using Bank.Common.Extensions;
+using Bank.Credit.App.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
 
@@ -11,7 +12,9 @@ namespace Bank.Credit.App.Setup
             builder
                 .Services.AddHangfire(config =>
                     config.UsePostgreSqlStorage(c =>
-                        c.UseNpgsqlConnection(builder.Configuration.GetConnectionString("Hangfire"))
+                        c.UseNpgsqlConnection(
+                            builder.GetConfigurationValue<DbConnection>().ConnectionString
+                        )
                     )
                 )
                 .AddHangfireServer();

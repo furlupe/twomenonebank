@@ -5,6 +5,8 @@ stages:
 variables:
   IMAGE_NAME: happypiece/twomenonebank
   CORE_TAG: core
+  AUTH_TAG: auth
+  CREDIT_TAG: credit
 
 .build:
   tags:
@@ -24,6 +26,7 @@ variables:
   before_script:
     - docker info
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - function
   after_script:
     - echo 'Initiating cleanup...'
     - docker system prune -f
@@ -37,6 +40,24 @@ build-core:
     - docker build . --rm -f svc_Core/Core.dockerfile -t $IMAGE_NAME:$CORE_TAG
     - echo 'Builds completed, pushing to registry...'
     - docker push $IMAGE_NAME:$CORE_TAG
+    - echo 'Build completed.'
+
+build-auth:
+  extends: .build
+  script:
+    - echo 'Building Auth service...'
+    - docker build . --rm -f svc_Auth/Auth.dockerfile -t $IMAGE_NAME:$AUTH_TAG
+    - echo 'Builds completed, pushing to registry...'
+    - docker push $IMAGE_NAME:$AUTH_TAG
+    - echo 'Build completed.'
+
+build-credit:
+  extends: .build
+  script:
+    - echo 'Building Credit service...'
+    - docker build . --rm -f svc_Credit/Credit.dockerfile -t $IMAGE_NAME:$CREDIT_TAG
+    - echo 'Builds completed, pushing to registry...'
+    - docker push $IMAGE_NAME:$CREDIT_TAG
     - echo 'Build completed.'
 
 deploy:
@@ -54,6 +75,8 @@ deploy:
     - echo 'Deploying services...'
     - docker compose create
     - docker cp $CORE_APPSETTINGS twomenonebank-core-app:/app/appsettings.Staging.json
+    - docker cp $AUTH_APPSETTINGS twomenonebank-auth-app:/app/appsettings.Staging.json
+    - docker cp $CREDIT_APPSETTINGS twomenonebank-credit-app:/app/appsettings.Staging.json
     - docker compose start
     - echo 'Deploy completed.'
   after_script:

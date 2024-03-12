@@ -1,5 +1,0 @@
-services:
-  credit_db:
-      extends:
-        file: ./postgresql/compose.yaml
-        service: credit_db

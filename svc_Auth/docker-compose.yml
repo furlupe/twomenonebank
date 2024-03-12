@@ -1,0 +1,24 @@
+version: "3.4"
+
+services:
+  auth-app:
+    container_name: twomenonebank-auth-app
+    image: happypiece/twomenonebank:auth
+    depends_on:
+      - db
+    ports:
+      - "0.0.0.0:28000:28000"
+      - "0.0.0.0:28001:28001"
+    environment:
+      ASPNETCORE_HTTP_PORT: https://+:28001
+      ASPNETCORE_URLS: http://+:28000
+      ASPNETCORE_ENVIRONMENT: Staging
+    restart: always
+    networks:
+      - twomenonebank-network
+
+volumes:
+  twomenonebank-db:
+
+networks:
+  twomenonebank-network:
