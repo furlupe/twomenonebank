@@ -58,6 +58,8 @@ namespace Bank.Auth.App.Setup.Extensions
                         new SymmetricSecurityKey(Convert.FromBase64String(authOptions.Key))
                     );
 
+                    options.SetIssuer(authOptions.Host);
+
                     options
                         .UseAspNetCore()
                         .DisableTransportSecurityRequirement()

@@ -1,0 +1,24 @@
+version: "3.4"
+
+services:
+  credit-app:
+    container_name: twomenonebank-credit-app
+    image: happypiece/twomenonebank:credit
+    depends_on:
+      - db
+    ports:
+      - "0.0.0.0:29000:29000"
+      - "0.0.0.0:29001:29001"
+    environment:
+      ASPNETCORE_HTTP_PORT: https://+:29001
+      ASPNETCORE_URLS: http://+:29000
+      ASPNETCORE_ENVIRONMENT: Staging
+    restart: always
+    networks:
+      - twomenonebank-network
+
+volumes:
+  twomenonebank-db:
+
+networks:
+  twomenonebank-network:
