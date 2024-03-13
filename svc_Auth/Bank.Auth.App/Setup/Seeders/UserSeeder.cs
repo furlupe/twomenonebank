@@ -28,7 +28,7 @@ namespace Bank.Auth.App.Setup.Seeders
 
             if (await manager.FindByNameAsync("amogus@mail.ru") == null)
             {
-                User user = new() { Email = "amogus@mail.ru", UserName = "amogus@mail.ru" };
+                User user = new() { Email = "amogus@mail.ru", UserName = "amogus@mail.ru", Role = Role.Admin.ToString() };
 
                 await manager.CreateAsync(user);
                 await manager.AddPasswordAsync(user, "balls");
