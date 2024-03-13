@@ -24,7 +24,7 @@ namespace Bank.Auth.App.Services.Auth.Validators
         {
             (string username, string password) = ExtractDataFromRequest(request);
 
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByEmailAsync(username);
             if (user == null)
             {
                 return _grantResultFactory.InvalidCredentials();

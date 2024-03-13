@@ -45,7 +45,7 @@ namespace Bank.Auth.App.Controllers
                 return BadRequest("Can't create Admin");
             }
 
-            var user = new User() { Email = registerDto.Email, UserName = registerDto.Email };
+            var user = new User() { Email = registerDto.Email, Name = registerDto.Username, UserName = registerDto.Email, Role = registerDto.Role.ToString() };
             var result = await _userManager.CreateAsync(user);
 
             if (!result.Succeeded)
@@ -58,7 +58,7 @@ namespace Bank.Auth.App.Controllers
             List<Claim> claims =
             [
                 new Claim(Claims.Subject, user.Id.ToString()),
-                new Claim(Claims.Name, user.UserName),
+                new Claim(Claims.Name, user.Email),
                 new Claim(ClaimTypes.Role, registerDto.Role.ToString()),
                 new Claim(BankClaims.Id, user.Id.ToString())
             ];
@@ -76,7 +76,11 @@ namespace Bank.Auth.App.Controllers
                 return Forbid();
             }
 
-            return await _userManager.Users.GetPage(new() { PageNumber = page }, user => new UserDto() { Id = user.Id, Email = user.Email });
+            return await _userManager.Users.GetPage(new() { PageNumber = page }, user =>
+            {
+                _ = Enum.TryParse(user.Role, out Role role);
+                return new UserDto() { Id = user.Id, Email = user.Email, Name = user.Name, Role= role };
+            });
         }
 
         private async Task<IActionResult> ToggleBan(Guid userId, bool on = true)
