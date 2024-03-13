@@ -32,12 +32,8 @@ var app = builder.Build();
 
 await app.UsePersistance();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsProduction())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
