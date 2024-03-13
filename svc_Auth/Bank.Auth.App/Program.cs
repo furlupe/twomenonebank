@@ -19,11 +19,8 @@ builder.AddPersistance().ConfigureAuth().AddServices();
 var app = builder.Build();
 await app.UsePersistance();
 
-if (!app.Environment.IsProduction())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

@@ -22,11 +22,8 @@ public static class FrontlineServicesSetup
 
     public static void UseFrontlineServices(this WebApplication app)
     {
-        if (!app.Environment.IsProduction())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.MapHealthChecks("/health");
 
