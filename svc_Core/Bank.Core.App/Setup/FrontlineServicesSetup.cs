@@ -22,7 +22,7 @@ public static class FrontlineServicesSetup
 
     public static void UseFrontlineServices(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        if (!app.Environment.IsProduction())
         {
             app.UseSwagger();
             app.UseSwaggerUI();

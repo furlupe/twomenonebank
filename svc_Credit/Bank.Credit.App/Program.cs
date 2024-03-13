@@ -3,6 +3,7 @@ using Bank.Auth.Shared.Policies.Handlers;
 using Bank.Common.Extensions;
 using Bank.Credit.App.Services;
 using Bank.Credit.App.Setup;
+using Bank.Credit.Persistance.Extensions;
 using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,7 +33,7 @@ var app = builder.Build();
 await app.UsePersistance();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

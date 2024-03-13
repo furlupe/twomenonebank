@@ -1,5 +1,6 @@
 ﻿using Bank.Common.Extensions;
 using Bank.Credit.App.Services;
+using Bank.Credit.Persistance.Extensions;
 using Hangfire;
 using Hangfire.PostgreSql;
 

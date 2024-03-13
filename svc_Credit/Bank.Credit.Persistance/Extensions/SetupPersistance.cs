@@ -1,8 +1,9 @@
-﻿using Bank.Common.Extensions;
-using Bank.Credit.Persistance;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Bank.Common.Extensions;
 
-namespace Bank.Credit.App.Setup
+namespace Bank.Credit.Persistance.Extensions
 {
     public static class SetupPersistance
     {
