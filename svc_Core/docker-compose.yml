@@ -12,7 +12,7 @@ services:
     environment:
       ASPNETCORE_HTTP_PORT: https://+:27001
       ASPNETCORE_URLS: http://+:27000
-      ASPNETCORE_ENVIRONMENT: Staging
+      ASPNETCORE_ENVIRONMENT: Development
     restart: always
     networks:
       - twomenonebank-network

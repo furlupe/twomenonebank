@@ -3,6 +3,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
 WORKDIR /source
 COPY . .
+
+ENV DOTNET_NUGET_SIGNATURE_VERIFICATION=false
+
 RUN ls -lA
 RUN dotnet restore "./svc_Core/Bank.Core.App/Bank.Core.App.csproj" --disable-parallel \
 && dotnet publish "./svc_Core/Bank.Core.App/Bank.Core.App.csproj" -c debug -o /app --no-restore
