@@ -36,63 +36,18 @@ class HomeViewModel(
 
             _uiState.update {
                 HomeState(
-                    userName = "Владимир Валерьевич",
-                    euroExchangeRate = "Евро: 12,12$ , 134,1$",
-                    dollarExchangeRate = "Доллар: 43, 45$ , 123",
-                    billsInfo = listOf(
-                        BillInfo(
-                            id = "0",
-                            number = "****2206",
-                            balance = "0,43$",
-                            type = "Сберегательный счёт",
-                            duration = "бессрочный"
-                        ),
-                        BillInfo(
-                            id = "1",
-                            number = "****2206",
-                            balance = "0,43$",
-                            type = "Сберегательный счёт",
-                            duration = "бессрочный"
-                        )
-                    ),
-                    creditsInfo = listOf()
+                    userName = userName,
+                    euroExchangeRate = "Евро: $euroExchangeRate$",
+                    dollarExchangeRate = "Доллар: $dollarExchangeRate$",
+                    billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1) else billsInfo,
+                    creditsInfo = if (creditsInfo.size > 2) creditsInfo.slice(0..1) else creditsInfo
                 )
             }
-
-            /*
-            * val billInfo = HomeItem(
-            infoBlockTitle = getString(R.string.title_bills),
-            openAllInfoButtonTitle = getString(R.string.title_all_bills),
-            infoBlocks = listOf(
-                InfoBlock(
-                    typeOfBill = "Сберегательный счёт",
-                    countOfMoney = "0,43$",
-                    billDuration = "бессрочный",
-                    numberOfBill = "****2206"
-                ),
-                InfoBlock(
-                    typeOfBill = "Сберегательный счёт",
-                    countOfMoney = "0,43$",
-                    billDuration = "бессрочный",
-                    numberOfBill = "****2206"
-                ),
-            )
-        )
-
-        val creditInfo = HomeItem(
-            infoBlockTitle = getString(R.string.title_credits),
-            openAllInfoButtonTitle = getString(R.string.title_all_credits),
-            infoBlocks = listOf(
-                InfoBlock(
-                    typeOfBill = "Сберегательный счёт",
-                    countOfMoney = "0,43$",
-                    billDuration = "бессрочный",
-                    numberOfBill = "****2206"
-                ),
-            )
-        )*/
         }
     }
+
+    fun createBill() {}
+    fun createCredit() {}
 }
 
 data class HomeState(

@@ -35,15 +35,8 @@
         <activity
             android:name=".ui.credit.AllCreditsActivity"
             android:exported="false" />
-
         <activity
-            android:name=".ui.bill.CreateBillActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.bill.BillInfoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.bill.AllBillsActivity"
+            android:name=".ui.bill.BillsActivity"
             android:exported="false" />
 
     </application>

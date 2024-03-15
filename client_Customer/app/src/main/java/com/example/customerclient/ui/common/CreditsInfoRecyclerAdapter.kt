@@ -1,4 +1,4 @@
-package com.example.customerclient.ui.bottombar.home
+package com.example.customerclient.ui.common
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.customerclient.R
 import com.example.customerclient.databinding.ItemCreditInfoBinding
+import com.example.customerclient.ui.bottombar.home.CreditInfo
 
 class CreditsInfoRecyclerAdapter(
     private val items: List<CreditInfo>,

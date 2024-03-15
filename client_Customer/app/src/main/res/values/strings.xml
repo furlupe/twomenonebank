@@ -17,4 +17,10 @@
     <string name="title_history">История</string>
     <string name="open_bill_title">Открыть счёт</string>
     <string name="take_out_loan_title">Взять кредит</string>
+    <string name="available">Доступно</string>
+    <string name="top_up">Внести деньги</string>
+    <string name="withdraw">Снять деньги</string>
+    <string name="transfer">Перевод на счёт</string>
+
+    <string name="title_bill_info">Информация о счёте</string>
 </resources>
