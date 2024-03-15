@@ -27,10 +27,10 @@ namespace Bank.Credit.App.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task Pay(Guid userId, Guid creditId, int amount)
+        public async Task Pay(Guid userId, Guid creditId)
         {
             var credit = await _dbContext.Credits.Include(x => x.Tariff).SingleAsync(x => x.User.Id == userId && x.Id == creditId);
-            credit.Pay(amount);
+            credit.Pay();
 
             await _dbContext.SaveChangesAsync();
         }

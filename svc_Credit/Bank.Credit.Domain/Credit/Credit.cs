@@ -68,9 +68,9 @@ namespace Bank.Credit.Domain.Credit
             }
         }
 
-        public void Pay(int amount)
+        public void Pay()
         {
-            var @event = new CreditPaymentMadeEvent(Id, amount, DateTime.UtcNow);
+            var @event = new CreditPaymentMadeEvent(Id, PeriodicPayment, DateTime.UtcNow);
             ApplyAndRecord(@event);
         }
 

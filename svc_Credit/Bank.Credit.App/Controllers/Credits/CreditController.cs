@@ -28,9 +28,9 @@ namespace Bank.Credit.App.Controllers.Credits
 
         [HttpPost("{creditId}/pay")]
         [Authorize(Policy = Policies.CreateUserIfNeeded)]
-        public async Task<IActionResult> Pay(Guid creditId, [FromBody] CreditPaymentDto dto)
+        public async Task<IActionResult> Pay(Guid creditId)
         {
-            await _creditService.Pay(User.GetId(), creditId, dto.Amount);
+            await _creditService.Pay(User.GetId(), creditId);
             return Ok();
         }
 
