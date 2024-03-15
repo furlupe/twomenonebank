@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.customerclient.R
 import com.example.customerclient.databinding.FragmentHomeBinding
 import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithConfirmAndDismissButtons
 import com.example.customerclient.ui.common.BillsInfoRecyclerAdapter
@@ -109,7 +108,7 @@ class HomeFragment : Fragment() {
         creditsInfo: List<CreditInfo>,
         onCreateCreditClick: () -> Unit
     ) {
-        binding.addCreditButton.setOnClickListener { navigateToCreateCreditActivity() }
+        binding.addCreditButton.setOnClickListener { /*navigateToCreateCreditActivity()*/ }
 
         when (creditsInfo.size) {
             0 -> {
@@ -118,7 +117,7 @@ class HomeFragment : Fragment() {
                 binding.createNewCreditCard.visibility = View.VISIBLE
 
                 binding.createNewCreditCard.setOnClickListener {
-                    navigateToCreateCreditActivity()
+                    /*navigateToCreateCreditActivity()*/
                 }
             }
 
@@ -134,7 +133,7 @@ class HomeFragment : Fragment() {
                 binding.createNewCreditCard.visibility = View.GONE
 
                 binding.openAllCreditsButton.setOnClickListener {
-                    navigateToAllCreditsActivity()
+                    navigateToCreditsActivity("", "ALL")
                 }
             }
         }
@@ -145,7 +144,7 @@ class HomeFragment : Fragment() {
             creditInfoRecyclerView.adapter =
                 CreditsInfoRecyclerAdapter(
                     items = creditsInfo,
-                    onCreditClick = { creditId -> navigateToCreditInfoActivity(creditId) }
+                    onCreditClick = { creditId -> navigateToCreditsActivity(creditId, "INFO") }
                 )
         }
     }
@@ -165,22 +164,18 @@ class HomeFragment : Fragment() {
         dialog.show(manager, "addBillAlertDialog")
     }
 
-    private fun navigateToCreateCreditActivity() {
-        findNavController().navigate(R.id.action_navigation_home_to_createCreditActivity)
-    }
-
-    private fun navigateToAllCreditsActivity() {
-        findNavController().navigate(R.id.action_navigation_home_to_allCreditsActivity)
-    }
-
-    private fun navigateToCreditInfoActivity(creditId: String) {
+    private fun navigateToCreditsActivity(creditId: String, screenCreditType: String) {
         val action =
-            HomeFragmentDirections.actionNavigationHomeToCreditInfoActivity(creditId)
+            HomeFragmentDirections.actionNavigationHomeToCreditsActivity(
+                creditId,
+                screenCreditType
+            )
         findNavController().navigate(action)
     }
 
-    private fun navigateToBillsActivity(billId: String, screenType: String) {
-        val action = HomeFragmentDirections.actionNavigationHomeToBillsActivity(billId, screenType)
+    private fun navigateToBillsActivity(billId: String, screenBillType: String) {
+        val action =
+            HomeFragmentDirections.actionNavigationHomeToBillsActivity(billId, screenBillType)
         findNavController().navigate(action)
     }
 }

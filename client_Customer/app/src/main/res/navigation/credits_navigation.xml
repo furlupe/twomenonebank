@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/credits_navigation"
+    app:startDestination="@+id/navigationAllCredits">
+
+    <fragment
+        android:id="@+id/navigationAllCredits"
+        android:name="com.example.customerclient.ui.credit.all.AllCreditsFragment"
+        android:label="@string/title_all_credits"
+        tools:layout="@layout/fragment_all_credits">
+        <action
+            android:id="@+id/action_navigationAllCredits_to_navigationCreditInfo"
+            app:destination="@id/navigationCreditInfo" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigationCreditInfo"
+        android:name="com.example.customerclient.ui.credit.info.CreditInfoFragment"
+        android:label="@string/title_credit_info"
+        tools:layout="@layout/fragment_credit_info">
+        <argument
+            android:name="creditId"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

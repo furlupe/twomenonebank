@@ -20,6 +20,8 @@ import com.example.customerclient.ui.auth.signin.SignInViewModel
 import com.example.customerclient.ui.bill.all.AllBillsViewModel
 import com.example.customerclient.ui.bill.info.BillInfoViewModel
 import com.example.customerclient.ui.bottombar.home.HomeViewModel
+import com.example.customerclient.ui.credit.all.AllCreditsViewModel
+import com.example.customerclient.ui.credit.info.CreditInfoViewModel
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -66,6 +68,7 @@ val appModule = module {
     }
 
     viewModel { SignInViewModel() }
+
     viewModel { AllBillsViewModel(getUserBillsInfoUseCase = get()) }
     viewModel { (handle: SavedStateHandle) ->
         BillInfoViewModel(
@@ -73,6 +76,9 @@ val appModule = module {
             getBillInfoUseCase = get()
         )
     }
+
+    viewModel { (handle: SavedStateHandle) -> CreditInfoViewModel(handle) }
+    viewModel { AllCreditsViewModel() }
     //end region
 }
 

@@ -1,7 +1,6 @@
 package com.example.customerclient.ui.bill
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navArgs
@@ -18,8 +17,7 @@ class BillsActivity : AppCompatActivity(), BillsListener {
         binding = ActivityBillsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.d("SCREEN_TYPE", args.screenType)
-        if (args.screenType == "INFO") {
+        if (args.screenBillType == "INFO") {
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_bills) as NavHostFragment
 
@@ -40,7 +38,7 @@ class BillsActivity : AppCompatActivity(), BillsListener {
         return args.billId
     }
 
-    override fun getStartScreenType(): String {
-        return args.screenType
+    override fun getStartBillScreenType(): String {
+        return args.screenBillType
     }
 }

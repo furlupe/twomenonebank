@@ -68,7 +68,7 @@ class BillInfoFragment : Fragment() {
     ) {
         // Кнопка назад
         binding.backBillInfoButton.setOnClickListener {
-            if (callback?.getStartScreenType() == "ALL") findNavController().popBackStack()
+            if (callback?.getStartBillScreenType() == "ALL") findNavController().popBackStack()
             else callback?.backToMainFragment()
         }
 

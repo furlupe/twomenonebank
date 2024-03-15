@@ -27,13 +27,7 @@
             android:name=".ui.bottombar.BottomBarActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.credit.CreateCreditActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.credit.CreditInfoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.credit.AllCreditsActivity"
+            android:name=".ui.credit.CreditsActivity"
             android:exported="false" />
         <activity
             android:name=".ui.bill.BillsActivity"
