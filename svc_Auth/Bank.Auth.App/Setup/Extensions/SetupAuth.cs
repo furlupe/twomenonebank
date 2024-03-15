@@ -7,13 +7,12 @@ using Bank.Common.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
-using System.Security.Claims;
 
 namespace Bank.Auth.App.Setup.Extensions
 {
     public static class SetupAuth
     {
-        public static WebApplicationBuilder ConfigureAuth(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder AddAuth(this WebApplicationBuilder builder)
         {
             var services = builder.Services;
 

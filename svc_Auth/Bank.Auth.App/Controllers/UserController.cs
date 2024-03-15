@@ -26,6 +26,27 @@ namespace Bank.Auth.App.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet("me")]
+        public async Task<ActionResult<UserDto>> GetMe()
+        {
+            var me = await _userManager.FindByIdAsync(User.GetId().ToString());
+
+            if (me == null)
+            {
+                return BadRequest("An authorized request made by no account...what?");
+            }
+
+            _ = Enum.TryParse(me.Role, out Role role);
+
+            return Ok(new UserDto()
+            {
+                Id = me.Id,
+                Email = me.Email,
+                Name = me.Name,
+                Role = role
+            });
+        }
+
         [HttpPost("{userId}/ban")]
         public Task<IActionResult> Ban(Guid userId) => ToggleBan(userId, true);
 
@@ -76,7 +97,7 @@ namespace Bank.Auth.App.Controllers
                 return Forbid();
             }
 
-            return await _userManager.Users.GetPage(new() { PageNumber = page }, user =>
+            return await _userManager.Users.Where(x => x.Id != User.GetId()).GetPage(new() { PageNumber = page }, user =>
             {
                 _ = Enum.TryParse(user.Role, out Role role);
                 return new UserDto() { Id = user.Id, Email = user.Email, Name = user.Name, Role= role };
@@ -90,7 +111,7 @@ namespace Bank.Auth.App.Controllers
                 return Forbid();
             }
 
-            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.Id == userId);
+            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.Id == userId && x.Id != User.GetId());
 
             if (user == null)
             {
