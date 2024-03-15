@@ -8,8 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.customerclient.R
 import com.example.customerclient.databinding.FragmentHomeBinding
 import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithConfirmAndDismissButtons
+import com.example.customerclient.ui.common.AlertDialogWithEditTextField
 import com.example.customerclient.ui.common.BillsInfoRecyclerAdapter
 import com.example.customerclient.ui.common.CreditsInfoRecyclerAdapter
 import kotlinx.coroutines.launch
@@ -38,7 +40,7 @@ class HomeFragment : Fragment() {
                     creditsInfo = homeState.creditsInfo,
 
                     onCreateBillClick = { viewModel.createBill() },
-                    onCreateCreditClick = { viewModel.createCredit() }
+                    onCreateCreditClick = { amountOfCredit -> viewModel.createCredit(amountOfCredit) }
                 )
             }
         }
@@ -52,7 +54,7 @@ class HomeFragment : Fragment() {
         billsInfo: List<BillInfo>,
         creditsInfo: List<CreditInfo>,
         onCreateBillClick: () -> Unit,
-        onCreateCreditClick: () -> Unit
+        onCreateCreditClick: (String) -> Unit
     ) {
         binding.userWelcome.text = "Здравствуйте,\n$name"
         binding.exchangeRate.text = "$euro\n$dollar"
@@ -106,9 +108,9 @@ class HomeFragment : Fragment() {
 
     private fun creditsCardInfoContent(
         creditsInfo: List<CreditInfo>,
-        onCreateCreditClick: () -> Unit
+        onCreateCreditClick: (String) -> Unit
     ) {
-        binding.addCreditButton.setOnClickListener { /*navigateToCreateCreditActivity()*/ }
+        binding.addCreditButton.setOnClickListener { showCreateCreditDialog(onCreateCreditClick) }
 
         when (creditsInfo.size) {
             0 -> {
@@ -117,7 +119,7 @@ class HomeFragment : Fragment() {
                 binding.createNewCreditCard.visibility = View.VISIBLE
 
                 binding.createNewCreditCard.setOnClickListener {
-                    /*navigateToCreateCreditActivity()*/
+                    showCreateCreditDialog(onCreateCreditClick)
                 }
             }
 
@@ -153,7 +155,7 @@ class HomeFragment : Fragment() {
         onCreateClick: () -> Unit,
     ) {
         val dialog = AlertDialogWithConfirmAndDismissButtons(
-            title = "Аннуитетный счёт",
+            title = "Сберегательный счёт",
             description = "Валюта: Российский рубль\nНачисление процентов: На ежедневный остаток\nВаша ставка: 12%",
             onPositiveButtonClick = onCreateClick,
             positiveButtonText = "Создать",
@@ -162,6 +164,19 @@ class HomeFragment : Fragment() {
 
         val manager = parentFragmentManager
         dialog.show(manager, "addBillAlertDialog")
+    }
+
+    private fun showCreateCreditDialog(
+        onCreateClick: (String) -> Unit,
+    ) {
+        val dialog = AlertDialogWithEditTextField(
+            title = "Аннуитетный кредит",
+            description = getString(R.string.credit_amount),
+            onPositiveButtonClick = onCreateClick,
+        )
+
+        val manager = parentFragmentManager
+        dialog.show(manager, "addCreditAlertDialog")
     }
 
     private fun navigateToCreditsActivity(creditId: String, screenCreditType: String) {

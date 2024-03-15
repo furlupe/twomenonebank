@@ -2,4 +2,7 @@
 <resources>
     <string name="available">Доступно</string>
     <string name="top_up">Внести деньги</string>
+    <string name="top_up_amount">Сумма зачисления, ₽</string>
+    <string name="withdraw_amount">Сумма снятия, ₽</string>
+    <string name="credit_amount">Сумма кредита, ₽</string>
 </resources>

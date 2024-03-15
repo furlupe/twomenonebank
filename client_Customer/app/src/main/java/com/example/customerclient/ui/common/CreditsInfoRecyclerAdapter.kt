@@ -21,6 +21,7 @@ class CreditsInfoRecyclerAdapter(
         val balance = binding.balanceCreditTitle
         val nextWithdrawDate = binding.nextWithdrawDateTitle
         val nextFee = binding.nextFeeTitle
+        val divider = binding.creditDivider
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreditInfoViewHolder {
@@ -39,5 +40,9 @@ class CreditsInfoRecyclerAdapter(
         holder.balance.text = items[position].balance
         holder.nextWithdrawDate.text = items[position].nextWithdrawDate
         holder.nextFee.text = items[position].nextFee
+
+        if (position == itemCount - 1) {
+            holder.divider.visibility = View.GONE
+        }
     }
 }

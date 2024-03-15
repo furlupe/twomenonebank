@@ -10,11 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.customerclient.R
 import com.example.customerclient.databinding.FragmentBillInfoBinding
 import com.example.customerclient.ui.bill.BillsListener
-import com.example.customerclient.ui.bill.info.components.AlertDialogWithEditTextField
 import com.example.customerclient.ui.bill.info.components.BillsHistoryRecyclerAdapter
 import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithConfirmAndDismissButtons
+import com.example.customerclient.ui.common.AlertDialogWithEditTextField
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -22,6 +23,8 @@ import org.koin.core.parameter.parametersOf
 class BillInfoFragment : Fragment() {
     private lateinit var binding: FragmentBillInfoBinding
     private var callback: BillsListener? = null
+
+    private val viewModel: BillInfoViewModel by viewModel { parametersOf(Bundle(), "vm1") }
 
     override fun onAttach(context: Context) {
         callback = activity as BillsListener
@@ -38,8 +41,6 @@ class BillInfoFragment : Fragment() {
         binding = FragmentBillInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val viewModel: BillInfoViewModel by viewModel { parametersOf(Bundle(), "vm1") }
-
         lifecycleScope.launch {
             viewModel.uiState.collect { billInfoState ->
                 billInfoFragmentContent(
@@ -53,6 +54,7 @@ class BillInfoFragment : Fragment() {
                 )
             }
         }
+
         return root
     }
 
@@ -79,7 +81,7 @@ class BillInfoFragment : Fragment() {
         binding.topUpButton.setOnClickListener {
             showAlertDialogForChargeAndTopUp(
                 title = "Пополнить счёт",
-                editTextTitle = "Сумма зачисления, ₽",
+                editTextTitleResId = R.string.top_up_amount,
                 onPositiveButtonClick = onTopUpBill,
                 tag = "topUpAlertDialog"
             )
@@ -89,7 +91,7 @@ class BillInfoFragment : Fragment() {
         binding.withdrawMoneyButton.setOnClickListener {
             showAlertDialogForChargeAndTopUp(
                 title = "Снять деньги со счёта",
-                editTextTitle = "Сумма снятия, ₽",
+                editTextTitleResId = R.string.withdraw_amount,
                 onPositiveButtonClick = onChargeBill,
                 tag = "withdrawAlertDialog"
             )
@@ -126,13 +128,13 @@ class BillInfoFragment : Fragment() {
 
     private fun showAlertDialogForChargeAndTopUp(
         title: String,
-        editTextTitle: String,
+        editTextTitleResId: Int,
         onPositiveButtonClick: (String) -> Unit,
         tag: String
     ) {
         val dialogWithEditText = AlertDialogWithEditTextField(
             title = title,
-            editTextTitle = editTextTitle,
+            description = getString(editTextTitleResId),
             onPositiveButtonClick = onPositiveButtonClick
         )
         val manager = parentFragmentManager

@@ -22,6 +22,7 @@ class BillsInfoRecyclerAdapter(
         val balance = binding.balanceBillTitle
         val type = binding.typeOfBillTitle
         val duration = binding.billDurationTitle
+        val divider = binding.billDivider
     }
 
     override fun onCreateViewHolder(
@@ -46,5 +47,9 @@ class BillsInfoRecyclerAdapter(
         holder.balance.text = items[position].balance
         holder.type.text = items[position].type
         holder.duration.text = items[position].duration
+
+        if (position == itemCount - 1) {
+            holder.divider.visibility = View.GONE
+        }
     }
 }

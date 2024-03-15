@@ -12,6 +12,7 @@ import com.example.customerclient.domain.repositories.ExchangeRateRepository
 import com.example.customerclient.domain.repositories.UserRepository
 import com.example.customerclient.domain.usecases.bill.GetBillInfoUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
+import com.example.customerclient.domain.usecases.credit.GetCreditInfoUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoUseCase
 import com.example.customerclient.domain.usecases.exchangeRate.GetDollarExchangeRateUseCase
 import com.example.customerclient.domain.usecases.exchangeRate.GetEuroExchangeRateUseCase
@@ -47,6 +48,7 @@ val appModule = module {
 
     // - Credit
     single<GetUserCreditsInfoUseCase> { GetUserCreditsInfoUseCase(creditRepository = get()) }
+    single<GetCreditInfoUseCase> { GetCreditInfoUseCase(creditRepository = get()) }
 
     // - ExchangeRate
     single<GetDollarExchangeRateUseCase> { GetDollarExchangeRateUseCase(exchangeRateRepository = get()) }
@@ -77,8 +79,13 @@ val appModule = module {
         )
     }
 
-    viewModel { (handle: SavedStateHandle) -> CreditInfoViewModel(handle) }
-    viewModel { AllCreditsViewModel() }
+    viewModel { (handle: SavedStateHandle) ->
+        CreditInfoViewModel(
+            handle,
+            getCreditInfoUseCase = get()
+        )
+    }
+    viewModel { AllCreditsViewModel(getUserCreditsInfoUseCase = get()) }
     //end region
 }
 

@@ -21,6 +21,8 @@ class AllBillsFragment : Fragment() {
     private lateinit var binding: FragmentAllBillsBinding
     private var callback: BillsListener? = null
 
+    val viewModel: AllBillsViewModel by viewModel()
+
     override fun onAttach(context: Context) {
         callback = activity as BillsListener
         super.onAttach(context)
@@ -31,8 +33,6 @@ class AllBillsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel: AllBillsViewModel by viewModel()
-
         binding = FragmentAllBillsBinding.inflate(layoutInflater)
         val root: View = binding.root
 

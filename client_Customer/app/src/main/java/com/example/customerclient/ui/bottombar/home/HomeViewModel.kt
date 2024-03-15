@@ -47,7 +47,7 @@ class HomeViewModel(
     }
 
     fun createBill() {}
-    fun createCredit() {}
+    fun createCredit(amount: String) {}
 }
 
 data class HomeState(
