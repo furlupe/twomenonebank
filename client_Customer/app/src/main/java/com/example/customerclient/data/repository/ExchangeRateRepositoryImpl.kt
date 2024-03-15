@@ -5,11 +5,11 @@ import com.example.customerclient.domain.repositories.ExchangeRateRepository
 import com.example.customerclient.euroExchangeRate
 
 class ExchangeRateRepositoryImpl : ExchangeRateRepository {
-    override fun getDollarExchangeRate(): Double {
+    override suspend fun getDollarExchangeRate(): Double {
         return dollarExchangeRate
     }
 
-    override fun getEuroExchangeRate(): Double {
+    override suspend fun getEuroExchangeRate(): Double {
         return euroExchangeRate
     }
 }

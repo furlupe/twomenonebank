@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/all_bills_navigation"
+    app:startDestination="@id/navigationAllBills">
+
+    <fragment
+        android:id="@+id/navigationAllBills"
+        android:name="com.example.customerclient.ui.bill.all.AllBillsFragment"
+        android:label="@string/title_all_bills"
+        tools:layout="@layout/fragment_all_bills">
+        <action
+            android:id="@+id/action_navigationAllBills_to_navigationBillInfo"
+            app:destination="@id/navigationBillInfo" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigationBillInfo"
+        android:name="com.example.customerclient.ui.bill.info.BillInfoFragment"
+        android:label="@string/title_bill_info"
+        tools:layout="@layout/fragment_bill_info">
+        <argument
+            android:name="billId"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

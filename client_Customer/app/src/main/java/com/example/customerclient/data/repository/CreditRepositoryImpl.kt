@@ -5,7 +5,7 @@ import com.example.customerclient.domain.repositories.CreditRepository
 import com.example.customerclient.ui.bottombar.home.CreditInfo
 
 class CreditRepositoryImpl : CreditRepository {
-    override fun getUserCreditsInfo(userId: String): List<CreditInfo> {
+    override suspend fun getUserCreditsInfo(userId: String): List<CreditInfo> {
         return creditsInfo
     }
 }

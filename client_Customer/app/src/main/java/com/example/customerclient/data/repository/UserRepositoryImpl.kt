@@ -4,7 +4,8 @@ import com.example.customerclient.domain.repositories.UserRepository
 import com.example.customerclient.userName
 
 class UserRepositoryImpl : UserRepository {
-    override fun getUserName(userId: String): String {
+    override suspend fun getUserName(userId: String): String {
         return userName
     }
+
 }

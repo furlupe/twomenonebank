@@ -14,22 +14,15 @@
             android:id="@+id/action_navigation_home_to_createCreditActivity"
             app:destination="@id/createCreditActivity" />
         <action
-            android:id="@+id/action_navigation_home_to_createBillActivity"
-            app:destination="@id/createBillActivity" />
-        <action
             android:id="@+id/action_navigation_home_to_allCreditsActivity"
             app:destination="@id/allCreditsActivity" />
         <action
-            android:id="@+id/action_navigation_home_to_allBillsActivity"
-            app:destination="@id/allBillsActivity" />
+            android:id="@+id/action_navigation_home_to_billsActivity"
+            app:destination="@id/billsActivity" />
         <action
             android:id="@+id/action_navigation_home_to_creditInfoActivity"
             app:destination="@id/creditInfoActivity" />
-        <action
-            android:id="@+id/action_navigation_home_to_billInfoActivity"
-            app:destination="@id/billInfoActivity" />
     </fragment>
-
 
     <fragment
         android:id="@+id/navigation_history"
@@ -43,26 +36,19 @@
         android:label="CreateCreditActivity" />
 
     <activity
-        android:id="@+id/createBillActivity"
-        android:name="com.example.customerclient.ui.bill.CreateBillActivity"
-        android:label="CreateBillActivity" />
-
-    <activity
         android:id="@+id/allCreditsActivity"
         android:name="com.example.customerclient.ui.credit.AllCreditsActivity"
         android:label="AllCreditsActivity" />
 
     <activity
-        android:id="@+id/allBillsActivity"
-        android:name="com.example.customerclient.ui.bill.AllBillsActivity"
-        android:label="AllBillsActivity" />
-
-    <activity
-        android:id="@+id/billInfoActivity"
-        android:name="com.example.customerclient.ui.bill.BillInfoActivity"
-        android:label="BillInfoActivity">
+        android:id="@+id/billsActivity"
+        android:name="com.example.customerclient.ui.bill.BillsActivity"
+        android:label="BillsActivity">
         <argument
             android:name="billId"
+            app:argType="string" />
+        <argument
+            android:name="screenType"
             app:argType="string" />
     </activity>
 
