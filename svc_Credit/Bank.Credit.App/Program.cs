@@ -5,6 +5,7 @@ using Bank.Credit.App.Services;
 using Bank.Credit.App.Setup;
 using Bank.Credit.Persistance.Extensions;
 using Hangfire;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(o => o.AddAuth().UseXmlComments(Assembly.GetExecutingAssembly()));
 
 builder.AddConfiguration();
 

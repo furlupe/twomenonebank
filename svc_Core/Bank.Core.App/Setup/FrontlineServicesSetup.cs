@@ -1,6 +1,8 @@
 ﻿using Bank.Auth.Shared.Extensions;
 using Bank.Auth.Shared.Policies.Handlers;
+using Bank.Common.Extensions;
 using Bank.Core.App.Services;
+using System.Reflection;
 
 namespace Bank.Core.App.Setup;
 
@@ -15,7 +17,7 @@ public static class FrontlineServicesSetup
         services.AddScoped<IUserService, UserService>();
         services.AddControllers();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(o => o.AddAuth().UseXmlComments(Assembly.GetExecutingAssembly()));
 
         return builder;
     }
