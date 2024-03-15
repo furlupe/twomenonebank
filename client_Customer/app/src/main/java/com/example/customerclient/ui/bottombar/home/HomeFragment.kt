@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customerclient.R
 import com.example.customerclient.databinding.FragmentHomeBinding
 import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithConfirmAndDismissButtons
+import com.example.customerclient.ui.common.AlertDialogWithEditTextField
 import com.example.customerclient.ui.common.BillsInfoRecyclerAdapter
 import com.example.customerclient.ui.common.CreditsInfoRecyclerAdapter
 import kotlinx.coroutines.launch
@@ -39,7 +40,7 @@ class HomeFragment : Fragment() {
                     creditsInfo = homeState.creditsInfo,
 
                     onCreateBillClick = { viewModel.createBill() },
-                    onCreateCreditClick = { viewModel.createCredit() }
+                    onCreateCreditClick = { amountOfCredit -> viewModel.createCredit(amountOfCredit) }
                 )
             }
         }
@@ -53,7 +54,7 @@ class HomeFragment : Fragment() {
         billsInfo: List<BillInfo>,
         creditsInfo: List<CreditInfo>,
         onCreateBillClick: () -> Unit,
-        onCreateCreditClick: () -> Unit
+        onCreateCreditClick: (String) -> Unit
     ) {
         binding.userWelcome.text = "Здравствуйте,\n$name"
         binding.exchangeRate.text = "$euro\n$dollar"
@@ -107,9 +108,9 @@ class HomeFragment : Fragment() {
 
     private fun creditsCardInfoContent(
         creditsInfo: List<CreditInfo>,
-        onCreateCreditClick: () -> Unit
+        onCreateCreditClick: (String) -> Unit
     ) {
-        binding.addCreditButton.setOnClickListener { navigateToCreateCreditActivity() }
+        binding.addCreditButton.setOnClickListener { showCreateCreditDialog(onCreateCreditClick) }
 
         when (creditsInfo.size) {
             0 -> {
@@ -118,7 +119,7 @@ class HomeFragment : Fragment() {
                 binding.createNewCreditCard.visibility = View.VISIBLE
 
                 binding.createNewCreditCard.setOnClickListener {
-                    navigateToCreateCreditActivity()
+                    showCreateCreditDialog(onCreateCreditClick)
                 }
             }
 
@@ -134,7 +135,7 @@ class HomeFragment : Fragment() {
                 binding.createNewCreditCard.visibility = View.GONE
 
                 binding.openAllCreditsButton.setOnClickListener {
-                    navigateToAllCreditsActivity()
+                    navigateToCreditsActivity("", "ALL")
                 }
             }
         }
@@ -145,7 +146,7 @@ class HomeFragment : Fragment() {
             creditInfoRecyclerView.adapter =
                 CreditsInfoRecyclerAdapter(
                     items = creditsInfo,
-                    onCreditClick = { creditId -> navigateToCreditInfoActivity(creditId) }
+                    onCreditClick = { creditId -> navigateToCreditsActivity(creditId, "INFO") }
                 )
         }
     }
@@ -154,7 +155,7 @@ class HomeFragment : Fragment() {
         onCreateClick: () -> Unit,
     ) {
         val dialog = AlertDialogWithConfirmAndDismissButtons(
-            title = "Аннуитетный счёт",
+            title = "Сберегательный счёт",
             description = "Валюта: Российский рубль\nНачисление процентов: На ежедневный остаток\nВаша ставка: 12%",
             onPositiveButtonClick = onCreateClick,
             positiveButtonText = "Создать",
@@ -165,22 +166,31 @@ class HomeFragment : Fragment() {
         dialog.show(manager, "addBillAlertDialog")
     }
 
-    private fun navigateToCreateCreditActivity() {
-        findNavController().navigate(R.id.action_navigation_home_to_createCreditActivity)
+    private fun showCreateCreditDialog(
+        onCreateClick: (String) -> Unit,
+    ) {
+        val dialog = AlertDialogWithEditTextField(
+            title = "Аннуитетный кредит",
+            description = getString(R.string.credit_amount),
+            onPositiveButtonClick = onCreateClick,
+        )
+
+        val manager = parentFragmentManager
+        dialog.show(manager, "addCreditAlertDialog")
     }
 
-    private fun navigateToAllCreditsActivity() {
-        findNavController().navigate(R.id.action_navigation_home_to_allCreditsActivity)
-    }
-
-    private fun navigateToCreditInfoActivity(creditId: String) {
+    private fun navigateToCreditsActivity(creditId: String, screenCreditType: String) {
         val action =
-            HomeFragmentDirections.actionNavigationHomeToCreditInfoActivity(creditId)
+            HomeFragmentDirections.actionNavigationHomeToCreditsActivity(
+                creditId,
+                screenCreditType
+            )
         findNavController().navigate(action)
     }
 
-    private fun navigateToBillsActivity(billId: String, screenType: String) {
-        val action = HomeFragmentDirections.actionNavigationHomeToBillsActivity(billId, screenType)
+    private fun navigateToBillsActivity(billId: String, screenBillType: String) {
+        val action =
+            HomeFragmentDirections.actionNavigationHomeToBillsActivity(billId, screenBillType)
         findNavController().navigate(action)
     }
 }

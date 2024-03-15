@@ -3,5 +3,5 @@ package com.example.customerclient.ui.bill
 interface BillsListener {
     fun backToMainFragment()
     fun getBillId(): String
-    fun getStartScreenType(): String
+    fun getStartBillScreenType(): String
 }

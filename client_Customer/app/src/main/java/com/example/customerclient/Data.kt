@@ -17,6 +17,20 @@ val creditsInfo = listOf<CreditInfo>(
         balance = "40000 ₽",
         nextWithdrawDate = "08.03.2024",
         nextFee = "2000 ₽"
+    ),
+    CreditInfo(
+        id = "0",
+        type = "Аннуитетный кредит",
+        balance = "40000 ₽",
+        nextWithdrawDate = "08.03.2024",
+        nextFee = "2000 ₽"
+    ),
+    CreditInfo(
+        id = "0",
+        type = "Аннуитетный кредит",
+        balance = "40000 ₽",
+        nextWithdrawDate = "08.03.2024",
+        nextFee = "2000 ₽"
     )
 )
 val billsInfo = listOf<BillInfo>(
@@ -169,7 +183,7 @@ val billsInfo = listOf<BillInfo>(
     )
 )
 
-val billHistory = listOf<BillHistory>(
+val billHistory = listOf(
     BillHistory(
         type = HistoryOperationType.WITHDRAW,
         amount = "10000",

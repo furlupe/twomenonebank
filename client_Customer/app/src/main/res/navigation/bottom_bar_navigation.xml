@@ -11,17 +11,11 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_navigation_home_to_createCreditActivity"
-            app:destination="@id/createCreditActivity" />
-        <action
-            android:id="@+id/action_navigation_home_to_allCreditsActivity"
-            app:destination="@id/allCreditsActivity" />
+            android:id="@+id/action_navigation_home_to_creditsActivity"
+            app:destination="@id/creditsActivity" />
         <action
             android:id="@+id/action_navigation_home_to_billsActivity"
             app:destination="@id/billsActivity" />
-        <action
-            android:id="@+id/action_navigation_home_to_creditInfoActivity"
-            app:destination="@id/creditInfoActivity" />
     </fragment>
 
     <fragment
@@ -31,16 +25,6 @@
         tools:layout="@layout/fragment_history" />
 
     <activity
-        android:id="@+id/createCreditActivity"
-        android:name="com.example.customerclient.ui.credit.CreateCreditActivity"
-        android:label="CreateCreditActivity" />
-
-    <activity
-        android:id="@+id/allCreditsActivity"
-        android:name="com.example.customerclient.ui.credit.AllCreditsActivity"
-        android:label="AllCreditsActivity" />
-
-    <activity
         android:id="@+id/billsActivity"
         android:name="com.example.customerclient.ui.bill.BillsActivity"
         android:label="BillsActivity">
@@ -48,16 +32,19 @@
             android:name="billId"
             app:argType="string" />
         <argument
-            android:name="screenType"
+            android:name="screenBillType"
             app:argType="string" />
     </activity>
 
     <activity
-        android:id="@+id/creditInfoActivity"
-        android:name="com.example.customerclient.ui.credit.CreditInfoActivity"
-        android:label="CreditInfoActivity">
+        android:id="@+id/creditsActivity"
+        android:name="com.example.customerclient.ui.credit.CreditsActivity"
+        android:label="CreditsActivity">
         <argument
             android:name="creditId"
+            app:argType="string" />
+        <argument
+            android:name="screenCreditType"
             app:argType="string" />
     </activity>
 </navigation>

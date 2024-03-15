@@ -23,4 +23,8 @@
     <string name="transfer">Перевод на счёт</string>
 
     <string name="title_bill_info">Информация о счёте</string>
+    <string name="title_credit_info">Информация о кредите</string>
+    <string name="top_up_amount">Сумма зачисления, ₽</string>
+    <string name="withdraw_amount">Сумма снятия, ₽</string>
+    <string name="credit_amount">Сумма кредита, ₽</string>
 </resources>

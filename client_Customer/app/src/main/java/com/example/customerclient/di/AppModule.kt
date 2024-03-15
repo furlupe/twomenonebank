@@ -12,6 +12,7 @@ import com.example.customerclient.domain.repositories.ExchangeRateRepository
 import com.example.customerclient.domain.repositories.UserRepository
 import com.example.customerclient.domain.usecases.bill.GetBillInfoUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
+import com.example.customerclient.domain.usecases.credit.GetCreditInfoUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoUseCase
 import com.example.customerclient.domain.usecases.exchangeRate.GetDollarExchangeRateUseCase
 import com.example.customerclient.domain.usecases.exchangeRate.GetEuroExchangeRateUseCase
@@ -20,6 +21,8 @@ import com.example.customerclient.ui.auth.signin.SignInViewModel
 import com.example.customerclient.ui.bill.all.AllBillsViewModel
 import com.example.customerclient.ui.bill.info.BillInfoViewModel
 import com.example.customerclient.ui.bottombar.home.HomeViewModel
+import com.example.customerclient.ui.credit.all.AllCreditsViewModel
+import com.example.customerclient.ui.credit.info.CreditInfoViewModel
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -45,6 +48,7 @@ val appModule = module {
 
     // - Credit
     single<GetUserCreditsInfoUseCase> { GetUserCreditsInfoUseCase(creditRepository = get()) }
+    single<GetCreditInfoUseCase> { GetCreditInfoUseCase(creditRepository = get()) }
 
     // - ExchangeRate
     single<GetDollarExchangeRateUseCase> { GetDollarExchangeRateUseCase(exchangeRateRepository = get()) }
@@ -66,6 +70,7 @@ val appModule = module {
     }
 
     viewModel { SignInViewModel() }
+
     viewModel { AllBillsViewModel(getUserBillsInfoUseCase = get()) }
     viewModel { (handle: SavedStateHandle) ->
         BillInfoViewModel(
@@ -73,6 +78,14 @@ val appModule = module {
             getBillInfoUseCase = get()
         )
     }
+
+    viewModel { (handle: SavedStateHandle) ->
+        CreditInfoViewModel(
+            handle,
+            getCreditInfoUseCase = get()
+        )
+    }
+    viewModel { AllCreditsViewModel(getUserCreditsInfoUseCase = get()) }
     //end region
 }
 
