@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bank.Credit.App.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/manage/[controller]")]
     [ApiController]
     public class TariffController : ControllerBase
     {
