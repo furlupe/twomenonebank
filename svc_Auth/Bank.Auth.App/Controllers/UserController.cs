@@ -27,26 +27,45 @@ namespace Bank.Auth.App.Controllers
         }
 
         [HttpGet("me")]
-        public async Task<ActionResult<UserDto>> GetMe()
-        {
-            var me = await _userManager.FindByIdAsync(User.GetId().ToString());
+        public Task<ActionResult<UserDto>> GetMe()
+            => GetUserById(User.GetId());
 
-            if (me == null)
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<UserDto>> GetUser(Guid userId)
+        {
+            if (!IsEmployeeOrHigher())
             {
-                return BadRequest("An authorized request made by no account...what?");
+                return Forbid();
             }
 
-            _ = Enum.TryParse(me.Role, out Role role);
+            return await GetUserById(userId);
+        }
 
-            return Ok(
-                new UserDto()
-                {
-                    Id = me.Id,
-                    Email = me.Email,
-                    Name = me.Name,
-                    Role = role
-                }
-            );
+        [HttpGet]
+        public async Task<ActionResult<PageDto<UserDto>>> GetUserList([FromQuery] int page = 1)
+        {
+            if (!IsEmployeeOrHigher())
+            {
+                return Forbid();
+            }
+
+            return await _userManager
+                .Users.Where(x => x.Id != User.GetId())
+                .GetPage(
+                    new() { PageNumber = page },
+                    user =>
+                    {
+                        _ = Enum.TryParse(user.Role, out Role role);
+                        return new UserDto()
+                        {
+                            Id = user.Id,
+                            Email = user.Email,
+                            Name = user.Name,
+                            Role = role,
+                            IsBanned = user.LockoutEnd != null
+                        };
+                    }
+                );
         }
 
         [HttpPost("{userId}/ban")]
@@ -58,7 +77,7 @@ namespace Bank.Auth.App.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            if (User.HasRole(Role.User))
+            if (!IsEmployeeOrHigher())
             {
                 return Forbid();
             }
@@ -97,36 +116,36 @@ namespace Bank.Auth.App.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        public async Task<ActionResult<PageDto<UserDto>>> GetUserList([FromQuery] int page = 1)
+        private async Task<ActionResult<UserDto>> GetUserById(Guid userId)
         {
-            if (User.HasRole(Role.User))
+            if (!IsEmployeeOrHigher())
             {
                 return Forbid();
             }
 
-            return await _userManager
-                .Users.Where(x => x.Id != User.GetId())
-                .GetPage(
-                    new() { PageNumber = page },
-                    user =>
-                    {
-                        _ = Enum.TryParse(user.Role, out Role role);
-                        return new UserDto()
-                        {
-                            Id = user.Id,
-                            Email = user.Email,
-                            Name = user.Name,
-                            Role = role,
-                            IsBanned = user.LockoutEnd != null
-                        };
-                    }
-                );
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                return BadRequest("An authorized request made by no account...what?");
+            }
+
+            _ = Enum.TryParse(user.Role, out Role role);
+
+            return Ok(
+                new UserDto()
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Name = user.Name,
+                    Role = role
+                }
+            );
         }
 
         private async Task<IActionResult> ToggleBan(Guid userId, bool on = true)
         {
-            if (User.HasRole(Role.User))
+            if (!IsEmployeeOrHigher())
             {
                 return Forbid();
             }
@@ -146,5 +165,7 @@ namespace Bank.Auth.App.Controllers
             );
             return result.Succeeded ? Ok() : BadRequest();
         }
+        private bool IsEmployeeOrHigher()
+            => User.HasRole(Role.Employee) || User.HasRole(Role.Admin);
     }
 }
