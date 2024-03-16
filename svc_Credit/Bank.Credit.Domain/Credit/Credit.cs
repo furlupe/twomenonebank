@@ -74,9 +74,9 @@ namespace Bank.Credit.Domain.Credit
             ApplyAndRecord(@event);
         }
 
-        public void PayPenalty(int amount)
+        public void PayPenalty()
         {
-            var @event = new CreditPenaltyPaidEvent(Id, amount, DateTime.UtcNow);
+            var @event = new CreditPenaltyPaidEvent(Id, Penalty, DateTime.UtcNow);
             ApplyAndRecord(@event);
         }
 
@@ -133,11 +133,6 @@ namespace Bank.Credit.Domain.Credit
 
         private void Apply(CreditPaymentMadeEvent @event)
         {
-            if (LastPaymentDate - NextPaymentDate < Tariff.Period)
-            {
-                throw new InvalidOperationException("Can't pay since period has not passed");
-            }
-
             var amountToPay = PeriodicPayment * (MissedPaymentPeriods + 1);
 
             if (@event.Amount < amountToPay)
@@ -154,13 +149,8 @@ namespace Bank.Credit.Domain.Credit
                 );
             }
 
-            if (@event.Amount > Amount)
-            {
-                throw new InvalidDataException("Can't withdraw more than balance has");
-            }
-
             MissedPaymentPeriods = 0;
-            Amount -= @event.Amount;
+            Amount -= @event.Amount > Amount ? Amount : @event.Amount;
 
             if (Amount == 0)
             {
@@ -205,16 +195,6 @@ namespace Bank.Credit.Domain.Credit
 
         private void Apply(CreditPenaltyPaidEvent @event)
         {
-            if (@event.Amount < Penalty)
-            {
-                throw new InvalidOperationException("Penalty must be paid fully at once");
-            }
-
-            if (@event.Amount > Penalty)
-            {
-                throw new InvalidOperationException("Cannot overpay the penalty");
-            }
-
             Penalty = 0;
         }
 

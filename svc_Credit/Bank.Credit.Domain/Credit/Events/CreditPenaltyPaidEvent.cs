@@ -8,7 +8,7 @@
             : base() { }
 
         public CreditPenaltyPaidEvent(Guid aggregateId, int amount, DateTime happenedAt)
-            : base(aggregateId, happenedAt)
+            : base(CreditEventType.PenaltyPaid, aggregateId, happenedAt)
         {
             Amount = amount;
         }

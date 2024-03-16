@@ -8,7 +8,7 @@
             : base() { }
 
         public CreditPaymentDateMovedEvent(Guid aggregateId, DateTime to, DateTime happendAt)
-            : base(aggregateId, happendAt)
+            : base(CreditEventType.PaymentDateMoved, aggregateId, happendAt)
         {
             To = to;
         }

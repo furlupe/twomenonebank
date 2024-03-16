@@ -3,6 +3,7 @@ using System;
 using Bank.Credit.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bank.Credit.Persistance.Migrations
 {
     [DbContext(typeof(BankCreditDbContext))]
-    partial class BankCreditDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240316081129_AddCreditEventType")]
+    partial class AddCreditEventType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -19,6 +19,8 @@ namespace Bank.Credit.App.Dto
         public int BaseAmount { get; set; }
         public int Days { get; set; }
         public int Penalty { get; set; }
+        public int PeriodicPayment { get; set; }
+        public bool IsClosed { get; set; }
     }
 
     public class CreateCreditDto
@@ -37,6 +39,7 @@ namespace Bank.Credit.App.Dto
     {
         public Guid Id { get; set; }
         public Guid CreditId { get; set; }
+        public CreditEventType Type { get; set; }
         public DateTime HappenedAt { get; set; }
 
         /// <summary>

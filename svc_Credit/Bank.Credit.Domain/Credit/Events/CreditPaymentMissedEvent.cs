@@ -6,6 +6,6 @@
             : base() { }
 
         public CreditPaymentMissedEvent(Guid aggregateId, DateTime happenedAt)
-            : base(aggregateId, happenedAt) { }
+            : base(CreditEventType.PaymentMissed, aggregateId, happenedAt) { }
     }
 }

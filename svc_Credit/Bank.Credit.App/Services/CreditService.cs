@@ -35,19 +35,27 @@ namespace Bank.Credit.App.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task PayPenalty(Guid userId, Guid creditId, int amount)
+        public async Task PayPenalty(Guid userId, Guid creditId)
         {
             var credit = await _dbContext.Credits.Include(x => x.Tariff).SingleAsync(x => x.User.Id == userId && x.Id == creditId);
-            credit.PayPenalty(amount);
+            credit.PayPenalty();
 
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<CreditDto> GetCredit(Guid creditId)
+        public async Task<CreditDto> GetCredit(Guid creditId, Guid? userId = null)
         {
             var credit = await _dbContext
                 .Credits.Include(x => x.Tariff)
+                .Include(x => x.User)
                 .SingleAsync(x => x.Id == creditId);
+
+            if (userId != null && credit.User.Id != userId)
+            {
+                throw new InvalidOperationException(
+                    $"User {userId} is not the owner of credit {creditId}"
+                );
+            }
 
             return new()
             {
@@ -61,9 +69,12 @@ namespace Bank.Credit.App.Services
                 Amount = credit.Amount,
                 BaseAmount = credit.BaseAmount,
                 Days = credit.Days,
-                Penalty = credit.Penalty
+                Penalty = credit.Penalty,
+                PeriodicPayment = credit.PeriodicPayment,
+                IsClosed = credit.IsClosed
             };
         }
+
 
         public Task<PageDto<CreditSmallDto>> GetUserCredits(Guid userId, int page) =>
             _dbContext
@@ -81,13 +92,23 @@ namespace Bank.Credit.App.Services
                     }
                 );
 
-        public Task<PageDto<CreditOperationDto>> GetCreditOperationHistory(
+        public async Task<PageDto<CreditOperationDto>> GetCreditOperationHistory(
             Guid creditId,
-            int page
-        ) =>
-            _dbContext
-                .CreditEvents.Where(x => x.AggregateId == creditId)
+            int page,
+            Guid? userId = null
+        )
+        {
+            var credit = await _dbContext.Credits.SingleAsync(x =>
+                x.Id == creditId && (userId == null || x.User.Id == userId)
+            );
+
+            IQueryable<CreditEvent> query = _dbContext.Set<CreditEvent>();
+
+            return await query
+                .Where(x => x.AggregateId == credit.Id)
                 .GetPage(new() { PageNumber = page }, FormEventDtoFromEventEntity);
+        }
+
 
         private static CreditOperationDto FormEventDtoFromEventEntity(CreditEvent @event)
         {
@@ -97,6 +118,7 @@ namespace Bank.Credit.App.Services
                     Id = @event.Id,
                     CreditId = @event.AggregateId,
                     HappenedAt = @event.CreatedAt,
+                    Type = @event.Type
                 };
 
             switch (@event)
