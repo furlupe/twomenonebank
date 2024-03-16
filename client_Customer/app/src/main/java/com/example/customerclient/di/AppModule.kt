@@ -18,6 +18,7 @@ import com.example.customerclient.domain.usecases.exchangeRate.GetDollarExchange
 import com.example.customerclient.domain.usecases.exchangeRate.GetEuroExchangeRateUseCase
 import com.example.customerclient.domain.usecases.user.GetUserNameUseCase
 import com.example.customerclient.ui.auth.signin.SignInViewModel
+import com.example.customerclient.ui.auth.signup.SignUpViewModel
 import com.example.customerclient.ui.bill.all.AllBillsViewModel
 import com.example.customerclient.ui.bill.info.BillInfoViewModel
 import com.example.customerclient.ui.bottombar.home.HomeViewModel
@@ -70,7 +71,7 @@ val appModule = module {
     }
 
     viewModel { SignInViewModel() }
-
+    viewModel { SignUpViewModel() }
     viewModel { AllBillsViewModel(getUserBillsInfoUseCase = get()) }
     viewModel { (handle: SavedStateHandle) ->
         BillInfoViewModel(
