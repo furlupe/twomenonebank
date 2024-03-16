@@ -87,6 +87,11 @@ namespace Bank.Auth.App.Controllers
                 return BadRequest("Can't create Admin");
             }
 
+            if (!Enum.IsDefined(typeof(Role), registerDto.Role))
+            {
+                return BadRequest("Wrong role, buddy");
+            }
+
             var user = new User()
             {
                 Email = registerDto.Email,
