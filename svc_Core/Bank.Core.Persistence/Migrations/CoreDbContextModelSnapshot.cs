@@ -57,7 +57,7 @@ namespace Bank.Core.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<uint>("Version")
@@ -88,6 +88,9 @@ namespace Bank.Core.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Name", "UserId")
+                        .IsUnique();
 
                     b.ToTable("Accounts");
                 });

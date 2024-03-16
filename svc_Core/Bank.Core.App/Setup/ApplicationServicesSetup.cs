@@ -16,6 +16,7 @@ public static class ApplicationServicesSetup
         var services = builder.Services;
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<ITransactionService, TransactionService>();
 
         return builder;
     }

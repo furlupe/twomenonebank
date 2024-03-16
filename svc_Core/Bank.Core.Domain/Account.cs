@@ -12,6 +12,7 @@ public class Account : StoredModel
     public string Name { get; set; }
     public long Balance { get; set; } = 0;
     public User User { get; set; }
+    public Guid UserId { get; set; }
     public List<AccountEvent> Events { get; protected set; } = [];
 
     public void Deposit(Deposit transaction, DateTime now)
@@ -19,30 +20,32 @@ public class Account : StoredModel
         Balance += transaction.Value;
         Events.Add(
             new AccountEvent(
-                $"Deposited {transaction.Value}",
-                AccountEvent.Type.BalanceChange,
+                $"Deposited {transaction.Value}.",
+                AccountEventType.BalanceChange,
                 now,
-                balanceChange: new BalanceChange(
-                    this,
-                    transaction.Value,
-                    BalanceChange.Type.Deposit
-                )
+                balanceChange: new BalanceChange(this, transaction.Value, BalanceChangeType.Deposit)
             )
         );
     }
 
     public void Withdraw(Withdraw transaction, DateTime now)
     {
+        Validation.Check(
+            ExceptionConstants.MsgInvalidAction,
+            transaction.Value <= Balance,
+            "Withdraw sum exceeds account balance."
+        );
+
         Balance -= transaction.Value;
         Events.Add(
             new AccountEvent(
-                $"Deposited {transaction.Value}",
-                AccountEvent.Type.BalanceChange,
+                $"Withdrew {transaction.Value}.",
+                AccountEventType.BalanceChange,
                 now,
                 balanceChange: new BalanceChange(
                     this,
                     transaction.Value,
-                    BalanceChange.Type.Withdrawal
+                    BalanceChangeType.Withdrawal
                 )
             )
         );
@@ -50,11 +53,17 @@ public class Account : StoredModel
 
     public void RepayCredit(RepayCredit transaction, DateTime now)
     {
+        Validation.Check(
+            ExceptionConstants.MsgInvalidAction,
+            transaction.Value <= Balance,
+            "Payment sum exceeds account balance."
+        );
+
         Balance -= transaction.Value;
         Events.Add(
             new AccountEvent(
-                $"Deposited {transaction.Value}",
-                AccountEvent.Type.BalanceChange,
+                $"Payed {transaction.Value} for credit.",
+                AccountEventType.BalanceChange,
                 now,
                 balanceChange: new BalanceChange(
                     this,
@@ -72,9 +81,10 @@ public class Account : StoredModel
             "Cannot close a non-empty account"
         );
 
-    public Account(User user)
+    public Account(User user, string name)
     {
         User = user;
+        Name = name;
     }
 
     protected Account() { }

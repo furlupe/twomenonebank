@@ -7,7 +7,7 @@ public class AccountEventDto
     public Guid Id { get; set; }
     public string Comment { get; protected set; }
 
-    public AccountEvent.Type EventType { get; protected set; }
+    public AccountEventType EventType { get; protected set; }
     public BalanceChangeDto? BalanceChange { get; protected set; }
     public TransferDto? Transfer { get; protected set; }
     public DateTime ResolvedAt { get; protected set; }

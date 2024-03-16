@@ -4,13 +4,13 @@ public class AccountEvent : DomainEvent
 {
     public string Comment { get; protected set; }
 
-    public Type EventType { get; protected set; }
+    public AccountEventType EventType { get; protected set; }
     public BalanceChange? BalanceChange { get; protected set; }
     public Transfer? Transfer { get; protected set; }
 
     public AccountEvent(
         string comment,
-        Type eventType,
+        AccountEventType eventType,
         DateTime now,
         EventState state = EventState.Completed,
         BalanceChange? balanceChange = null,
@@ -25,11 +25,11 @@ public class AccountEvent : DomainEvent
         State = state;
     }
 
-    public enum Type
-    {
-        BalanceChange,
-        Transfer,
-    }
-
     protected AccountEvent() { }
+}
+
+public enum AccountEventType
+{
+    BalanceChange,
+    Transfer,
 }

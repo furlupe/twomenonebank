@@ -38,10 +38,13 @@ public class AccountService(CoreDbContext db, IUserService userService) : IAccou
     public async Task<Guid> CreateAccountFor(Guid id, AccountCreateDto dto)
     {
         var user = await userService.GetUser(id);
-        var account = new Account(user);
+        if (await db.Accounts.AnyAsync(x => x.UserId == id && x.Name == dto.Name))
+            throw new ConflictingChangesException($"Account with name {dto.Name} already exists.");
+
+        user.OpenNewAccount(dto.Name);
         await db.SaveChangesAsync();
 
-        return account.Id;
+        return user.Accounts.Single(x => x.Name == dto.Name).Id;
     }
 
     public async Task CloseAccount(Guid id)

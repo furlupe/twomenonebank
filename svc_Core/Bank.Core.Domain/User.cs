@@ -7,17 +7,16 @@ public class User : StoredModel
 {
     public List<Account> Accounts { get; set; } = [];
 
-    public Guid AddAccount()
+    public void OpenNewAccount(string name)
     {
-        var account = new Account(this);
+        var account = new Account(this, name);
         Accounts.Add(account);
-
-        return account.Id;
     }
 
     public User(Guid id)
     {
         Id = id;
     }
+
     protected User() { }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bank.Core.Persistence.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20240310062147_Init")]
+    [Migration("20240316064628_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -60,7 +60,7 @@ namespace Bank.Core.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<uint>("Version")
@@ -91,6 +91,9 @@ namespace Bank.Core.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Name", "UserId")
+                        .IsUnique();
 
                     b.ToTable("Accounts");
                 });
