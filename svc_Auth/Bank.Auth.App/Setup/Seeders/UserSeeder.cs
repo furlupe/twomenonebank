@@ -1,10 +1,10 @@
-﻿using Bank.Auth.Domain;
+﻿using System.Security.Claims;
+using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
 using Bank.Auth.Shared.Claims;
+using Bank.Auth.Shared.Enumerations;
 using Microsoft.AspNetCore.Identity;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using System.Security.Claims;
-using Bank.Auth.Shared.Enumerations;
 
 namespace Bank.Auth.App.Setup.Seeders
 {
@@ -28,7 +28,13 @@ namespace Bank.Auth.App.Setup.Seeders
 
             if (await manager.FindByNameAsync("amogus@mail.ru") == null)
             {
-                User user = new() { Email = "amogus@mail.ru", UserName = "amogus@mail.ru", Role = Role.Admin.ToString() };
+                User user =
+                    new()
+                    {
+                        Email = "amogus@mail.ru",
+                        UserName = "amogus@mail.ru",
+                        Role = Role.Admin.ToString()
+                    };
 
                 await manager.CreateAsync(user);
                 await manager.AddPasswordAsync(user, "balls");

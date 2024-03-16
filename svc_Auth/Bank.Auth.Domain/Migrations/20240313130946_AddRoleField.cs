@@ -15,15 +15,14 @@ namespace Bank.Auth.Domain.Migrations
                 table: "AspNetUsers",
                 type: "text",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: ""
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Role",
-                table: "AspNetUsers");
+            migrationBuilder.DropColumn(name: "Role", table: "AspNetUsers");
         }
     }
 }

@@ -38,13 +38,15 @@ namespace Bank.Auth.App.Controllers
 
             _ = Enum.TryParse(me.Role, out Role role);
 
-            return Ok(new UserDto()
-            {
-                Id = me.Id,
-                Email = me.Email,
-                Name = me.Name,
-                Role = role
-            });
+            return Ok(
+                new UserDto()
+                {
+                    Id = me.Id,
+                    Email = me.Email,
+                    Name = me.Name,
+                    Role = role
+                }
+            );
         }
 
         [HttpPost("{userId}/ban")]
@@ -66,7 +68,13 @@ namespace Bank.Auth.App.Controllers
                 return BadRequest("Can't create Admin");
             }
 
-            var user = new User() { Email = registerDto.Email, Name = registerDto.Username, UserName = registerDto.Email, Role = registerDto.Role.ToString() };
+            var user = new User()
+            {
+                Email = registerDto.Email,
+                Name = registerDto.Username,
+                UserName = registerDto.Email,
+                Role = registerDto.Role.ToString()
+            };
             var result = await _userManager.CreateAsync(user);
 
             if (!result.Succeeded)
@@ -97,11 +105,23 @@ namespace Bank.Auth.App.Controllers
                 return Forbid();
             }
 
-            return await _userManager.Users.Where(x => x.Id != User.GetId()).GetPage(new() { PageNumber = page }, user =>
-            {
-                _ = Enum.TryParse(user.Role, out Role role);
-                return new UserDto() { Id = user.Id, Email = user.Email, Name = user.Name, Role= role };
-            });
+            return await _userManager
+                .Users.Where(x => x.Id != User.GetId())
+                .GetPage(
+                    new() { PageNumber = page },
+                    user =>
+                    {
+                        _ = Enum.TryParse(user.Role, out Role role);
+                        return new UserDto()
+                        {
+                            Id = user.Id,
+                            Email = user.Email,
+                            Name = user.Name,
+                            Role = role,
+                            IsBanned = user.LockoutEnd != null
+                        };
+                    }
+                );
         }
 
         private async Task<IActionResult> ToggleBan(Guid userId, bool on = true)
@@ -111,7 +131,9 @@ namespace Bank.Auth.App.Controllers
                 return Forbid();
             }
 
-            var user = await _userManager.Users.SingleOrDefaultAsync(x => x.Id == userId && x.Id != User.GetId());
+            var user = await _userManager.Users.SingleOrDefaultAsync(x =>
+                x.Id == userId && x.Id != User.GetId()
+            );
 
             if (user == null)
             {

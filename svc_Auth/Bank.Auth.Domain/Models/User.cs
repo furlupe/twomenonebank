@@ -6,6 +6,7 @@ namespace Bank.Auth.Domain.Models
     {
         public string? Name { get; set; }
         public string Role { get; set; }
+
         public User()
             : base() { }
     }

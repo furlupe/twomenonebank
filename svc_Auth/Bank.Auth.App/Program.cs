@@ -1,7 +1,7 @@
+using System.Reflection;
 using Bank.Auth.App.Setup.Extensions;
 using Bank.Auth.Shared.Extensions;
 using Bank.Common.Extensions;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;

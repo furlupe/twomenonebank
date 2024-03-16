@@ -32,7 +32,7 @@ namespace Bank.Auth.Shared.Extensions
             }
 
             bool result = Enum.TryParse(roleClaim.Value, out Role parsed);
-            
+
             return result && parsed == role;
         }
 
