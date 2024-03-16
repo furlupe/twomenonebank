@@ -123,11 +123,6 @@ namespace Bank.Auth.App.Controllers
 
         private async Task<ActionResult<UserDto>> GetUserById(Guid userId)
         {
-            if (!IsEmployeeOrHigher())
-            {
-                return Forbid();
-            }
-
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)
