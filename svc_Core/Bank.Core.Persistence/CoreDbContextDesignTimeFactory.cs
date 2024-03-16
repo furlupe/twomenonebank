@@ -11,7 +11,7 @@ internal class CoreDbContextDesignTimeFactory : IDesignTimeDbContextFactory<Core
         var optionsBuilder = new DbContextOptionsBuilder<CoreDbContext>();
 
         optionsBuilder.UseNpgsql(
-            "Username=postgres;Password=beebra228;Host=localhost;Port=5432;Database=bank_core;Pooling=true;Keepalive=5;Command Timeout=60;"
+            "Host=localhost;Port=5432;Database=twomenonebank-core;Username=twomenonebank;Password=twomenonebank;Pooling=true;Keepalive=5;Command Timeout=60;"
         );
 
         return new CoreDbContext(optionsBuilder.Options, new DateTimeProvider());

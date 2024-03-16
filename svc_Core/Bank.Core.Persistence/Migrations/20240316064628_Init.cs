@@ -16,7 +16,7 @@ namespace Bank.Core.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
@@ -29,7 +29,7 @@ namespace Bank.Core.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Balance = table.Column<long>(type: "bigint", nullable: false),
@@ -117,6 +117,12 @@ namespace Bank.Core.Persistence.Migrations
                 name: "IX_AccountEvent_Transfer_Target_AccountId",
                 table: "AccountEvent",
                 column: "Transfer_Target_AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Accounts_Name_UserId",
+                table: "Accounts",
+                columns: new[] { "Name", "UserId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_UserId",

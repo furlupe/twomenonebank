@@ -6,31 +6,25 @@ public class BalanceChange
 {
     public long Value { get; protected set; }
     public Account Account { get; protected set; }
+    public Guid AccountId { get; protected set; }
 
-    public Type EventType { get; protected set; }
+    public BalanceChangeType EventType { get; protected set; }
     public CreditPayment? CreditPayment { get; protected set; }
 
-    public enum Type
-    {
-        Withdrawal,
-        Deposit,
-        CreditPayment
-    }
-
     public BalanceChange(Account account, long value, CreditPayment creditPayment)
-        : this(account, value, Type.CreditPayment)
+        : this(account, value, BalanceChangeType.CreditPayment)
     {
         CreditPayment = creditPayment;
+        ValidateType();
     }
 
-    public BalanceChange(Account account, long value, Type type)
+    public BalanceChange(Account account, long value, BalanceChangeType type)
     {
         Account = account;
         Value = value;
         EventType = type;
 
         ValidateValue();
-        ValidateType();
     }
 
     protected void ValidateValue() =>
@@ -43,9 +37,16 @@ public class BalanceChange
     protected void ValidateType() =>
         Validation.Check(
             ExceptionConstants.MsgInvalidAction,
-            EventType == Type.CreditPayment && CreditPayment != null,
+            (EventType == BalanceChangeType.CreditPayment) == (CreditPayment != null),
             "Balance change that is credit payment must have corresponding data."
         );
 
     protected BalanceChange() { }
+}
+
+public enum BalanceChangeType
+{
+    Withdrawal,
+    Deposit,
+    CreditPayment
 }

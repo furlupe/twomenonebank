@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Bank.Common.Pagination;
+﻿namespace Bank.Common.Pagination;
 
 /// <summary>
 /// Contains pagination info and items associated with current page.

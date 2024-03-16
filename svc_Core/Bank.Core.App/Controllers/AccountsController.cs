@@ -2,6 +2,7 @@
 using Bank.Auth.Shared.Policies;
 using Bank.Common.Pagination;
 using Bank.Core.App.Dto;
+using Bank.Core.App.Dto.Events;
 using Bank.Core.App.Dto.Pagination;
 using Bank.Core.App.Services.Contracts;
 using Bank.Exceptions.WebApiException;
@@ -12,7 +13,10 @@ namespace Bank.Core.App.Controllers;
 
 [Route("accounts")]
 [Authorize(Policy = Policies.CreateUserIfNeeded)]
-public class AccountsController(IAccountService accountService) : ControllerBase
+public class AccountsController(
+    IAccountService accountService,
+    ITransactionService transactionService
+) : ControllerBase
 {
     [HttpGet("my")]
     public async Task<PageDto<AccountDto>> GetMyAccounts(
@@ -28,10 +32,23 @@ public class AccountsController(IAccountService accountService) : ControllerBase
     {
         var account = await accountService.GetAccount(id);
 
-        if (account.User.Id != User.GetId())
+        if (account.UserId != User.GetId())
             throw new NotFoundException();
 
         return AccountDto.From(account);
+    }
+
+    [HttpGet("{id}/history")]
+    public async Task<PageDto<AccountEventDto>> GetAccountOperations(
+        [FromRoute] Guid id,
+        TransactionQueryParameters queryParameters
+    )
+    {
+        if (!await accountService.IsAccountOwnedBy(id, User.GetId()))
+            throw new NotFoundException();
+        var transactions = await transactionService.GetAccountTransactions(id, queryParameters);
+
+        return transactions.Cast(AccountEventDto.From);
     }
 
     [HttpPost("open")]

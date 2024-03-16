@@ -1,10 +1,17 @@
-﻿using Bank.Core.Domain.Transactions;
+﻿using Bank.Common.Pagination;
+using Bank.Core.App.Dto.Pagination;
+using Bank.Core.Domain.Events;
+using Bank.Core.Domain.Transactions;
 
 namespace Bank.Core.App.Services.Contracts;
 
 public interface ITransactionService
 {
-    public Task Deposit(Guid accountId, Deposit dto);
-    public Task Withdraw(Guid accountId, Withdraw dto);
-    public Task RepayCredit(Guid accountId, RepayCredit dto);
+    Task<PageDto<AccountEvent>> GetAccountTransactions(
+        Guid id,
+        TransactionQueryParameters queryParameters
+    );
+    Task Deposit(Guid accountId, Deposit dto);
+    Task Withdraw(Guid accountId, Withdraw dto);
+    Task RepayCredit(Guid accountId, RepayCredit dto);
 }

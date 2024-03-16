@@ -29,11 +29,25 @@ public class CoreDbContext : DbContext
             s.UseTpcMappingStrategy();
             s.Property(x => x.Version).IsRowVersion();
             s.HasQueryFilter(x => x.DeletedAt == null);
+            s.Property(x => x.DeletedAt).IsRequired(false);
+        });
+
+        modelBuilder.Entity<Account>(a =>
+        {
+            a.HasOne(x => x.User).WithMany(x => x.Accounts).HasForeignKey(x => x.UserId);
+            a.HasIndex(x => new { x.Name, x.UserId }).IsUnique();
         });
 
         modelBuilder.Entity<AccountEvent>(a =>
         {
-            a.OwnsOne(x => x.BalanceChange, b => b.OwnsOne(x => x.CreditPayment));
+            a.OwnsOne(
+                x => x.BalanceChange,
+                b =>
+                {
+                    b.OwnsOne(x => x.CreditPayment);
+                    b.HasOne(x => x.Account).WithMany().HasForeignKey(x => x.AccountId);
+                }
+            );
             a.OwnsOne(
                 x => x.Transfer,
                 t =>

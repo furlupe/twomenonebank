@@ -1,8 +1,12 @@
-﻿using Bank.Auth.Shared.Policies;
+﻿using Bank.Auth.Shared.Extensions;
+using Bank.Auth.Shared.Policies;
 using Bank.Common.Pagination;
 using Bank.Core.App.Dto;
+using Bank.Core.App.Dto.Events;
 using Bank.Core.App.Dto.Pagination;
+using Bank.Core.App.Services;
 using Bank.Core.App.Services.Contracts;
+using Bank.Exceptions.WebApiException;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,8 +14,11 @@ namespace Bank.Core.App.Controllers;
 
 [Route("manage/acccounts")]
 [Authorize(Policy = Policies.EmployeeOrHigher)]
-public class AccountsEmployeeController(IUserService userService, IAccountService accountService)
-    : ControllerBase
+public class AccountsEmployeeController(
+    IUserService userService,
+    IAccountService accountService,
+    ITransactionService transactionService
+) : ControllerBase
 {
     [HttpGet("{id}")]
     public async Task<AccountDto> GetAccount([FromRoute] Guid id)
@@ -28,5 +35,16 @@ public class AccountsEmployeeController(IUserService userService, IAccountServic
     {
         var accounts = await accountService.GetAccountsFor(id, queryParameters);
         return accounts.Cast(AccountDto.From);
+    }
+
+    [HttpGet("{id}/history")]
+    public async Task<PageDto<AccountEventDto>> GetAccountOperations(
+        [FromRoute] Guid id,
+        TransactionQueryParameters queryParameters
+    )
+    {
+        var transactions = await transactionService.GetAccountTransactions(id, queryParameters);
+
+        return transactions.Cast(AccountEventDto.From);
     }
 }
