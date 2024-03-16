@@ -1,9 +1,11 @@
 ﻿using Bank.Auth.Shared.Extensions;
 using Bank.Auth.Shared.Policies;
+using Bank.Common.Pagination;
 using Bank.Credit.App.Dto;
 using Bank.Credit.App.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bank.Credit.App.Controllers.Credits
 {
@@ -36,11 +38,30 @@ namespace Bank.Credit.App.Controllers.Credits
 
         [HttpPost("{creditId}/pay-penalty")]
         [Authorize(Policy = Policies.CreateUserIfNeeded)]
-        public async Task<IActionResult> PayPenalty(Guid creditId, [FromBody] CreditPaymentDto dto)
+        public async Task<IActionResult> PayPenalty(Guid creditId)
         {
-            await _creditService.PayPenalty(User.GetId(), creditId, dto.Amount);
+            await _creditService.PayPenalty(User.GetId(), creditId);
             return Ok();
         }
+
+        [HttpGet("my")]
+        [Authorize(Policy = Policies.CreateUserIfNeeded)]
+        public async Task<ActionResult<PageDto<CreditSmallDto>>> GetCurrentUserCredits(
+            [FromQuery, Range(1, int.MaxValue)] int page = 1
+        ) => Ok(await _creditService.GetUserCredits(User.GetId(), page));
+
+        [HttpGet("my/{creditId}")]
+        [Authorize(Policy = Policies.CreateUserIfNeeded)]
+        public async Task<ActionResult<CreditDto>> GetCurrentUserCreditDetails(Guid creditId) =>
+            Ok(await _creditService.GetCredit(creditId, User.GetId()));
+
+        [HttpGet("my/{creditId}/operations")]
+        [Authorize(Policy = Policies.CreateUserIfNeeded)]
+        public async Task<ActionResult<PageDto<CreditOperationDto>>> GetCurrentUserCreditOperations(
+            Guid creditId,
+            [FromQuery, Range(1, int.MaxValue)] int page = 1
+        ) => Ok(await _creditService.GetCreditOperationHistory(creditId, page, User.GetId()));
+
 
     }
 }

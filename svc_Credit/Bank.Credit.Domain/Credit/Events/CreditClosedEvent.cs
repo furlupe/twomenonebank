@@ -6,6 +6,6 @@
             : base() { }
 
         public CreditClosedEvent(Guid aggregateId, DateTime dateTime)
-            : base(aggregateId, dateTime) { }
+            : base(CreditEventType.Closed, aggregateId, dateTime) { }
     }
 }

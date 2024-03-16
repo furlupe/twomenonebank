@@ -8,7 +8,7 @@
             : base() { }
 
         public CreditPaymentMadeEvent(Guid creditId, int amount, DateTime date)
-            : base(creditId, date)
+            : base(CreditEventType.PaymentMade, creditId, date)
         {
             Amount = amount;
         }

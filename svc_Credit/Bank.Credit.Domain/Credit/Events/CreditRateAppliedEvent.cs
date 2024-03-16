@@ -6,6 +6,6 @@
             : base() { }
 
         public CreditRateAppliedEvent(Guid aggregateId, DateTime happenedAt)
-            : base(aggregateId, happenedAt) { }
+            : base(CreditEventType.RateApplied, aggregateId, happenedAt) { }
     }
 }
