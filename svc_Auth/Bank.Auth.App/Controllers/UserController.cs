@@ -143,7 +143,8 @@ namespace Bank.Auth.App.Controllers
                     Id = user.Id,
                     Email = user.Email,
                     Name = user.Name,
-                    Role = role
+                    Role = role,
+                    IsBanned = user.LockoutEnd != null
                 }
             );
         }
@@ -156,7 +157,7 @@ namespace Bank.Auth.App.Controllers
             }
 
             var user = await _userManager.Users.SingleOrDefaultAsync(x =>
-                x.Id == userId && x.Id != User.GetId()
+                x.Id == userId && x.Id != User.GetId() && x.Role != Role.Admin.ToString()
             );
 
             if (user == null)
