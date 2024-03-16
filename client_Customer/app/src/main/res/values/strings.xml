@@ -3,6 +3,7 @@
 
     <!-- Экран входа -->
     <string name="label_sign_in">Вход</string>
+    <string name="label_sign_up">Регистрация</string>
 
     <!-- Главный экран -->
     <string name="title_home">Главная</string>

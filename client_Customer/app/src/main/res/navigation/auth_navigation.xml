@@ -9,10 +9,26 @@
         android:id="@+id/navigation_sign_in"
         android:name="com.example.customerclient.ui.auth.signin.SignInFragment"
         android:label="@string/label_sign_in"
-        tools:layout="@layout/fragment_sign_in" >
+        tools:layout="@layout/fragment_sign_in">
         <action
             android:id="@+id/action_navigation_sign_in_to_bottom_bar_navigation"
             app:destination="@id/bottomBarActivity" />
+        <action
+            android:id="@+id/action_navigation_sign_in_to_sign_up"
+            app:destination="@+id/navigation_sign_up" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_sign_up"
+        android:name="com.example.customerclient.ui.auth.signup.SignUpFragment"
+        android:label="@string/label_sign_up"
+        tools:layout="@layout/fragment_sign_up">
+        <action
+            android:id="@+id/action_navigation_sign_up_to_bottom_bar_navigation"
+            app:destination="@id/bottomBarActivity" />
+        <action
+            android:id="@+id/action_navigation_sign_up_to_sign_in"
+            app:destination="@+id/navigation_sign_in" />
     </fragment>
 
     <activity
