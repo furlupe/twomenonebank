@@ -1,6 +1,5 @@
 package com.example.customerclient.data.repository
 
-import android.util.Log
 import com.example.customerclient.data.api.auth.AuthenticationApi
 import com.example.customerclient.data.api.dto.TokenDto
 import com.example.customerclient.data.storage.SharedPreferencesRepositoryImpl
@@ -17,7 +16,6 @@ class AuthRepositoryImpl(
             val tokens = api.connect(username = email, password = password)
             val expiresIn = tokens.expires_in
             sharedPreferencesRepositoryImpl.saveTokens(tokens.copy(expires_in = expiresIn + System.currentTimeMillis() / 1000))
-            Log.d("TOKENS", "$tokens")
             tokens
         }
     }

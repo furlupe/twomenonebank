@@ -45,14 +45,12 @@ class BillInfoFragment : Fragment() {
         val billHistoryRecyclerView = binding.billHistoryRecyclerView
         billHistoryRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        context?.let {
-            billHistoryRecyclerView.adapter =
-                BillsHistoryRecyclerAdapter()
-        }
+        val adapter = BillsHistoryRecyclerAdapter()
+        context?.let { billHistoryRecyclerView.adapter = adapter }
 
         lifecycleScope.launch {
             viewModel.billsHistoryState.collect { billHistory ->
-
+                adapter.submitData(billHistory)
             }
         }
 

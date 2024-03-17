@@ -1,6 +1,5 @@
 package com.example.customerclient.ui.auth.signin
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.customerclient.domain.usecases.auth.SignInUseCase
@@ -26,7 +25,6 @@ class SignInViewModel(
                     _uiState.update { SignInState.NavigateToMainScreen }
                 }
             } catch (e: Exception) {
-                Log.d("TOKENS", "${e.message}")
                 withContext(Dispatchers.Main) {
                     _uiState.update { SignInState.Error }
                 }

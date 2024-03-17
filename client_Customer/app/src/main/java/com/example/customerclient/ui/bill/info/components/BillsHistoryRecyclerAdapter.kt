@@ -20,7 +20,6 @@ class BillsHistoryRecyclerAdapter :
         private val binding = ItemHistoryBillInfoBinding.bind(itemView)
 
         val historyIcon = binding.historyIcon
-        val billInfoHistoryTitle = binding.billInfoHistoryTitle
         val moneyHistoryTitle = binding.moneyHistoryTitle
         val transferHistoryTitle = binding.transferHistoryTitle
         val date = binding.billInfoHistoryDateTitle
@@ -42,7 +41,6 @@ class BillsHistoryRecyclerAdapter :
                     HistoryOperationType.TOP_UP -> R.drawable.ic_round_add_32dp
                 }
             )
-            holder.billInfoHistoryTitle.text = item.billId
             holder.moneyHistoryTitle.text = item.amount
 
             holder.moneyHistoryTitle.text =
