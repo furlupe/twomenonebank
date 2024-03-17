@@ -14,7 +14,7 @@ fun CreditShortDto.toCreditInfo() = CreditShortInfo(
     id = this.id,
     type = this.tariff,
     balance = "${this.amount} ₽",
-    nextWithdrawDate = this.days.toString(),
+    date = this.days.toString(),
     nextFee = "Количество дней",
     isClosed = this.isClosed
 )

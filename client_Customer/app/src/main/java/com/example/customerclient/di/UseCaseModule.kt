@@ -5,9 +5,11 @@ import com.example.customerclient.domain.usecases.bill.CloseBillUseCase
 import com.example.customerclient.domain.usecases.bill.DepositUseCase
 import com.example.customerclient.domain.usecases.bill.GetBillHistoryUseCase
 import com.example.customerclient.domain.usecases.bill.GetBillInfoUseCase
+import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsPagedInfoUseCase
 import com.example.customerclient.domain.usecases.bill.OpenBillUseCase
+import com.example.customerclient.domain.usecases.bill.SaveUserBillInfoToDatabaseUseCase
 import com.example.customerclient.domain.usecases.bill.WithdrawUseCase
 import com.example.customerclient.domain.usecases.credit.CreateCreditUseCase
 import com.example.customerclient.domain.usecases.credit.GetCreditHistoryUseCase
@@ -34,6 +36,9 @@ val useCaseModule = module {
     single<CloseBillUseCase> { CloseBillUseCase(billRepository = get()) }
     single<DepositUseCase> { DepositUseCase(billRepository = get()) }
     single<WithdrawUseCase> { WithdrawUseCase(billRepository = get()) }
+
+    single<GetUserBillsInfoFromDatabaseUseCase> { GetUserBillsInfoFromDatabaseUseCase(billRepository = get()) }
+    single<SaveUserBillInfoToDatabaseUseCase> { SaveUserBillInfoToDatabaseUseCase(billRepository = get()) }
 
     // - Credit
     single<GetUserCreditsInfoPagingUseCase> { GetUserCreditsInfoPagingUseCase(creditRepository = get()) }

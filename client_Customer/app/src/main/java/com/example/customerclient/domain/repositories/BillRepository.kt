@@ -6,7 +6,10 @@ import com.example.customerclient.ui.bottombar.home.BillInfo
 import kotlinx.coroutines.flow.Flow
 
 interface BillRepository {
+    suspend fun saveUserBillsToDatabase(bills: List<BillInfo>)
     suspend fun getUserBillsInfo(): List<BillInfo>
+
+    suspend fun getUserBillsInfoFromDatabase(): List<BillInfo>
 
     suspend fun getUserBillsPagedInfo(): Flow<PagingData<BillInfo>>
 

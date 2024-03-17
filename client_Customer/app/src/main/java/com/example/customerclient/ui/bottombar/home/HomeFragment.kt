@@ -40,6 +40,7 @@ class HomeFragment : Fragment() {
                         name = homeState.userName,
                         billsInfo = homeState.billsInfo,
                         creditsInfo = homeState.creditsInfo,
+                        isFromDatabase = homeState.fromDatabase,
 
                         onCreateBillClick = { name -> viewModel.createBill(name) },
                     )
@@ -55,23 +56,27 @@ class HomeFragment : Fragment() {
         name: String,
         billsInfo: List<BillInfo>,
         creditsInfo: List<CreditShortInfo>,
+        isFromDatabase: Boolean,
         onCreateBillClick: (String) -> Unit,
     ) {
         binding.userWelcome.text = if (name == "") "Здравствуйте" else "Здравствуйте,\n$name"
 
-        billsCardInfoContent(billsInfo, onCreateBillClick)
-        creditsCardInfoContent(creditsInfo)
+        billsCardInfoContent(billsInfo, onCreateBillClick, isFromDatabase)
+        creditsCardInfoContent(creditsInfo, isFromDatabase)
     }
 
     private fun billsCardInfoContent(
         billsInfo: List<BillInfo>,
         onCreateBillClick: (String) -> Unit,
+        isFromDatabase: Boolean,
     ) {
         binding.addBillButton.setOnClickListener {
-            showCreateBillDialog { name ->
-                onCreateBillClick(
-                    name
-                )
+            if (!isFromDatabase) {
+                showCreateBillDialog { name ->
+                    onCreateBillClick(
+                        name
+                    )
+                }
             }
         }
 
@@ -82,10 +87,12 @@ class HomeFragment : Fragment() {
                 binding.createNewBillCard.visibility = View.VISIBLE
 
                 binding.createNewBillCard.setOnClickListener {
-                    showCreateBillDialog { name ->
-                        onCreateBillClick(
-                            name
-                        )
+                    if (!isFromDatabase) {
+                        showCreateBillDialog { name ->
+                            onCreateBillClick(
+                                name
+                            )
+                        }
                     }
                 }
             }
@@ -113,16 +120,23 @@ class HomeFragment : Fragment() {
             billInfoRecyclerView.adapter =
                 BillsInfoRecyclerAdapter(
                     items = billsInfo,
-                    onBillClick = { billId -> navigateToBillsActivity(billId, "INFO") }
+                    onBillClick = { billId ->
+                        if (!isFromDatabase) {
+                            navigateToBillsActivity(billId, "INFO")
+                        }
+                    }
                 )
         }
     }
 
     private fun creditsCardInfoContent(
         creditsInfo: List<CreditShortInfo>,
+        isFromDatabase: Boolean,
     ) {
-        binding.addCreditButton.setOnClickListener {
-            navigateToCreditsActivity("", "CREATE")
+        if (!isFromDatabase) {
+            binding.addCreditButton.setOnClickListener {
+                navigateToCreditsActivity("", "CREATE")
+            }
         }
 
         when (creditsInfo.size) {
@@ -132,7 +146,9 @@ class HomeFragment : Fragment() {
                 binding.createNewCreditCard.visibility = View.VISIBLE
 
                 binding.createNewCreditCard.setOnClickListener {
-                    navigateToCreditsActivity("", "CREATE")
+                    if (!isFromDatabase) {
+                        navigateToCreditsActivity("", "CREATE")
+                    }
                 }
             }
 
@@ -159,7 +175,11 @@ class HomeFragment : Fragment() {
             creditInfoRecyclerView.adapter =
                 CreditsInfoRecyclerAdapter(
                     items = creditsInfo,
-                    onCreditClick = { creditId -> navigateToCreditsActivity(creditId, "INFO") }
+                    onCreditClick = { creditId ->
+                        if (!isFromDatabase) {
+                            navigateToCreditsActivity(creditId, "INFO")
+                        }
+                    }
                 )
         }
     }

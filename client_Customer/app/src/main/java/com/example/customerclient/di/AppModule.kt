@@ -1,12 +1,15 @@
 package com.example.customerclient.di
 
+import androidx.room.Room
 import com.example.customerclient.common.Constants
+import com.example.customerclient.common.Constants.BILL_DATABASE_NAME
 import com.example.customerclient.data.AccessInterceptor
 import com.example.customerclient.data.api.auth.AuthenticationApi
 import com.example.customerclient.data.api.auth.UserApi
 import com.example.customerclient.data.api.core.AccountsApi
 import com.example.customerclient.data.api.core.TransactionsApi
 import com.example.customerclient.data.api.credit.CreditsApi
+import com.example.customerclient.data.remote.database.BillDatabase
 import com.example.customerclient.data.repository.AuthRepositoryImpl
 import com.example.customerclient.data.repository.BillRepositoryImpl
 import com.example.customerclient.data.repository.CreditRepositoryImpl
@@ -20,7 +23,9 @@ import com.example.customerclient.domain.repositories.UserRepository
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -54,6 +59,16 @@ val appModule = module {
             .build()
     }
 
+    single<BillDatabase> {
+        Room.databaseBuilder(
+            androidApplication(),
+            BillDatabase::class.java,
+            BILL_DATABASE_NAME
+        ).build()
+    }
+
+    singleOf(BillDatabase::billDao)
+
     // - Auth
     single<AuthenticationApi> {
         Retrofit.Builder()
@@ -61,8 +76,8 @@ val appModule = module {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(
                 OkHttpClient.Builder()
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
                     .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build()
             )
@@ -82,8 +97,8 @@ val appModule = module {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(
                 OkHttpClient.Builder()
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
                     .addInterceptor(AccessInterceptor(get(), get()))
                     .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build()
@@ -104,8 +119,8 @@ val appModule = module {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(
                 OkHttpClient.Builder()
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
                     .addInterceptor(AccessInterceptor(get(), get()))
                     .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build()
@@ -123,8 +138,8 @@ val appModule = module {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(
                 OkHttpClient.Builder()
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(15, TimeUnit.SECONDS)
+                    .connectTimeout(15, TimeUnit.SECONDS)
                     .addInterceptor(AccessInterceptor(get(), get()))
                     .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build()
@@ -148,6 +163,6 @@ val appModule = module {
     }
 
     single<BillRepository> {
-        BillRepositoryImpl(accountsApi = get(), transactionsApi = get())
+        BillRepositoryImpl(accountsApi = get(), transactionsApi = get(), billDao = get())
     }
 }

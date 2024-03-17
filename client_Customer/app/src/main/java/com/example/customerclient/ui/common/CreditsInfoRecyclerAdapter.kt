@@ -39,7 +39,7 @@ class CreditsInfoRecyclerAdapter(
         }
         holder.type.text = items[position].type
         holder.balance.text = items[position].balance
-        holder.nextWithdrawDate.text = items[position].nextWithdrawDate
+        holder.nextWithdrawDate.text = items[position].date
         holder.nextFee.text = items[position].nextFee
 
         if (position == itemCount - 1) {

@@ -22,11 +22,18 @@ val viewModelModule = module {
             getUserInfoUseCase = get(),
             getUserBillsInfoUseCase = get(),
             getUserCreditsInfoUseCase = get(),
-            openBillUseCase = get()
+            openBillUseCase = get(),
+            saveUserBillInfoToDatabaseUseCase = get(),
+            getUserBillsInfoFromDatabaseUseCase = get()
         )
     }
 
-    viewModel { AllBillsViewModel(getUserBillsPagedInfoUseCase = get()) }
+    viewModel {
+        AllBillsViewModel(
+            getUserBillsPagedInfoUseCase = get(),
+            getUserBillsInfoFromDatabaseUseCase = get()
+        )
+    }
     viewModel { (handle: SavedStateHandle) ->
         BillInfoViewModel(
             handle,

@@ -12,6 +12,8 @@ import com.example.customerclient.data.api.dto.WithdrawDto
 import com.example.customerclient.data.api.dto.toBillInfo
 import com.example.customerclient.data.paging.bill.BillsHistoryPagingSource
 import com.example.customerclient.data.paging.bill.BillsPagingSource
+import com.example.customerclient.data.remote.database.BillDao
+import com.example.customerclient.data.remote.database.entity.BillEntity
 import com.example.customerclient.domain.repositories.BillRepository
 import com.example.customerclient.ui.bill.info.BillHistory
 import com.example.customerclient.ui.bottombar.home.BillInfo
@@ -19,10 +21,31 @@ import kotlinx.coroutines.flow.Flow
 
 class BillRepositoryImpl(
     private val accountsApi: AccountsApi,
-    private val transactionsApi: TransactionsApi
+    private val transactionsApi: TransactionsApi,
+    private val billDao: BillDao
 ) : BillRepository {
+    override suspend fun saveUserBillsToDatabase(bills: List<BillInfo>) {
+        val currentBillsIds = billDao.getBills().map { it.id }
+        val newBills = bills.filter { it.id !in currentBillsIds }
+        newBills.map {
+            billDao.insertBill(
+                BillEntity(
+                    it.id,
+                    it.name,
+                    it.balance,
+                    it.type,
+                    it.duration
+                )
+            )
+        }
+    }
+
     override suspend fun getUserBillsInfo(): List<BillInfo> {
         return accountsApi.getUserBills(1, 30).items?.map { it.toBillInfo() } ?: listOf()
+    }
+
+    override suspend fun getUserBillsInfoFromDatabase(): List<BillInfo> {
+        return billDao.getBills().map { BillInfo(it.id, it.name, it.balance, it.type, it.duration) }
     }
 
     override suspend fun getUserBillsPagedInfo(): Flow<PagingData<BillInfo>> {
