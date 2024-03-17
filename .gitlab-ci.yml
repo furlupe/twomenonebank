@@ -8,15 +8,27 @@ variables:
   AUTH_TAG: auth
   CREDIT_TAG: credit
 
-.build:
-  tags:
-    - build
-    - docker
-  stage: build
+.backend-changes:
+   rules:
+    - changes:
+        paths:
+          - Libraries/**/*
+          - svc_Core/**/*
+          - svc_Auth/**/*
+          - svc_Credit/**/*
+
+.develop-or-manual: 
   rules:
     - if: $CI_COMMIT_REF_NAME != "develop"
       when: manual
     - when: always
+
+.build:
+  extends: [.backend-changes, .develop-or-manual]
+  tags:
+    - build
+    - docker
+  stage: build
   image: docker:25.0
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
@@ -60,14 +72,15 @@ build-credit:
     - echo 'Build completed.'
 
 deploy:
+  extends: [.backend-changes, .develop-or-manual]
   tags:
     - deploy
     - shell
   stage: deploy
   rules:
-    - if: $CI_COMMIT_REF_NAME != "develop"
-      when: manual
-    - when: on_success
+    - changes:
+        paths:
+          - docker-compose.yml
   before_script:
     - docker info
   script:
