@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("androidx.navigation.safeargs")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -57,4 +59,26 @@ dependencies {
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
 
+    implementation(libs.androidx.paging.runtime)
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
+
+    // Koin
+    implementation("io.insert-koin:koin-android:3.2.0-beta-1")
+    implementation("io.insert-koin:koin-androidx-navigation:3.2.0-beta-1")
+
+    // Crypto
+    implementation("androidx.security:security-crypto:1.0.0")
+
+    //Room
+    val room_version = "2.6.1"
+
+    // Room components
+    implementation("androidx.room:room-ktx:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    androidTestImplementation("androidx.room:room-testing:$room_version")
 }

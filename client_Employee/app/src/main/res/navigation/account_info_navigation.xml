@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/account_info_navigation"
+    app:startDestination="@id/accountListFragment">
+
+    <fragment
+        android:id="@+id/accountListFragment"
+        android:name="com.example.employeeclient.presentation.account.accountslist.list.AccountListFragment"
+        android:label="fragment_account_list"
+        tools:layout="@layout/fragment_account_list" >
+        <action
+            android:id="@+id/action_accountListFragment_to_accountInfoActivity"
+            app:destination="@id/accountInfoActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/accountInfoActivity"
+        android:name="com.example.employeeclient.presentation.account.accountinfo.AccountInfoActivity"
+        android:label="activity_account_info"
+        tools:layout="@layout/activity_account_info" >
+        <argument
+            android:name="accountId"
+            app:argType="string" />
+    </activity>
+</navigation>
