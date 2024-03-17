@@ -17,15 +17,20 @@ class CreditsActivity : AppCompatActivity(), CreditsListener {
         binding = ActivityCreditsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (args.screenCreditType == "INFO") {
-            val navHostFragment =
-                supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_credits) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_credits) as NavHostFragment
 
-            val navController = navHostFragment.navController
-            val action =
-                AllCreditsFragmentDirections.actionNavigationAllCreditsToNavigationCreditInfo(args.creditId)
+        val navController = navHostFragment.navController
+        when (args.screenCreditType) {
+            "INFO" -> {
+                val action =
+                    AllCreditsFragmentDirections.actionNavigationAllCreditsToNavigationCreditInfo(
+                        args.creditId
+                    )
+                navController.navigate(action)
+            }
 
-            navController.navigate(action)
+            "CREATE" -> navController.navigate(R.id.action_navigationAllCredits_to_navigationCreateCredit)
         }
     }
 

@@ -8,10 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.customerclient.R
 import com.example.customerclient.databinding.FragmentHomeBinding
 import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithConfirmAndDismissButtons
-import com.example.customerclient.ui.common.AlertDialogWithEditTextField
 import com.example.customerclient.ui.common.BillsInfoRecyclerAdapter
 import com.example.customerclient.ui.common.CreditsInfoRecyclerAdapter
 import kotlinx.coroutines.launch
@@ -20,28 +18,36 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
 
+    private val viewModel: HomeViewModel by viewModel()
+    override fun onStart() {
+        super.onStart()
+        viewModel.getUserBillsAndCreditsInfo()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel: HomeViewModel by viewModel()
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         lifecycleScope.launch {
             viewModel.uiState.collect { homeState ->
-                homeFragmentContent(
-                    name = homeState.userName,
-                    euro = homeState.euroExchangeRate,
-                    dollar = homeState.dollarExchangeRate,
-                    billsInfo = homeState.billsInfo,
-                    creditsInfo = homeState.creditsInfo,
+                when (homeState) {
+                    is HomeState.Content -> homeFragmentContent(
+                        name = homeState.userName,
+                        euro = homeState.euroExchangeRate,
+                        dollar = homeState.dollarExchangeRate,
+                        billsInfo = homeState.billsInfo,
+                        creditsInfo = homeState.creditsInfo,
 
-                    onCreateBillClick = { viewModel.createBill() },
-                    onCreateCreditClick = { amountOfCredit -> viewModel.createCredit(amountOfCredit) }
-                )
+                        onCreateBillClick = { viewModel.createBill() },
+                    )
+
+                    else -> {}
+                }
             }
         }
         return root
@@ -52,15 +58,14 @@ class HomeFragment : Fragment() {
         euro: String,
         dollar: String,
         billsInfo: List<BillInfo>,
-        creditsInfo: List<CreditInfo>,
+        creditsInfo: List<CreditShortInfo>,
         onCreateBillClick: () -> Unit,
-        onCreateCreditClick: (String) -> Unit
     ) {
-        binding.userWelcome.text = "Здравствуйте,\n$name"
+        binding.userWelcome.text = if (name == "") "Здравствуйте" else "Здравствуйте,\n$name"
         binding.exchangeRate.text = "$euro\n$dollar"
 
         billsCardInfoContent(billsInfo, onCreateBillClick)
-        creditsCardInfoContent(creditsInfo, onCreateCreditClick)
+        creditsCardInfoContent(creditsInfo)
     }
 
     private fun billsCardInfoContent(
@@ -107,10 +112,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun creditsCardInfoContent(
-        creditsInfo: List<CreditInfo>,
-        onCreateCreditClick: (String) -> Unit
+        creditsInfo: List<CreditShortInfo>,
     ) {
-        binding.addCreditButton.setOnClickListener { showCreateCreditDialog(onCreateCreditClick) }
+        binding.addCreditButton.setOnClickListener {
+            navigateToCreditsActivity("", "CREATE")
+        }
 
         when (creditsInfo.size) {
             0 -> {
@@ -119,7 +125,7 @@ class HomeFragment : Fragment() {
                 binding.createNewCreditCard.visibility = View.VISIBLE
 
                 binding.createNewCreditCard.setOnClickListener {
-                    showCreateCreditDialog(onCreateCreditClick)
+                    navigateToCreditsActivity("", "CREATE")
                 }
             }
 
@@ -164,19 +170,6 @@ class HomeFragment : Fragment() {
 
         val manager = parentFragmentManager
         dialog.show(manager, "addBillAlertDialog")
-    }
-
-    private fun showCreateCreditDialog(
-        onCreateClick: (String) -> Unit,
-    ) {
-        val dialog = AlertDialogWithEditTextField(
-            title = "Аннуитетный кредит",
-            description = getString(R.string.credit_amount),
-            onPositiveButtonClick = onCreateClick,
-        )
-
-        val manager = parentFragmentManager
-        dialog.show(manager, "addCreditAlertDialog")
     }
 
     private fun navigateToCreditsActivity(creditId: String, screenCreditType: String) {

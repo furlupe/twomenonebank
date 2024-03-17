@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/historyCreditIcon"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:contentDescription=""
+        android:src="@drawable/ic_round_add_32dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/transferCreditHistoryTitle"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="16dp"
+
+        android:text="Совершенное действие"
+        android:textSize="12sp"
+
+        app:layout_constraintStart_toEndOf="@+id/historyCreditIcon"
+        app:layout_constraintTop_toTopOf="@+id/historyCreditIcon" />
+
+    <TextView
+        android:id="@+id/creditInfoHistoryTitle"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="16dp"
+
+        android:text="Взнос по кредиту"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+
+        app:layout_constraintStart_toEndOf="@+id/historyCreditIcon"
+        app:layout_constraintTop_toBottomOf="@+id/transferCreditHistoryTitle" />
+
+    <TextView
+        android:id="@+id/creditActionHistoryTitle"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="+ 5000,00$"
+        android:textStyle="bold"
+        android:textColor="@color/green"
+        android:textSize="14sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/historyCreditIcon" />
+
+    <TextView
+        android:id="@+id/creditInfoHistoryDateTitle"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="16dp"
+
+        android:text="20.03.2023"
+        android:textSize="12sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/creditActionHistoryTitle" />
+</androidx.constraintlayout.widget.ConstraintLayout>

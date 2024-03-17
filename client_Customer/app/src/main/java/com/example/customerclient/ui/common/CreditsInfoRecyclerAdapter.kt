@@ -4,14 +4,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.customerclient.R
 import com.example.customerclient.databinding.ItemCreditInfoBinding
-import com.example.customerclient.ui.bottombar.home.CreditInfo
+import com.example.customerclient.ui.bottombar.home.CreditShortInfo
 
 class CreditsInfoRecyclerAdapter(
-    private val items: List<CreditInfo>,
+    private val items: List<CreditShortInfo>,
     private val onCreditClick: (String) -> Unit
-) : RecyclerView.Adapter<CreditsInfoRecyclerAdapter.CreditInfoViewHolder>() {
+) : Adapter<CreditsInfoRecyclerAdapter.CreditInfoViewHolder>() {
 
     class CreditInfoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemCreditInfoBinding.bind(itemView)

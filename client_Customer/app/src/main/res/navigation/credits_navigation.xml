@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigationAllCredits_to_navigationCreditInfo"
             app:destination="@id/navigationCreditInfo" />
+        <action
+            android:id="@+id/action_navigationAllCredits_to_navigationCreateCredit"
+            app:destination="@id/navigationCreateCredit" />
     </fragment>
 
     <fragment
@@ -24,5 +27,11 @@
             android:name="creditId"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigationCreateCredit"
+        android:name="com.example.customerclient.ui.credit.create.CreateCreditFragment"
+        android:label="@string/title_create_credit"
+        tools:layout="@layout/fragment_create_credit"></fragment>
 
 </navigation>
