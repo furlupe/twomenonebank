@@ -1,5 +1,6 @@
 package com.example.customerclient.ui.credit.info
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.example.customerclient.databinding.FragmentCreditInfoBinding
 import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithConfirmAndDismissButtons
 import com.example.customerclient.ui.credit.CreditsListener
 import com.example.customerclient.ui.credit.info.components.CreditsHistoryRecyclerAdapter
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -36,11 +38,27 @@ class CreditInfoFragment : Fragment() {
         binding = FragmentCreditInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        // Список с историей кредита
+        val creditHistoryRecyclerView = binding.creditHistoryRecyclerView
+        creditHistoryRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        val adapter = CreditsHistoryRecyclerAdapter()
+        context?.let { creditHistoryRecyclerView.adapter = adapter }
+
+        lifecycleScope.launch {
+            viewModel.creditsHistoryState.collectLatest {
+                adapter.submitData(it)
+            }
+        }
+
         lifecycleScope.launch {
             viewModel.uiState.collect { creditInfoState ->
                 creditInfoFragmentContent(
-                    creditHistory = creditInfoState.history,
-                    onLoanPayment = { viewModel.payOffLoan() }
+                    creditInfoState.info.penalty,
+                    creditInfoState.info.amount,
+                    onLoanPayment = { viewModel.payOffLoan() },
+                    onPenyPayment = {}
                 )
             }
         }
@@ -48,9 +66,12 @@ class CreditInfoFragment : Fragment() {
         return root
     }
 
+    @SuppressLint("SetTextI18n")
     private fun creditInfoFragmentContent(
-        creditHistory: List<CreditHistory>,
-        onLoanPayment: () -> Unit
+        penalty: Int,
+        amount: String,
+        onLoanPayment: () -> Unit,
+        onPenyPayment: () -> Unit
     ) {
         // Кнопка назад
         binding.backCreditInfoButton.setOnClickListener {
@@ -59,20 +80,21 @@ class CreditInfoFragment : Fragment() {
         }
 
         // Сумма кредита
-        binding.creditMoneyTitle.text = "32489203 ₽"
+        binding.creditMoneyTitle.text = "$amount $"
 
         // Кнопка "Внести платёж"
-        binding.payOfCreditButton.setOnClickListener {
-            showConfirmToLoanPaymentDialog(onLoanPayment)
+        if (penalty == 0) {
+            binding.closeCreditTitle.text = "Внести платёж"
+            binding.payOfCreditButton.setOnClickListener {
+                showConfirmToLoanPaymentDialog(onLoanPayment)
+            }
         }
-
-        // Список с историей кредита
-        val creditHistoryRecyclerView = binding.creditHistoryRecyclerView
-        creditHistoryRecyclerView.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        context?.let {
-            creditHistoryRecyclerView.adapter =
-                CreditsHistoryRecyclerAdapter(items = creditHistory)
+        // Кнопка "Погасить пени"
+        else {
+            binding.closeCreditTitle.text = "Погасить пени"
+            binding.payOfCreditButton.setOnClickListener {
+                showConfirmToPenyPaymentDialog(onPenyPayment)
+            }
         }
     }
 
@@ -80,7 +102,22 @@ class CreditInfoFragment : Fragment() {
         onConfirmClick: () -> Unit,
     ) {
         val dialogWithEditText = AlertDialogWithConfirmAndDismissButtons(
-            title = "Вы хотите внести ежемесячный платёж?",
+            title = "Вы хотите внести ежедневный платёж?",
+            description = "",
+            positiveButtonText = "Да",
+            negativeButtonText = "Нет",
+
+            onPositiveButtonClick = onConfirmClick,
+        )
+        val manager = parentFragmentManager
+        dialogWithEditText.show(manager, "confirmToCloseBillAlertDialog")
+    }
+
+    private fun showConfirmToPenyPaymentDialog(
+        onConfirmClick: () -> Unit,
+    ) {
+        val dialogWithEditText = AlertDialogWithConfirmAndDismissButtons(
+            title = "Вы хотите выплатить пени?",
             description = "",
             positiveButtonText = "Да",
             negativeButtonText = "Нет",

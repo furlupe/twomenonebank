@@ -10,9 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customerclient.databinding.FragmentAllCreditsBinding
-import com.example.customerclient.ui.bottombar.home.CreditInfo
-import com.example.customerclient.ui.common.CreditsInfoRecyclerAdapter
+import com.example.customerclient.ui.bottombar.home.CreditShortInfo
+import com.example.customerclient.ui.common.CreditsInfoPagingRecyclerAdapter
 import com.example.customerclient.ui.credit.CreditsListener
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,6 +27,11 @@ class AllCreditsFragment : Fragment() {
         super.onAttach(context)
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.getCreditShortInfo()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,30 +39,38 @@ class AllCreditsFragment : Fragment() {
     ): View {
         binding = FragmentAllCreditsBinding.inflate(inflater, container, false)
 
+        val allCreditsRecyclerView = binding.allCreditsRecyclerView
+        allCreditsRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        val adapter = CreditsInfoPagingRecyclerAdapter(onCreditClick = { creditId ->
+            navigateToCreditInfoFragment(creditId)
+        })
+        context?.let {
+            allCreditsRecyclerView.adapter = adapter
+        }
+
         lifecycleScope.launch {
             viewModel.uiState.collect { allCreditsState -> allCreditsFragmentContent(allCreditsState.credits) }
+        }
+
+        lifecycleScope.launch {
+            viewModel.creditShortInfoState.collectLatest {
+                adapter.submitData(it)
+            }
         }
 
         return binding.root
     }
 
     private fun allCreditsFragmentContent(
-        bills: List<CreditInfo>
+        credits: List<CreditShortInfo>
     ) {
         // Кнопка назад
         binding.backAllCreditsButton.setOnClickListener { callback?.backToMainFragment() }
 
-        // Список счетов
-        val allBillsRecyclerView = binding.allCreditsRecyclerView
-        allBillsRecyclerView.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        context?.let {
-            allBillsRecyclerView.adapter =
-                CreditsInfoRecyclerAdapter(
-                    items = bills,
-                    onCreditClick = { creditId -> navigateToCreditInfoFragment(creditId) }
-                )
-        }
+        // Список кредитов
+
     }
 
     private fun navigateToCreditInfoFragment(billId: String) {
