@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsPagedInfoUseCase
 import com.example.customerclient.ui.bottombar.home.BillInfo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +13,7 @@ import kotlinx.coroutines.launch
 
 class AllBillsViewModel(
     private val getUserBillsPagedInfoUseCase: GetUserBillsPagedInfoUseCase,
+    private val getUserBillsInfoFromDatabaseUseCase: GetUserBillsInfoFromDatabaseUseCase
 ) : ViewModel() {
 
     private val _billsInfoState: MutableStateFlow<PagingData<BillInfo>> =
@@ -29,7 +31,7 @@ class AllBillsViewModel(
                         _billsInfoState.value = bills
                     }
             } catch (e: Exception) {
-
+                _billsInfoState.value = PagingData.from(getUserBillsInfoFromDatabaseUseCase())
             }
 
         }

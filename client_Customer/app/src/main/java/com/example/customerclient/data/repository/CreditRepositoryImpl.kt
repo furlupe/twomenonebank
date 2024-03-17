@@ -18,7 +18,7 @@ import com.example.customerclient.ui.credit.info.CreditInfo
 import kotlinx.coroutines.flow.Flow
 
 class CreditRepositoryImpl(
-    private val creditsApi: CreditsApi,
+    private val creditsApi: CreditsApi
 ) : CreditRepository {
     override suspend fun getUserCreditsPagingInfo(): Flow<PagingData<CreditShortInfo>> {
         return Pager(

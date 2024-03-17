@@ -43,7 +43,7 @@ class BillsInfoRecyclerAdapter(
         holder.billItem.setOnClickListener {
             onBillClick(items[position].id)
         }
-        holder.number.text = items[position].number
+        holder.number.text = items[position].name
         holder.balance.text = items[position].balance
         holder.type.text = items[position].type
         holder.duration.text = items[position].duration
