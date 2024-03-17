@@ -2,30 +2,36 @@ package com.example.customerclient.ui.bill.all
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.example.customerclient.domain.usecases.bill.GetUserBillsPagedInfoUseCase
 import com.example.customerclient.ui.bottombar.home.BillInfo
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 class AllBillsViewModel(
-    private val getUserBillsInfoUseCase: GetUserBillsInfoUseCase,
+    private val getUserBillsPagedInfoUseCase: GetUserBillsPagedInfoUseCase,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<AllBillsState> = MutableStateFlow(AllBillsState())
-    val uiState: StateFlow<AllBillsState> = _uiState.asStateFlow()
+    private val _billsInfoState: MutableStateFlow<PagingData<BillInfo>> =
+        MutableStateFlow(value = PagingData.empty())
+    val billsInfoState: MutableStateFlow<PagingData<BillInfo>> get() = _billsInfoState
 
-    init {
+
+    fun getBills() {
         viewModelScope.launch {
-            val userId = "0"
-            val bills = getUserBillsInfoUseCase(userId)
-            _uiState.update { it.copy(bills = bills) }
+            try {
+                getUserBillsPagedInfoUseCase()
+                    .distinctUntilChanged()
+                    .cachedIn(viewModelScope)
+                    .collect { bills: PagingData<BillInfo> ->
+                        _billsInfoState.value = bills
+                    }
+            } catch (e: Exception) {
+
+            }
+
         }
     }
 }
-
-data class AllBillsState(
-    val bills: List<BillInfo> = listOf()
-)

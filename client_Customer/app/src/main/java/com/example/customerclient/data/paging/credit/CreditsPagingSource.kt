@@ -1,4 +1,4 @@
-package com.example.customerclient.data
+package com.example.customerclient.data.paging.credit
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

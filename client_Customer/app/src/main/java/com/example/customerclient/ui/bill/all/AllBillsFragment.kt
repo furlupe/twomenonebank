@@ -11,8 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customerclient.databinding.FragmentAllBillsBinding
 import com.example.customerclient.ui.bill.BillsListener
-import com.example.customerclient.ui.bottombar.home.BillInfo
-import com.example.customerclient.ui.common.BillsInfoRecyclerAdapter
+import com.example.customerclient.ui.common.BillsInfoPagingRecyclerAdapter
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -28,6 +28,11 @@ class AllBillsFragment : Fragment() {
         super.onAttach(context)
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.getBills()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,28 +41,27 @@ class AllBillsFragment : Fragment() {
         binding = FragmentAllBillsBinding.inflate(layoutInflater)
         val root: View = binding.root
 
-        lifecycleScope.launch {
-            viewModel.uiState.collect { allBillsState -> allBillsFragmentContent(allBillsState.bills) }
-        }
-
-        return root
-    }
-
-    private fun allBillsFragmentContent(
-        bills: List<BillInfo>
-    ) {
         // Кнопка назад
         binding.backAllBillsButton.setOnClickListener { callback?.backToMainFragment() }
 
         // Список счетов
-        val allBillsRecyclerView = binding.allBillsRecyclerView
-        allBillsRecyclerView.layoutManager =
+        val allCreditsRecyclerView = binding.allBillsRecyclerView
+        allCreditsRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        context?.let {
-            allBillsRecyclerView.adapter =
-                BillsInfoRecyclerAdapter(items = bills,
-                    onBillClick = { billId -> navigateToBillInfoFragment(billId) })
+
+        val adapter = BillsInfoPagingRecyclerAdapter(onBillClick = { creditId ->
+            navigateToBillInfoFragment(creditId)
+        })
+        context?.let { allCreditsRecyclerView.adapter = adapter }
+
+        lifecycleScope.launch {
+            viewModel.billsInfoState.collectLatest {
+                adapter.submitData(it)
+            }
         }
+
+
+        return root
     }
 
     private fun navigateToBillInfoFragment(billId: String) {

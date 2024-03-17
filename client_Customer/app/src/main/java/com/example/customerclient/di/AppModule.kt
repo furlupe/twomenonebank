@@ -4,18 +4,18 @@ import com.example.customerclient.common.Constants
 import com.example.customerclient.data.AccessInterceptor
 import com.example.customerclient.data.api.auth.AuthenticationApi
 import com.example.customerclient.data.api.auth.UserApi
+import com.example.customerclient.data.api.core.AccountsApi
+import com.example.customerclient.data.api.core.TransactionsApi
 import com.example.customerclient.data.api.credit.CreditsApi
 import com.example.customerclient.data.repository.AuthRepositoryImpl
 import com.example.customerclient.data.repository.BillRepositoryImpl
 import com.example.customerclient.data.repository.CreditRepositoryImpl
-import com.example.customerclient.data.repository.ExchangeRateRepositoryImpl
 import com.example.customerclient.data.repository.UserRepositoryImpl
 import com.example.customerclient.data.storage.SharedPreferencesRepositoryImpl
 import com.example.customerclient.data.storage.SharedPreferencesStorage
 import com.example.customerclient.domain.repositories.AuthRepository
 import com.example.customerclient.domain.repositories.BillRepository
 import com.example.customerclient.domain.repositories.CreditRepository
-import com.example.customerclient.domain.repositories.ExchangeRateRepository
 import com.example.customerclient.domain.repositories.UserRepository
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -116,8 +116,38 @@ val appModule = module {
         CreditRepositoryImpl(creditsApi = get())
     }
 
-    // region : Repositories
-    single<BillRepository> { BillRepositoryImpl() }
-    single<ExchangeRateRepository> { ExchangeRateRepositoryImpl() }
-    // end region
+    // - Bills
+    single<AccountsApi> {
+        Retrofit.Builder()
+            .baseUrl(Constants.BASE_CORE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(
+                OkHttpClient.Builder()
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .addInterceptor(AccessInterceptor(get(), get()))
+                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                    .build()
+            )
+            .build().create(AccountsApi::class.java)
+    }
+
+    single<TransactionsApi> {
+        Retrofit.Builder()
+            .baseUrl(Constants.BASE_CORE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(
+                OkHttpClient.Builder()
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .addInterceptor(AccessInterceptor(get(), get()))
+                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                    .build()
+            )
+            .build().create(TransactionsApi::class.java)
+    }
+
+    single<BillRepository> {
+        BillRepositoryImpl(accountsApi = get(), transactionsApi = get())
+    }
 }
