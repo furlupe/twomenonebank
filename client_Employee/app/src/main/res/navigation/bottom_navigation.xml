@@ -7,19 +7,56 @@
 
     <fragment
         android:id="@+id/navigation_users"
-        android:name="com.example.employeeclient.main.users.UsersFragment"
+        android:name="com.example.employeeclient.presentation.main.users.UsersFragment"
         android:label="@string/title_users"
-        tools:layout="@layout/fragment_users" />
+        tools:layout="@layout/fragment_users" >
+        <action
+            android:id="@+id/action_navigation_users_to_creditsListActivity"
+            app:destination="@id/creditsListActivity" />
+        <action
+            android:id="@+id/action_navigation_users_to_accountListActivity"
+            app:destination="@id/accountListActivity" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_credit"
-        android:name="com.example.employeeclient.main.credit.CreditFragment"
+        android:name="com.example.employeeclient.presentation.main.credit.CreditFragment"
         android:label="@string/title_credit"
         tools:layout="@layout/fragment_credit" />
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.employeeclient.main.profile.ProfileFragment"
+        android:name="com.example.employeeclient.presentation.main.adduser.AddUserFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_add_user" />
+    <activity
+        android:id="@+id/creditsListActivity"
+        android:name="com.example.employeeclient.presentation.credit.creditslist.CreditsListActivity"
+        android:label="activity_credits_list"
+        tools:layout="@layout/activity_credits_list" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <argument
+            android:name="username"
+            app:argType="string" />
+    </activity>
+    <activity
+        android:id="@+id/accountListActivity"
+        android:name="com.example.employeeclient.presentation.account.accountslist.AccountListActivity"
+        android:label="activity_account_list"
+        tools:layout="@layout/activity_account_list" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <argument
+            android:name="username"
+            app:argType="string" />
+    </activity>
+    <fragment
+        android:id="@+id/navigation_sync"
+        android:name="com.example.employeeclient.presentation.main.sync.SyncFragment"
+        android:label="fragment_sync"
+        tools:layout="@layout/fragment_sync" />
+
 </navigation>

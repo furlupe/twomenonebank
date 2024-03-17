@@ -1,5 +1,6 @@
 <resources>
-    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+
+    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
@@ -55,4 +56,13 @@
     <style name="SplashScreen" parent="AppTheme">
         <item name="android:windowBackground">@drawable/splash_image</item>
     </style>
+
+    <style name="SplashScreen.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="SplashScreen.AppBarOverlay" parent="AppTheme" />
+
+    <style name="SplashScreen.PopupOverlay" parent="AppTheme" />
 </resources>
