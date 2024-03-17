@@ -1,18 +1,15 @@
-﻿using Bank.Auth.Shared.Extensions;
-using Bank.Auth.Shared.Policies;
+﻿using Bank.Auth.Shared.Policies;
 using Bank.Common.Pagination;
 using Bank.Core.App.Dto;
 using Bank.Core.App.Dto.Events;
 using Bank.Core.App.Dto.Pagination;
-using Bank.Core.App.Services;
 using Bank.Core.App.Services.Contracts;
-using Bank.Exceptions.WebApiException;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bank.Core.App.Controllers;
 
-[Route("manage/acccounts")]
+[Route("manage/accounts")]
 [Authorize(Policy = Policies.EmployeeOrHigher)]
 public class AccountsEmployeeController(
     IUserService userService,
