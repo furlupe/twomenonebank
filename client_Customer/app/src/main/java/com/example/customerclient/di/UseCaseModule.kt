@@ -15,9 +15,11 @@ import com.example.customerclient.domain.usecases.credit.CreateCreditUseCase
 import com.example.customerclient.domain.usecases.credit.GetCreditHistoryUseCase
 import com.example.customerclient.domain.usecases.credit.GetCreditInfoUseCase
 import com.example.customerclient.domain.usecases.credit.GetCreditTariffsUseCase
+import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoPagingUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoUseCase
 import com.example.customerclient.domain.usecases.credit.PayCreditUseCase
+import com.example.customerclient.domain.usecases.credit.SaveUserCreditInfoToDatabaseUseCase
 import com.example.customerclient.domain.usecases.user.GetUserInfoUseCase
 import org.koin.dsl.module
 
@@ -48,6 +50,17 @@ val useCaseModule = module {
     single<CreateCreditUseCase> { CreateCreditUseCase(creditRepository = get()) }
     single<GetCreditTariffsUseCase> { GetCreditTariffsUseCase(creditRepository = get()) }
     single<PayCreditUseCase> { PayCreditUseCase(creditRepository = get()) }
+
+    single<GetUserCreditsInfoFromDatabaseUseCase> {
+        GetUserCreditsInfoFromDatabaseUseCase(
+            creditRepository = get()
+        )
+    }
+    single<SaveUserCreditInfoToDatabaseUseCase> {
+        SaveUserCreditInfoToDatabaseUseCase(
+            creditRepository = get()
+        )
+    }
 
     // - User
     single<GetUserInfoUseCase> { GetUserInfoUseCase(userRepository = get()) }

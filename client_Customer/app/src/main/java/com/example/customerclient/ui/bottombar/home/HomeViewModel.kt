@@ -6,7 +6,9 @@ import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoFromDatab
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
 import com.example.customerclient.domain.usecases.bill.OpenBillUseCase
 import com.example.customerclient.domain.usecases.bill.SaveUserBillInfoToDatabaseUseCase
+import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoUseCase
+import com.example.customerclient.domain.usecases.credit.SaveUserCreditInfoToDatabaseUseCase
 import com.example.customerclient.domain.usecases.user.GetUserInfoUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +25,9 @@ class HomeViewModel(
     private val getUserCreditsInfoUseCase: GetUserCreditsInfoUseCase,
     private val openBillUseCase: OpenBillUseCase,
     private val getUserBillsInfoFromDatabaseUseCase: GetUserBillsInfoFromDatabaseUseCase,
-    private val saveUserBillInfoToDatabaseUseCase: SaveUserBillInfoToDatabaseUseCase
+    private val saveUserBillInfoToDatabaseUseCase: SaveUserBillInfoToDatabaseUseCase,
+    private val getUserCreditsInfoFromDatabaseUseCase: GetUserCreditsInfoFromDatabaseUseCase,
+    private val saveUserCreditInfoToDatabaseUseCase: SaveUserCreditInfoToDatabaseUseCase
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.Loading)
@@ -38,6 +42,7 @@ class HomeViewModel(
 
                 withContext(Dispatchers.IO) {
                     saveUserBillInfoToDatabaseUseCase(billsInfo)
+                    saveUserCreditInfoToDatabaseUseCase(creditsInfo)
                 }
 
                 _uiState.update {
@@ -51,12 +56,13 @@ class HomeViewModel(
             } catch (e: HttpException) {
                 withContext(Dispatchers.IO) {
                     val billsInfo = getUserBillsInfoFromDatabaseUseCase()
+                    val creditsInfo = getUserCreditsInfoFromDatabaseUseCase()
                     withContext(Dispatchers.Main) {
                         _uiState.update {
                             HomeState.Content(
                                 userName = "",
                                 billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1) else billsInfo,
-                                creditsInfo = listOf()
+                                creditsInfo = if (creditsInfo.size > 2) creditsInfo.slice(0..1) else creditsInfo
                             )
                         }
                     }

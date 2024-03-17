@@ -8,7 +8,10 @@ import com.example.customerclient.ui.credit.info.CreditInfo
 import kotlinx.coroutines.flow.Flow
 
 interface CreditRepository {
+    suspend fun saveUserCreditsToDatabase(credits: List<CreditShortInfo>)
     suspend fun getUserCreditsPagingInfo(): Flow<PagingData<CreditShortInfo>>
+
+    suspend fun getUserCreditsInfoFromDatabase(): List<CreditShortInfo>
 
     suspend fun getUserCreditsInfo(): List<CreditShortInfo>
 

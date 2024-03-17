@@ -10,6 +10,8 @@ import com.example.customerclient.data.api.dto.toCreditInfo
 import com.example.customerclient.data.paging.credit.CreditsHistoryPagingSource
 import com.example.customerclient.data.paging.credit.CreditsPagingSource
 import com.example.customerclient.data.paging.credit.TariffsPagingSource
+import com.example.customerclient.data.remote.database.CreditDao
+import com.example.customerclient.data.remote.database.entity.CreditEntity
 import com.example.customerclient.domain.repositories.CreditRepository
 import com.example.customerclient.ui.bottombar.home.CreditShortInfo
 import com.example.customerclient.ui.credit.create.Tariff
@@ -18,8 +20,25 @@ import com.example.customerclient.ui.credit.info.CreditInfo
 import kotlinx.coroutines.flow.Flow
 
 class CreditRepositoryImpl(
-    private val creditsApi: CreditsApi
+    private val creditsApi: CreditsApi,
+    private val creditDao: CreditDao
 ) : CreditRepository {
+    override suspend fun saveUserCreditsToDatabase(credits: List<CreditShortInfo>) {
+        val currentCreditsIds = creditDao.getCredits().map { it.id }
+        val newBills = credits.filter { it.id !in currentCreditsIds }
+        newBills.map {
+            creditDao.insertCredit(
+                CreditEntity(
+                    it.id,
+                    it.balance,
+                    it.type,
+                    it.date,
+                    it.isClosed
+                )
+            )
+        }
+    }
+
     override suspend fun getUserCreditsPagingInfo(): Flow<PagingData<CreditShortInfo>> {
         return Pager(
             config = PagingConfig(pageSize = PAGE_CREDIT_LIMIT),
@@ -29,6 +48,19 @@ class CreditRepositoryImpl(
                 )
             }
         ).flow
+    }
+
+    override suspend fun getUserCreditsInfoFromDatabase(): List<CreditShortInfo> {
+        return creditDao.getCredits().map { entity ->
+            CreditShortInfo(
+                entity.id,
+                entity.tariff,
+                entity.amount,
+                entity.days,
+                "Количество дней",
+                entity.isClosed
+            )
+        }
     }
 
     override suspend fun getUserCreditsInfo(): List<CreditShortInfo> {

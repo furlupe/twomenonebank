@@ -24,7 +24,9 @@ val viewModelModule = module {
             getUserCreditsInfoUseCase = get(),
             openBillUseCase = get(),
             saveUserBillInfoToDatabaseUseCase = get(),
-            getUserBillsInfoFromDatabaseUseCase = get()
+            getUserBillsInfoFromDatabaseUseCase = get(),
+            getUserCreditsInfoFromDatabaseUseCase = get(),
+            saveUserCreditInfoToDatabaseUseCase = get()
         )
     }
 
@@ -53,7 +55,12 @@ val viewModelModule = module {
             payCreditUseCase = get()
         )
     }
-    viewModel { AllCreditsViewModel(getUserCreditsInfoPagingUseCase = get()) }
+    viewModel {
+        AllCreditsViewModel(
+            getUserCreditsInfoPagingUseCase = get(),
+            getUserCreditsInfoFromDatabaseUseCase = get()
+        )
+    }
     viewModel {
         CreateCreditViewModel(
             createCreditUseCase = get(),
