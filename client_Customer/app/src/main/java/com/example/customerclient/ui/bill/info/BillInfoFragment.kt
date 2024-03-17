@@ -41,17 +41,33 @@ class BillInfoFragment : Fragment() {
         binding = FragmentBillInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        // Список с историей счёта
+        val billHistoryRecyclerView = binding.billHistoryRecyclerView
+        billHistoryRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        context?.let {
+            billHistoryRecyclerView.adapter =
+                BillsHistoryRecyclerAdapter()
+        }
+
+        lifecycleScope.launch {
+            viewModel.billsHistoryState.collect { billHistory ->
+
+            }
+        }
+
         lifecycleScope.launch {
             viewModel.uiState.collect { billInfoState ->
-                billInfoFragmentContent(
-                    moneyOnBill = billInfoState.moneyOnBill,
-                    billHistory = billInfoState.history,
+                if (billInfoState is BillInfoState.Content) {
+                    billInfoFragmentContent(
+                        moneyOnBill = billInfoState.info.balance,
 
-                    onTopUpBill = { amount -> viewModel.topUpBill(amount) },
-                    onChargeBill = { amount -> viewModel.chargeBill(amount) },
+                        onTopUpBill = { amount -> viewModel.topUpBill(amount) },
+                        onChargeBill = { amount -> viewModel.chargeBill(amount) },
 
-                    onConfirmToCloseBillClick = { viewModel.closeBill() }
-                )
+                        onConfirmToCloseBillClick = { viewModel.closeBill() }
+                    )
+                } else if (billInfoState is BillInfoState.NavigateToMainScreen) callback?.backToMainFragment()
             }
         }
 
@@ -61,7 +77,6 @@ class BillInfoFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun billInfoFragmentContent(
         moneyOnBill: String,
-        billHistory: List<BillHistory>,
 
         onTopUpBill: (String) -> Unit,
         onChargeBill: (String) -> Unit,
@@ -99,15 +114,6 @@ class BillInfoFragment : Fragment() {
 
         // Кнопка "Закрыть счёт"
         binding.closeBillButton.setOnClickListener { showConfirmToCloseBillDialog { onConfirmToCloseBillClick() } }
-
-        // Список с историей счёта
-        val billHistoryRecyclerView = binding.billHistoryRecyclerView
-        billHistoryRecyclerView.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        context?.let {
-            billHistoryRecyclerView.adapter =
-                BillsHistoryRecyclerAdapter(items = billHistory)
-        }
     }
 
     private fun showConfirmToCloseBillDialog(

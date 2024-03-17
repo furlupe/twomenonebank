@@ -4,12 +4,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.customerclient.common.Constants.PAGE_CREDIT_LIMIT
-import com.example.customerclient.data.CreditsHistoryPagingSource
-import com.example.customerclient.data.CreditsPagingSource
-import com.example.customerclient.data.TariffsPagingSource
 import com.example.customerclient.data.api.credit.CreditsApi
 import com.example.customerclient.data.api.dto.CreateCreditDto
 import com.example.customerclient.data.api.dto.toCreditInfo
+import com.example.customerclient.data.paging.credit.CreditsHistoryPagingSource
+import com.example.customerclient.data.paging.credit.CreditsPagingSource
+import com.example.customerclient.data.paging.credit.TariffsPagingSource
 import com.example.customerclient.domain.repositories.CreditRepository
 import com.example.customerclient.ui.bottombar.home.CreditShortInfo
 import com.example.customerclient.ui.credit.create.Tariff

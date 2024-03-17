@@ -33,6 +33,10 @@ class CreateCreditFragment : Fragment() {
     ): View {
         binding = FragmentCreateCreditBinding.inflate(inflater, container, false)
 
+        binding.backAllCreditsButton.setOnClickListener {
+            callback?.backToMainFragment()
+        }
+
         val tariffRecyclerView = binding.allTariffRecyclerView
         tariffRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

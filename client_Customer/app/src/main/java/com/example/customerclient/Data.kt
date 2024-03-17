@@ -161,109 +161,109 @@ val billHistory = listOf(
     BillHistory(
         type = HistoryOperationType.WITHDRAW,
         amount = "10000",
-        billNumber = "347289",
+        billId = "347289",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.TOP_UP,
         amount = "10000",
-        billNumber = "41332",
+        billId = "41332",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.WITHDRAW,
         amount = "10000",
-        billNumber = "347289",
+        billId = "347289",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.TOP_UP,
         amount = "10000",
-        billNumber = "41332",
+        billId = "41332",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.WITHDRAW,
         amount = "10000",
-        billNumber = "347289",
+        billId = "347289",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.TOP_UP,
         amount = "10000",
-        billNumber = "41332",
+        billId = "41332",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.WITHDRAW,
         amount = "10000",
-        billNumber = "347289",
+        billId = "347289",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.TOP_UP,
         amount = "10000",
-        billNumber = "41332",
+        billId = "41332",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.WITHDRAW,
         amount = "10000",
-        billNumber = "347289",
+        billId = "347289",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.TOP_UP,
         amount = "10000",
-        billNumber = "41332",
+        billId = "41332",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.WITHDRAW,
         amount = "10000",
-        billNumber = "347289",
+        billId = "347289",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.TOP_UP,
         amount = "10000",
-        billNumber = "41332",
+        billId = "41332",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.WITHDRAW,
         amount = "10000",
-        billNumber = "347289",
+        billId = "347289",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.TOP_UP,
         amount = "10000",
-        billNumber = "41332",
+        billId = "41332",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.WITHDRAW,
         amount = "10000",
-        billNumber = "347289",
+        billId = "347289",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.TOP_UP,
         amount = "10000",
-        billNumber = "41332",
+        billId = "41332",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.WITHDRAW,
         amount = "10000",
-        billNumber = "347289",
+        billId = "347289",
         date = "20.03.2023"
     ),
     BillHistory(
         type = HistoryOperationType.TOP_UP,
         amount = "10000",
-        billNumber = "41332",
+        billId = "41332",
         date = "20.03.2023"
     )
 )

@@ -9,8 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customerclient.databinding.FragmentHomeBinding
-import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithConfirmAndDismissButtons
-import com.example.customerclient.ui.common.BillsInfoRecyclerAdapter
+import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithEditTextConfirmAndDismissButtons
+import com.example.customerclient.ui.bottombar.home.components.BillsInfoRecyclerAdapter
 import com.example.customerclient.ui.common.CreditsInfoRecyclerAdapter
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,12 +38,10 @@ class HomeFragment : Fragment() {
                 when (homeState) {
                     is HomeState.Content -> homeFragmentContent(
                         name = homeState.userName,
-                        euro = homeState.euroExchangeRate,
-                        dollar = homeState.dollarExchangeRate,
                         billsInfo = homeState.billsInfo,
                         creditsInfo = homeState.creditsInfo,
 
-                        onCreateBillClick = { viewModel.createBill() },
+                        onCreateBillClick = { name -> viewModel.createBill(name) },
                     )
 
                     else -> {}
@@ -55,14 +53,11 @@ class HomeFragment : Fragment() {
 
     private fun homeFragmentContent(
         name: String,
-        euro: String,
-        dollar: String,
         billsInfo: List<BillInfo>,
         creditsInfo: List<CreditShortInfo>,
-        onCreateBillClick: () -> Unit,
+        onCreateBillClick: (String) -> Unit,
     ) {
         binding.userWelcome.text = if (name == "") "Здравствуйте" else "Здравствуйте,\n$name"
-        binding.exchangeRate.text = "$euro\n$dollar"
 
         billsCardInfoContent(billsInfo, onCreateBillClick)
         creditsCardInfoContent(creditsInfo)
@@ -70,9 +65,15 @@ class HomeFragment : Fragment() {
 
     private fun billsCardInfoContent(
         billsInfo: List<BillInfo>,
-        onCreateBillClick: () -> Unit,
+        onCreateBillClick: (String) -> Unit,
     ) {
-        binding.addBillButton.setOnClickListener { showCreateBillDialog { onCreateBillClick() } }
+        binding.addBillButton.setOnClickListener {
+            showCreateBillDialog { name ->
+                onCreateBillClick(
+                    name
+                )
+            }
+        }
 
         when (billsInfo.size) {
             0 -> {
@@ -80,7 +81,13 @@ class HomeFragment : Fragment() {
                 binding.openAllBillsButton.visibility = View.GONE
                 binding.createNewBillCard.visibility = View.VISIBLE
 
-                binding.createNewBillCard.setOnClickListener { showCreateBillDialog { onCreateBillClick() } }
+                binding.createNewBillCard.setOnClickListener {
+                    showCreateBillDialog { name ->
+                        onCreateBillClick(
+                            name
+                        )
+                    }
+                }
             }
 
             1 -> {
@@ -158,9 +165,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun showCreateBillDialog(
-        onCreateClick: () -> Unit,
+        onCreateClick: (String) -> Unit,
     ) {
-        val dialog = AlertDialogWithConfirmAndDismissButtons(
+        val dialog = AlertDialogWithEditTextConfirmAndDismissButtons(
             title = "Сберегательный счёт",
             description = "Валюта: Российский рубль\nНачисление процентов: На ежедневный остаток\nВаша ставка: 12%",
             onPositiveButtonClick = onCreateClick,

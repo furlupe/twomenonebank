@@ -1,4 +1,4 @@
-package com.example.customerclient.ui.common
+package com.example.customerclient.ui.bottombar.home.components
 
 import android.view.LayoutInflater
 import android.view.View

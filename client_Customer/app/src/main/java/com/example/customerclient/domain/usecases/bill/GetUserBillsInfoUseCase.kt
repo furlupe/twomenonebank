@@ -6,7 +6,7 @@ import com.example.customerclient.ui.bottombar.home.BillInfo
 class GetUserBillsInfoUseCase(
     private val billRepository: BillRepository
 ) {
-    suspend operator fun invoke(userId: String): List<BillInfo> {
-        return billRepository.getUserBillsInfo(userId)
+    suspend operator fun invoke(): List<BillInfo> {
+        return billRepository.getUserBillsInfo()
     }
 }

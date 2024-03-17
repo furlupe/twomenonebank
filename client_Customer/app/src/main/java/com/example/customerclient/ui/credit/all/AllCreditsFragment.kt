@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customerclient.databinding.FragmentAllCreditsBinding
-import com.example.customerclient.ui.bottombar.home.CreditShortInfo
 import com.example.customerclient.ui.common.CreditsInfoPagingRecyclerAdapter
 import com.example.customerclient.ui.credit.CreditsListener
 import kotlinx.coroutines.flow.collectLatest
@@ -39,6 +38,10 @@ class AllCreditsFragment : Fragment() {
     ): View {
         binding = FragmentAllCreditsBinding.inflate(inflater, container, false)
 
+        // Кнопка назад
+        binding.backAllCreditsButton.setOnClickListener { callback?.backToMainFragment() }
+
+        // Список кредитов
         val allCreditsRecyclerView = binding.allCreditsRecyclerView
         allCreditsRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -46,13 +49,7 @@ class AllCreditsFragment : Fragment() {
         val adapter = CreditsInfoPagingRecyclerAdapter(onCreditClick = { creditId ->
             navigateToCreditInfoFragment(creditId)
         })
-        context?.let {
-            allCreditsRecyclerView.adapter = adapter
-        }
-
-        lifecycleScope.launch {
-            viewModel.uiState.collect { allCreditsState -> allCreditsFragmentContent(allCreditsState.credits) }
-        }
+        context?.let { allCreditsRecyclerView.adapter = adapter }
 
         lifecycleScope.launch {
             viewModel.creditShortInfoState.collectLatest {
@@ -61,16 +58,6 @@ class AllCreditsFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    private fun allCreditsFragmentContent(
-        credits: List<CreditShortInfo>
-    ) {
-        // Кнопка назад
-        binding.backAllCreditsButton.setOnClickListener { callback?.backToMainFragment() }
-
-        // Список кредитов
-
     }
 
     private fun navigateToCreditInfoFragment(billId: String) {
