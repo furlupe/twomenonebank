@@ -22,20 +22,28 @@ namespace Bank.Auth.App.Setup.Seeders
 
             var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
-            if (await manager.FindByClientIdAsync("amogus", cancellationToken) is null)
+            OpenIddictApplicationDescriptor client =
+                new()
+                {
+                    ClientId = "amogus",
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Token,
+                        Permissions.Endpoints.Authorization,
+                        Permissions.GrantTypes.Password,
+                        Permissions.GrantTypes.RefreshToken,
+                        Permissions.Scopes.Profile,
+                        Permissions.GrantTypes.AuthorizationCode,
+                        Permissions.ResponseTypes.Code,
+                    }
+                };
+
+            client.RedirectUris.Add(new Uri("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
+
+            if (await manager.FindByClientIdAsync(client.ClientId!, cancellationToken) is null)
             {
                 await manager.CreateAsync(
-                    new OpenIddictApplicationDescriptor
-                    {
-                        ClientId = "amogus",
-                        Permissions =
-                        {
-                            Permissions.Endpoints.Token,
-                            Permissions.GrantTypes.Password,
-                            Permissions.GrantTypes.RefreshToken,
-                            Permissions.Scopes.Profile
-                        }
-                    },
+                    client,
                     cancellationToken
                 );
             }

@@ -1,12 +1,12 @@
-﻿using Bank.Auth.App.Setup.Seeders;
+﻿using Bank.Auth.Domain.Models;
 using Bank.Auth.Domain;
-using Bank.Auth.Domain.Models;
-using Bank.Auth.Shared.Extensions;
 using Bank.Auth.Shared.Options;
-using Bank.Common.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Bank.Common.Extensions;
 using Microsoft.IdentityModel.Tokens;
-using OpenIddict.Validation.AspNetCore;
+using Bank.Auth.Shared.Extensions;
+using Bank.Auth.App.Setup.Seeders;
 
 namespace Bank.Auth.App.Setup.Extensions
 {
@@ -15,6 +15,19 @@ namespace Bank.Auth.App.Setup.Extensions
         public static WebApplicationBuilder AddAuth(this WebApplicationBuilder builder)
         {
             var services = builder.Services;
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            {
+                options.LoginPath = "/login";
+            });
+
+            services.AddAuthorization(options => options.RegisterPolicies());
 
             var authOptions = builder.GetConfigurationValue<AuthOptions>();
 
@@ -46,7 +59,8 @@ namespace Bank.Auth.App.Setup.Extensions
                 .AddServer(options =>
                 {
                     options.SetTokenEndpointUris("/connect/token");
-                    options.AllowPasswordFlow().AllowRefreshTokenFlow();
+                    options.SetAuthorizationEndpointUris("/connect/authorize");
+                    options.AllowRefreshTokenFlow().AllowAuthorizationCodeFlow().AllowPasswordFlow();
 
                     options
                         .DisableAccessTokenEncryption()
@@ -62,7 +76,8 @@ namespace Bank.Auth.App.Setup.Extensions
                     options
                         .UseAspNetCore()
                         .DisableTransportSecurityRequirement()
-                        .EnableTokenEndpointPassthrough();
+                        .EnableTokenEndpointPassthrough()
+                        .EnableAuthorizationEndpointPassthrough();
                 })
                 .AddValidation(options =>
                 {
@@ -70,21 +85,16 @@ namespace Bank.Auth.App.Setup.Extensions
                     options.UseAspNetCore();
                 });
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme =
-                    OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme =
-                    OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-            });
-            services.AddAuthorization(options => options.RegisterPolicies());
-
             services
                 .AddHostedService<OpenIdClientsSeeder>()
-                .AddHostedService<UserSeeder>()
-                .AddHostedService<RolesSeeder>();
+                .AddHostedService<UserSeeder>();
 
             return builder;
+        }
+
+        public static IApplicationBuilder UseAuth(this IApplicationBuilder app) 
+        {
+            return app.UseAuthentication();
         }
     }
 }
