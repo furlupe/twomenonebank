@@ -3,6 +3,7 @@ using Bank.Auth.Shared.Extensions;
 using Bank.Auth.Shared.Policies.Handlers;
 using Bank.Common.Constants;
 using Bank.Common.Extensions;
+using Bank.Common.Middlewares;
 using Bank.Core.App.Services;
 
 namespace Bank.Core.App.Setup;
@@ -25,6 +26,8 @@ public static class FrontlineServicesSetup
 
     public static void UseFrontlineServices(this WebApplication app)
     {
+        app.UseMiddleware<ErrorHandlingMiddleware>();
+
         app.UseSwagger();
         app.UseSwaggerUI();
 
