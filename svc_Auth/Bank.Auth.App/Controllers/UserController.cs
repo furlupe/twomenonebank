@@ -4,19 +4,19 @@ using Bank.Auth.Domain.Models;
 using Bank.Auth.Shared.Claims;
 using Bank.Auth.Shared.Enumerations;
 using Bank.Auth.Shared.Extensions;
-using Bank.Auth.Shared.Policies;
 using Bank.Common.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Validation.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Bank.Auth.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -111,9 +111,8 @@ namespace Bank.Auth.App.Controllers
             List<Claim> claims =
             [
                 new Claim(Claims.Subject, user.Id.ToString()),
-                new Claim(Claims.Name, user.Email),
+                new Claim(ClaimTypes.Name, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, registerDto.Role.ToString()),
-                new Claim(BankClaims.Id, user.Id.ToString())
             ];
 
             await _userManager.AddClaimsAsync(user, claims);

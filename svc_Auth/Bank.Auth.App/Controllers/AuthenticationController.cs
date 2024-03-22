@@ -1,29 +1,31 @@
-﻿using Bank.Auth.App.Services.Auth.Validators;
-using Bank.Auth.App.Services.Auth.Validators.Result;
+﻿using Bank.Auth.App.ViewModels;
 using Bank.Auth.Domain.Models;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
+using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Bank.Auth.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : Controller
     {
-        private readonly GrantValidatorFactory _grantValidatorFactory;
+        public readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
         public AuthenticationController(
-            GrantValidatorFactory grantValidatorFactory,
+            UserManager<User> userManager,
             SignInManager<User> signInManager
         )
         {
-            _grantValidatorFactory = grantValidatorFactory;
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -52,40 +54,116 @@ namespace Bank.Auth.App.Controllers
             var request = HttpContext.GetOpenIddictServerRequest();
             ArgumentNullException.ThrowIfNull(request);
 
-            BaseGrantValidator grantValidator = _grantValidatorFactory.Create(request);
-            var validationResult = await grantValidator.ValidateAsync(request);
+            ClaimsPrincipal? claimsPrincipal = null;
 
-            return await ProccessGrantValidationResult(validationResult, request);
-        }
-
-        private async Task<IActionResult> ProccessGrantValidationResult(
-            GrantValidationResult result,
-            OpenIddictRequest request
-        )
-        {
-            if (!result.IsSuccess || result.User == null)
+            if (request.IsPasswordGrantType())
             {
-                return Unauthorized(new { error = result.ErrorKey, info = result.AdditionalInfo });
+                var user = await FindUserByCredentials(request.Username!, request.Password!);
+                if (user == null) throw new InvalidOperationException("invalid_username_password");
+
+                var claims = await _userManager.GetClaimsAsync(user);
+
+                var identity = new ClaimsIdentity(claims, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+                claimsPrincipal = new ClaimsPrincipal(identity);
+                claimsPrincipal.SetDestinations(claim => [Destinations.AccessToken, Destinations.IdentityToken]);
+                claimsPrincipal.SetScopes(request.GetScopes());
+
             }
 
-            var principal = await _signInManager.CreateUserPrincipalAsync(result.User);
+            else if (request.IsAuthorizationCodeGrantType() || request.IsRefreshTokenGrantType())
+            {
+                claimsPrincipal = (await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)).Principal;
+            }
+            else
+            {
+                throw new InvalidOperationException("Unsupported grant");
+            }
 
-            principal.SetDestinations(claim =>
-                claim.Type switch
+            if (claimsPrincipal == null) throw new InvalidOperationException("ClaimsPrincipal is null");
+
+            return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("~/connect/authorize")]
+        [HttpPost("~/connect/authorize")]
+        public async Task<IActionResult> Authorize()
+        {
+            var request = HttpContext.GetOpenIddictServerRequest();
+            ArgumentNullException.ThrowIfNull(request);
+
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (!result.Succeeded)
+            {
+                var properties = new AuthenticationProperties()
                 {
-                    Claims.Name
-                    or Claims.Subject
-                        => [Destinations.AccessToken, Destinations.IdentityToken],
-                    _ => [Destinations.AccessToken]
-                }
-            );
-            principal.SetScopes(request.GetScopes());
+                    RedirectUri = Request.PathBase + Request.Path
+                            + QueryString.Create(Request.HasFormContentType ? [.. Request.Form] : [.. Request.Query]),
+                };
 
-            var signInResult = SignIn(
-                principal,
-                OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
-            );
-            return signInResult;
+                return Challenge(
+                    authenticationSchemes: CookieAuthenticationDefaults.AuthenticationScheme,
+                    properties: properties
+                );
+            }
+
+            var claims = result.Principal.Claims;
+
+            foreach(Claim claim in claims)
+            {
+                claim.SetDestinations(Destinations.AccessToken);
+            }
+
+            var claimsIdentity = new ClaimsIdentity(claims, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+            claimsPrincipal.SetScopes(request.GetScopes());
+
+            return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+
+
+        [HttpGet("~/login")]
+        public IActionResult Login([FromQuery] string returnUrl = null)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        [HttpPost("~/login")]
+        public async Task<IActionResult> Login([FromForm] LoginViewModel model)
+        {
+            ViewBag.ReturnUrl = model.ReturnUrl;
+
+            User? user = await FindUserByCredentials(model.Email, model.Password);
+            if (user == null)
+            {
+                return View(model);
+            }
+
+            var principal = await _signInManager.CreateUserPrincipalAsync(user);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            if (Url.IsLocalUrl(model.ReturnUrl))
+            {
+                return Redirect(model.ReturnUrl);
+            }
+
+            return Ok();
+        }
+
+        private async Task<User?> FindUserByCredentials(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return null;
+
+            bool isPasswordRight = await _userManager.CheckPasswordAsync(user, password);
+            if (!isPasswordRight) return null;
+
+            return user;
         }
     }
 }
