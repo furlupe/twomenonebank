@@ -2,9 +2,7 @@
 
 namespace Bank.Exceptions.WebApiException;
 
-public abstract class WebApiException<TDetails>
-    : ApplicationException,
-        IProblemDetailsException<TDetails>
+public abstract class WebApiException<TDetails> : ApplicationException, IWebApiException<TDetails>
     where TDetails : ProblemDetails, new()
 {
     protected WebApiException(string type, int statusCode, string? title, string? detail = null)
@@ -25,10 +23,26 @@ public abstract class WebApiException<TDetails>
     }
 
     public TDetails Details { get; protected set; }
+
+    public IActionResult ToResult() =>
+        new ObjectResult(Details)
+        {
+            StatusCode = Details.Status,
+            ContentTypes =
+            {
+                ContentTypes.ApplicationProblemJson,
+                ContentTypes.ApplicationProblemXml
+            }
+        };
 }
 
-public abstract class WebApiException : WebApiException<ProblemDetails>
+public abstract class ProblemDetailsException : WebApiException<ProblemDetails>
 {
-    protected WebApiException(string type, int statusCode, string? title, string? detail = null)
+    protected ProblemDetailsException(
+        string type,
+        int statusCode,
+        string? title,
+        string? detail = null
+    )
         : base(type, statusCode, title, detail) { }
 }

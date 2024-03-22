@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Bank.Exceptions.WebApiException;
 
-public class NotFoundException : WebApiException
+public class NotFoundException : ProblemDetailsException
 {
     public NotFoundException(string? message = null)
         : base(
