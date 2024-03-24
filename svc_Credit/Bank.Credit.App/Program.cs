@@ -1,11 +1,11 @@
-using Bank.Auth.Shared.Extensions;
-using Bank.Auth.Shared.Policies.Handlers;
+using System.Reflection;
+using Bank.Auth.Common.Extensions;
+using Bank.Auth.Common.Policies.Handlers;
 using Bank.Common.Extensions;
 using Bank.Credit.App.Services;
 using Bank.Credit.App.Setup;
 using Bank.Credit.Persistance.Extensions;
 using Hangfire;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +26,7 @@ builder
     .AddTransient<CreditBackroundService>();
 
 builder.AddPersistance();
-builder.ConfigureAuth();
+builder.ConfigureAuth(opt => opt.RegisterPolicies());
 builder.ConfigureHangfire();
 
 var app = builder.Build();

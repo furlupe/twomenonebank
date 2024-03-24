@@ -1,4 +1,4 @@
-﻿using Bank.Auth.Shared.Policies;
+﻿using Bank.Auth.Common.Policies;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.Domain.Transactions;
 using Microsoft.AspNetCore.Authorization;

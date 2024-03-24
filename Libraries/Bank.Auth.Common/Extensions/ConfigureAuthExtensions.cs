@@ -1,5 +1,6 @@
-﻿using Bank.Auth.Shared.Options;
-using Bank.Auth.Shared.Policies.Handlers;
+﻿using Bank.Auth.Common.Enumerations;
+using Bank.Auth.Common.Options;
+using Bank.Auth.Common.Policies.Handlers;
 using Bank.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -7,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
 
-namespace Bank.Auth.Shared.Extensions
+namespace Bank.Auth.Common.Extensions
 {
     public static class ConfigureAuthExtensions
     {
@@ -17,13 +18,16 @@ namespace Bank.Auth.Shared.Extensions
         /// <param name="builder"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static WebApplicationBuilder ConfigureAuth(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder ConfigureAuth(
+            this WebApplicationBuilder builder, 
+            Action<AuthorizationOptions>? authSettings = null
+        )
         {
             var authOptions = builder.GetConfigurationValue<AuthOptions>();
 
             var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(authOptions.Key));
 
-            return builder.ConfigureAuth(authOptions.Host, securityKey);
+            return builder.ConfigureAuth(authOptions.Host, securityKey, authSettings);
         }
 
         public static AuthorizationOptions RegisterPolicies(this AuthorizationOptions options)
@@ -33,9 +37,7 @@ namespace Bank.Auth.Shared.Extensions
                 builder =>
                 {
                     builder.AddRequirements(
-                        new RoleAuthorizationRequirement(
-                            [Enumerations.Role.Admin, Enumerations.Role.Employee]
-                        )
+                        new RoleAuthorizationRequirement([Role.Admin, Role.Employee])
                     );
                 }
             );
@@ -61,9 +63,11 @@ namespace Bank.Auth.Shared.Extensions
         public static WebApplicationBuilder ConfigureAuth(
             this WebApplicationBuilder builder,
             string issuer,
-            SecurityKey issuerSigningKey
+            SecurityKey issuerSigningKey,
+            Action<AuthorizationOptions>? authSettings = null
         )
         {
+            authSettings ??= opt => { };
             var services = builder.Services;
 
             services
@@ -99,10 +103,7 @@ namespace Bank.Auth.Shared.Extensions
             services.AddScoped<IAuthorizationHandler, CreateUserAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, RoleAuthorizationHandler>();
 
-            services.AddAuthorization(options =>
-            {
-                options.RegisterPolicies();
-            });
+            services.AddAuthorization(authSettings);
 
             return builder;
         }

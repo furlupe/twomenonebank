@@ -1,4 +1,4 @@
-﻿namespace Bank.Auth.Shared.Policies.Handlers
+﻿namespace Bank.Auth.Common.Policies.Handlers
 {
     public interface IUserService
     {

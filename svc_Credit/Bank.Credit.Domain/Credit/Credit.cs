@@ -1,5 +1,5 @@
-﻿using Bank.Credit.Domain.Credit.Events;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Bank.Credit.Domain.Credit.Events;
 
 namespace Bank.Credit.Domain.Credit
 {
@@ -32,7 +32,13 @@ namespace Bank.Credit.Domain.Credit
             Days = days;
 
             var dailyRate = tariff.Rate / 100.0;
-            PeriodicPayment = (int) Math.Floor(amount * dailyRate * Math.Pow(1 + dailyRate, days) / (Math.Pow(1 + dailyRate, days) - 1));
+            PeriodicPayment = (int)
+                Math.Floor(
+                    amount
+                        * dailyRate
+                        * Math.Pow(1 + dailyRate, days)
+                        / (Math.Pow(1 + dailyRate, days) - 1)
+                );
 
             var now = DateTime.UtcNow;
             NextPaymentDate = now + Tariff.Period;
@@ -48,7 +54,8 @@ namespace Bank.Credit.Domain.Credit
                 (int)Math.Floor(Amount * Tariff.PenaltyRate * (now - LastPaymentDate).Days / 100.0)
                 - Penalty;
 
-            if (amount < 1) return;
+            if (amount < 1)
+                return;
 
             ApplyAndRecord(new CreditPenaltyAddedEvent(Id, amount, now));
         }
@@ -174,7 +181,6 @@ namespace Bank.Credit.Domain.Credit
 
         private void Apply(CreditPaymentDateMovedEvent @event)
         {
-            
             if (DateTime.UtcNow.Date - NextPaymentDate.Date < Tariff.Period)
             {
                 throw new InvalidOperationException("Can't move since period hasn't passed yet");

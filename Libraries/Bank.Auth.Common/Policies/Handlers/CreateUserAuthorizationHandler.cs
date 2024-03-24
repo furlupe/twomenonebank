@@ -1,7 +1,7 @@
-﻿using Bank.Auth.Shared.Extensions;
+﻿using Bank.Auth.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Bank.Auth.Shared.Policies.Handlers
+namespace Bank.Auth.Common.Policies.Handlers
 {
     public class CreateUserAuthorizationRequirement : IAuthorizationRequirement { }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bank.Auth.Shared.Policies
+namespace Bank.Auth.Common.Policies
 {
     public static class Policies
     {

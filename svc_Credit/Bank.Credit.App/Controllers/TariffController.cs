@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Bank.Auth.Shared.Policies;
+using Bank.Auth.Common.Attributes;
+using Bank.Auth.Common.Enumerations;
+using Bank.Auth.Common.Policies;
 using Bank.Common.Pagination;
 using Bank.Credit.App.Dto;
 using Bank.Credit.App.Services;
@@ -25,7 +27,8 @@ namespace Bank.Credit.App.Controllers
         ) => Ok(await _tariffService.GetTariffs(page));
 
         [HttpPost]
-        [Authorize(Policy = Policies.EmployeeOrHigher)]
+        [Authorize]
+        [CalledByStaff]
         public async Task<IActionResult> Create([FromBody] CreateTariffDto dto)
         {
             await _tariffService.CreateTariff(dto);

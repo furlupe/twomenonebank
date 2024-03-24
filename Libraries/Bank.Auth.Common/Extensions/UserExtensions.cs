@@ -1,14 +1,15 @@
 ﻿using System.Security.Claims;
-using Bank.Auth.Shared.Claims;
-using Bank.Auth.Shared.Enumerations;
+using Bank.Auth.Common.Claims;
+using Bank.Auth.Common.Enumerations;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Bank.Auth.Shared.Extensions
+namespace Bank.Auth.Common.Extensions
 {
     public static class UserExtensions
     {
         public static Guid? GetIdOrDefault(this ClaimsPrincipal user)
         {
-            Claim? idClaim = user.FindFirst(x => x.Type == BankClaims.Id);
+            Claim? idClaim = user.FindFirst(x => x.Type == ClaimTypes.NameIdentifier);
             if (idClaim == null)
             {
                 return null;
@@ -25,15 +26,13 @@ namespace Bank.Auth.Shared.Extensions
 
         public static bool HasRole(this ClaimsPrincipal user, Role role)
         {
-            Claim? roleClaim = user.FindFirst(ClaimTypes.Role);
-            if (roleClaim == null)
+            var roleClaims = user.FindAll(ClaimTypes.Role);
+            if (roleClaims.IsNullOrEmpty())
             {
                 return false;
             }
 
-            bool result = Enum.TryParse(roleClaim.Value, out Role parsed);
-
-            return result && parsed == role;
+            return roleClaims.Any(x => x.Value == role.ToString());
         }
 
         public static Guid GetId(this ClaimsPrincipal user)

@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
 using Bank.Auth.App.Dto;
+using Bank.Auth.Common.Attributes;
+using Bank.Auth.Common.Enumerations;
+using Bank.Auth.Common.Extensions;
 using Bank.Auth.Domain.Models;
-using Bank.Auth.Shared.Claims;
-using Bank.Auth.Shared.Enumerations;
-using Bank.Auth.Shared.Extensions;
 using Bank.Common.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -27,77 +27,59 @@ namespace Bank.Auth.App.Controllers
         }
 
         [HttpGet("me")]
-        public Task<ActionResult<UserDto>> GetMe()
-            => GetUserById(User.GetId());
+        [CalledByHuman]
+        public Task<ActionResult<UserDto>> GetMe() => GetUserById(User.GetId());
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<UserDto>> GetUser(Guid userId)
-        {
-            if (!IsEmployeeOrHigher())
-            {
-                return Forbid();
-            }
-
-            return await GetUserById(userId);
-        }
+        [CalledByStaff]
+        public Task<ActionResult<UserDto>> GetUser(Guid userId)
+            => GetUserById(userId);
 
         [HttpGet]
+        [CalledByStaff]
         public async Task<ActionResult<PageDto<UserDto>>> GetUserList([FromQuery] int page = 1)
         {
-            if (!IsEmployeeOrHigher())
-            {
-                return Forbid();
-            }
-
             return await _userManager
                 .Users.Where(x => x.Id != User.GetId())
                 .GetPage(
                     new() { PageNumber = page },
-                    user =>
-                    {
-                        _ = Enum.TryParse(user.Role, out Role role);
-                        return new UserDto()
-                        {
-                            Id = user.Id,
-                            Email = user.Email,
-                            Name = user.Name,
-                            Role = role,
-                            IsBanned = user.LockoutEnd != null
-                        };
-                    }
+                    UserToDto
                 );
         }
 
         [HttpPost("{userId}/ban")]
+        [CalledByStaff]
         public Task<IActionResult> Ban(Guid userId) => ToggleBan(userId, true);
 
         [HttpPost("{userId}/unban")]
+        [CalledByStaff]
         public Task<IActionResult> Unban(Guid userId) => ToggleBan(userId, false);
 
         [HttpPost("register")]
+        [CalledByStaff]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            if (!IsEmployeeOrHigher())
-            {
-                return Forbid();
-            }
-
-            if (registerDto.Role == Role.Admin)
+            if (registerDto.Roles.Contains(Role.Admin))
             {
                 return BadRequest("Can't create Admin");
             }
 
-            if (!Enum.IsDefined(typeof(Role), registerDto.Role))
+            foreach (var role in registerDto.Roles)
             {
-                return BadRequest("Wrong role, buddy");
+                if (!Enum.IsDefined(typeof(Role), role))
+                {
+                    return BadRequest("Wrong role, buddy");
+                }
             }
+
+            List<string> stringRoles = registerDto.Roles.Select(r => r.ToString()).ToList();
 
             var user = new User()
             {
                 Email = registerDto.Email,
                 Name = registerDto.Username,
                 UserName = registerDto.Email,
-                Role = registerDto.Role.ToString()
+                Roles = stringRoles
             };
             var result = await _userManager.CreateAsync(user);
 
@@ -111,9 +93,8 @@ namespace Bank.Auth.App.Controllers
             List<Claim> claims =
             [
                 new Claim(Claims.Subject, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, registerDto.Role.ToString()),
             ];
+            stringRoles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
 
             await _userManager.AddClaimsAsync(user, claims);
 
@@ -129,29 +110,32 @@ namespace Bank.Auth.App.Controllers
                 return BadRequest("An authorized request made by no account...what?");
             }
 
-            _ = Enum.TryParse(user.Role, out Role role);
+            return Ok(UserToDto(user));
+        }
 
-            return Ok(
-                new UserDto()
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    Name = user.Name,
-                    Role = role,
-                    IsBanned = user.LockoutEnd != null
-                }
-            );
+        private static UserDto UserToDto(User user)
+        {
+            List<Role> roles = [];
+            user.Roles.ForEach(r =>
+            {
+                _ = Enum.TryParse(r, out Role role);
+                roles.Add(role);
+            });
+
+            return new UserDto()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                Roles = roles,
+                IsBanned = user.LockoutEnd != null
+            };
         }
 
         private async Task<IActionResult> ToggleBan(Guid userId, bool on = true)
         {
-            if (!IsEmployeeOrHigher())
-            {
-                return Forbid();
-            }
-
             var user = await _userManager.Users.SingleOrDefaultAsync(x =>
-                x.Id == userId && x.Id != User.GetId() && x.Role != Role.Admin.ToString()
+                x.Id == userId && x.Id != User.GetId() && !x.Roles.Contains(Role.Admin.ToString())
             );
 
             if (user == null)
@@ -165,7 +149,5 @@ namespace Bank.Auth.App.Controllers
             );
             return result.Succeeded ? Ok() : BadRequest();
         }
-        private bool IsEmployeeOrHigher()
-            => User.HasRole(Role.Employee) || User.HasRole(Role.Admin);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
-using Bank.Auth.Shared.Policies;
+using Bank.Auth.Common.Attributes;
+using Bank.Auth.Common.Enumerations;
+using Bank.Auth.Common.Policies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,10 +23,12 @@ namespace Bank.Credit.App.Controllers
 
         [HttpGet("authenticated/user")]
         [Authorize(Policy = Policies.CreateUserIfNeeded)]
+        [CalledByUser]
         public string VersionUser() => Version();
 
         [HttpGet("authenticated/not-user")]
-        [Authorize(Policy = Policies.EmployeeOrHigher)]
+        [Authorize]
+        [CalledByStaff]
         public string VersionNotForUsers() => Version();
     }
 }

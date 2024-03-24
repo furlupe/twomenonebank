@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Bank.Auth.Shared.Policies;
+using Bank.Auth.Common.Attributes;
+using Bank.Auth.Common.Enumerations;
 using Bank.Common.Pagination;
 using Bank.Credit.App.Dto;
 using Bank.Credit.App.Services;
@@ -10,7 +11,8 @@ namespace Bank.Credit.App.Controllers.Credits
 {
     [Route("api/manage/credits")]
     [ApiController]
-    [Authorize(Policy = Policies.EmployeeOrHigher)]
+    [Authorize]
+    [CalledByStaff]
     public class CreditEmployeeController : ControllerBase
     {
         private readonly CreditService _creditService;
@@ -27,12 +29,10 @@ namespace Bank.Credit.App.Controllers.Credits
         ) => Ok(await _creditService.GetUserCredits(userId, page));
 
         [HttpGet("{creditId}")]
-
         public async Task<ActionResult<CreditDto>> GetCreditDetails(Guid creditId) =>
             Ok(await _creditService.GetCredit(creditId));
 
         [HttpGet("{creditId}/operations")]
-
         public async Task<ActionResult<PageDto<CreditOperationDto>>> GetCreditOperations(
             Guid creditId,
             [FromQuery, Range(1, int.MaxValue)] int page = 1

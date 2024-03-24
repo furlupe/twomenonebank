@@ -1,6 +1,6 @@
-﻿using Bank.Exceptions.WebApiException;
+﻿using System.Linq.Expressions;
+using Bank.Exceptions.WebApiException;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace Bank.Common.Pagination;
 

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Bank.Auth.Shared.Enumerations;
+using Bank.Auth.Common.Enumerations;
 
 namespace Bank.Auth.App.Dto
 {
@@ -16,6 +16,6 @@ namespace Bank.Auth.App.Dto
         public string? Username { get; set; }
 
         [Required]
-        public Role Role { get; set; }
+        public List<Role> Roles { get; set; }
     }
 }
