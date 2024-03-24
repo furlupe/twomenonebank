@@ -1,4 +1,4 @@
-﻿using Bank.Auth.Shared.Policies.Handlers;
+﻿using Bank.Auth.Common.Policies.Handlers;
 using Bank.Credit.Persistance;
 using Microsoft.EntityFrameworkCore;
 

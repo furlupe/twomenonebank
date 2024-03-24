@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Bank.Common.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Bank.Common.Extensions;
 
 namespace Bank.Credit.Persistance.Extensions
 {

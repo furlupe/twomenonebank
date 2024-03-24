@@ -1,16 +1,19 @@
-﻿using Bank.Auth.Shared.Extensions;
-using Bank.Auth.Shared.Policies;
+﻿using System.ComponentModel.DataAnnotations;
+using Bank.Auth.Common.Attributes;
+using Bank.Auth.Common.Enumerations;
+using Bank.Auth.Common.Extensions;
+using Bank.Auth.Common.Policies;
 using Bank.Common.Pagination;
 using Bank.Credit.App.Dto;
 using Bank.Credit.App.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace Bank.Credit.App.Controllers.Credits
 {
     [Route("api/[controller]")]
     [Authorize(Policy = Policies.CreateUserIfNeeded)]
+    [CalledByUser]
     [ApiController]
     public partial class CreditController : ControllerBase
     {
@@ -56,7 +59,5 @@ namespace Bank.Credit.App.Controllers.Credits
             Guid creditId,
             [FromQuery, Range(1, int.MaxValue)] int page = 1
         ) => Ok(await _creditService.GetCreditOperationHistory(creditId, page, User.GetId()));
-
-
     }
 }

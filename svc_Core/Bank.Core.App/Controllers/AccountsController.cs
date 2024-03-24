@@ -1,5 +1,5 @@
-﻿using Bank.Auth.Shared.Extensions;
-using Bank.Auth.Shared.Policies;
+﻿using Bank.Auth.Common.Extensions;
+using Bank.Auth.Common.Policies;
 using Bank.Common.Pagination;
 using Bank.Core.App.Dto;
 using Bank.Core.App.Dto.Events;

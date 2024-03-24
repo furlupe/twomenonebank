@@ -2,7 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Bank.Auth.Shared.Extensions
+namespace Bank.Auth.Common.Extensions
 {
     public static class AddSwaggerAuth
     {

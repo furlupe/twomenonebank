@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
+using Bank.Auth.Common.Claims;
+using Bank.Auth.Common.Enumerations;
 using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
-using Bank.Auth.Shared.Claims;
-using Bank.Auth.Shared.Enumerations;
 using Microsoft.AspNetCore.Identity;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -33,7 +33,7 @@ namespace Bank.Auth.App.Setup.Seeders
                     {
                         Email = "amogus@mail.ru",
                         UserName = "amogus@mail.ru",
-                        Role = Role.Admin.ToString()
+                        Roles = [Role.Admin.ToString(), Role.Employee.ToString()]
                     };
 
                 await manager.CreateAsync(user);
@@ -42,10 +42,8 @@ namespace Bank.Auth.App.Setup.Seeders
                 List<Claim> claims =
                 [
                     new Claim(Claims.Subject, user.Id.ToString()),
-                    new Claim(Claims.Name, user.UserName),
-                    new Claim(ClaimTypes.Role, Role.Admin.ToString()),
-                    new Claim(BankClaims.Id, user.Id.ToString())
                 ];
+                user.Roles.ForEach(r => claims.Add(new Claim(ClaimTypes.Role, r)));
 
                 await manager.AddClaimsAsync(user, claims);
             }

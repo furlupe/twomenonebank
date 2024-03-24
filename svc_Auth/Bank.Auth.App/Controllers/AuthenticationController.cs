@@ -1,4 +1,7 @@
-﻿using Bank.Auth.App.ViewModels;
+﻿using System.Security.Claims;
+using Bank.Auth.App.ViewModels;
+using Bank.Auth.Common.Claims;
+using Bank.Auth.Common.Enumerations;
 using Bank.Auth.Domain.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
@@ -7,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
-using System.Security.Claims;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Bank.Auth.App.Controllers
@@ -59,28 +61,45 @@ namespace Bank.Auth.App.Controllers
             if (request.IsPasswordGrantType())
             {
                 var user = await FindUserByCredentials(request.Username!, request.Password!);
-                if (user == null) throw new InvalidOperationException("invalid_username_password");
+                if (user == null)
+                    throw new InvalidOperationException("invalid_username_password");
 
                 var claims = await _userManager.GetClaimsAsync(user);
 
-                var identity = new ClaimsIdentity(claims, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                var identity = new ClaimsIdentity(
+                    claims,
+                    OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+                );
 
                 claimsPrincipal = new ClaimsPrincipal(identity);
-                claimsPrincipal.SetDestinations(claim => [Destinations.AccessToken, Destinations.IdentityToken]);
+                claimsPrincipal.SetDestinations(claim =>
+                    [Destinations.AccessToken, Destinations.IdentityToken]
+                );
                 claimsPrincipal.SetScopes(request.GetScopes());
-
             }
-
             else if (request.IsAuthorizationCodeGrantType() || request.IsRefreshTokenGrantType())
             {
-                claimsPrincipal = (await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)).Principal;
+                claimsPrincipal = (
+                    await HttpContext.AuthenticateAsync(
+                        OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+                    )
+                ).Principal;
+
+                if (claimsPrincipal == null)
+                    throw new InvalidOperationException("ClaimsPrincipal is null");
+
+                claimsPrincipal.AddClaim(BankClaims.Caller, Caller.Human.ToString());
+                claimsPrincipal.SetDestinations(_ =>
+                    [Destinations.AccessToken, Destinations.IdentityToken]
+                );
             }
             else
             {
                 throw new InvalidOperationException("Unsupported grant");
             }
 
-            if (claimsPrincipal == null) throw new InvalidOperationException("ClaimsPrincipal is null");
+            if (claimsPrincipal == null)
+                throw new InvalidOperationException("ClaimsPrincipal is null");
 
             return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
@@ -92,14 +111,20 @@ namespace Bank.Auth.App.Controllers
             var request = HttpContext.GetOpenIddictServerRequest();
             ArgumentNullException.ThrowIfNull(request);
 
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var result = await HttpContext.AuthenticateAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme
+            );
 
             if (!result.Succeeded)
             {
                 var properties = new AuthenticationProperties()
                 {
-                    RedirectUri = Request.PathBase + Request.Path
-                            + QueryString.Create(Request.HasFormContentType ? [.. Request.Form] : [.. Request.Query]),
+                    RedirectUri =
+                        Request.PathBase
+                        + Request.Path
+                        + QueryString.Create(
+                            Request.HasFormContentType ? [.. Request.Form] : [.. Request.Query]
+                        ),
                 };
 
                 return Challenge(
@@ -110,12 +135,15 @@ namespace Bank.Auth.App.Controllers
 
             var claims = result.Principal.Claims;
 
-            foreach(Claim claim in claims)
+            foreach (Claim claim in claims)
             {
                 claim.SetDestinations(Destinations.AccessToken);
             }
 
-            var claimsIdentity = new ClaimsIdentity(claims, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            var claimsIdentity = new ClaimsIdentity(
+                claims,
+                OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+            );
 
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
@@ -123,7 +151,6 @@ namespace Bank.Auth.App.Controllers
 
             return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
-
 
         [HttpGet("~/login")]
         public IActionResult Login([FromQuery] string returnUrl = null)
@@ -145,7 +172,10 @@ namespace Bank.Auth.App.Controllers
 
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal
+            );
 
             if (Url.IsLocalUrl(model.ReturnUrl))
             {
@@ -158,10 +188,12 @@ namespace Bank.Auth.App.Controllers
         private async Task<User?> FindUserByCredentials(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null) return null;
+            if (user == null)
+                return null;
 
             bool isPasswordRight = await _userManager.CheckPasswordAsync(user, password);
-            if (!isPasswordRight) return null;
+            if (!isPasswordRight)
+                return null;
 
             return user;
         }

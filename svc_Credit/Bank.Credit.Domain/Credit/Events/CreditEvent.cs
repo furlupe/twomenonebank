@@ -3,11 +3,15 @@
     public abstract class CreditEvent : DomainEvent
     {
         public CreditEventType Type { get; set; }
+
         protected CreditEvent()
             : base() { }
 
         public CreditEvent(CreditEventType type, Guid aggregateId, DateTime happenedAt)
-            : base(aggregateId, happenedAt) { Type = type; }
+            : base(aggregateId, happenedAt)
+        {
+            Type = type;
+        }
     }
 
     public enum CreditEventType

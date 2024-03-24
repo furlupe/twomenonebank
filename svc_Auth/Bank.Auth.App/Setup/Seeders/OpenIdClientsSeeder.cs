@@ -42,10 +42,7 @@ namespace Bank.Auth.App.Setup.Seeders
 
             if (await manager.FindByClientIdAsync(client.ClientId!, cancellationToken) is null)
             {
-                await manager.CreateAsync(
-                    client,
-                    cancellationToken
-                );
+                await manager.CreateAsync(client, cancellationToken);
             }
         }
 

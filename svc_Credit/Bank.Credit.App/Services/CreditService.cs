@@ -29,7 +29,9 @@ namespace Bank.Credit.App.Services
 
         public async Task Pay(Guid userId, Guid creditId)
         {
-            var credit = await _dbContext.Credits.Include(x => x.Tariff).SingleAsync(x => x.User.Id == userId && x.Id == creditId);
+            var credit = await _dbContext
+                .Credits.Include(x => x.Tariff)
+                .SingleAsync(x => x.User.Id == userId && x.Id == creditId);
             credit.Pay();
 
             await _dbContext.SaveChangesAsync();
@@ -37,7 +39,9 @@ namespace Bank.Credit.App.Services
 
         public async Task PayPenalty(Guid userId, Guid creditId)
         {
-            var credit = await _dbContext.Credits.Include(x => x.Tariff).SingleAsync(x => x.User.Id == userId && x.Id == creditId);
+            var credit = await _dbContext
+                .Credits.Include(x => x.Tariff)
+                .SingleAsync(x => x.User.Id == userId && x.Id == creditId);
             credit.PayPenalty();
 
             await _dbContext.SaveChangesAsync();
@@ -75,7 +79,6 @@ namespace Bank.Credit.App.Services
             };
         }
 
-
         public Task<PageDto<CreditSmallDto>> GetUserCredits(Guid userId, int page) =>
             _dbContext
                 .Credits.Where(x => x.User.Id == userId)
@@ -108,7 +111,6 @@ namespace Bank.Credit.App.Services
                 .Where(x => x.AggregateId == credit.Id)
                 .GetPage(new() { PageNumber = page }, FormEventDtoFromEventEntity);
         }
-
 
         private static CreditOperationDto FormEventDtoFromEventEntity(CreditEvent @event)
         {

@@ -22,13 +22,13 @@ namespace Bank.Credit.App.Services
             for (int index = 0; index < creditsTotal; index += Gap)
             {
                 var credits = await _dbContext
-                        .Credits.Where(credit => !credit.IsClosed)
-                        .Include(credit => credit.Tariff)
-                        .Skip(index)
-                        .Take(Gap)
-                        .ToListAsync();
+                    .Credits.Where(credit => !credit.IsClosed)
+                    .Include(credit => credit.Tariff)
+                    .Skip(index)
+                    .Take(Gap)
+                    .ToListAsync();
 
-                foreach(var credit in credits)
+                foreach (var credit in credits)
                 {
                     using var transaction = await _dbContext.Database.BeginTransactionAsync();
                     try
@@ -47,7 +47,6 @@ namespace Bank.Credit.App.Services
                         );
                         await transaction.RollbackAsync();
                     }
-
                 }
             }
         }

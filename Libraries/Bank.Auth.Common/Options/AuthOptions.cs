@@ -1,6 +1,6 @@
 ﻿using Bank.Attributes.Attributes;
 
-namespace Bank.Auth.Shared.Options
+namespace Bank.Auth.Common.Options
 {
     [ConfigurationModel("Auth")]
     public class AuthOptions

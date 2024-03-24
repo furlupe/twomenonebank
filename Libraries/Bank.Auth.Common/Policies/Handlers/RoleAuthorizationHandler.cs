@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
-using Bank.Auth.Shared.Enumerations;
+using Bank.Auth.Common.Enumerations;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Bank.Auth.Shared.Policies.Handlers
+namespace Bank.Auth.Common.Policies.Handlers
 {
     public class RoleAuthorizationRequirement : IAuthorizationRequirement
     {

@@ -1,4 +1,4 @@
-﻿using Bank.Auth.Shared.Enumerations;
+﻿using Bank.Auth.Common.Enumerations;
 
 namespace Bank.Auth.App.Dto
 {
@@ -7,7 +7,7 @@ namespace Bank.Auth.App.Dto
         public Guid Id { get; set; }
         public string? Email { get; set; }
         public string? Name { get; set; }
-        public Role Role { get; set; }
+        public List<Role> Roles { get; set; }
         public bool IsBanned { get; set; } = false;
     }
 }

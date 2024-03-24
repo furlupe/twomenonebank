@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using Bank.Auth.Shared.Extensions;
-using Bank.Auth.Shared.Policies.Handlers;
+using Bank.Auth.Common.Extensions;
+using Bank.Auth.Common.Policies.Handlers;
 using Bank.Common.Constants;
 using Bank.Common.Extensions;
 using Bank.Common.Middlewares;
