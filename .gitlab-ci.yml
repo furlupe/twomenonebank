@@ -77,6 +77,8 @@ deploy:
   stage: deploy
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
+      when: on_success
+    - when: manual
   before_script:
     - docker info
   script:
