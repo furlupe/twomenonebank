@@ -15,10 +15,6 @@ variables:
     - svc_Auth/**/*
     - svc_Credit/**/*
 
-.on-develop: 
-  rules:
-    if: $CI_COMMIT_REF_NAME == "develop"
-
 .build:
   tags:
     - build
@@ -26,8 +22,8 @@ variables:
   stage: build
   image: docker:25.0
   rules:
-    - changes: !reference [.backend-changes, changes]
-    - !reference [.on-develop, rules]
+    - if: $CI_COMMIT_REF_NAME == "develop"
+      changes: !reference [.backend-changes, changes]
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   services:
@@ -75,10 +71,7 @@ deploy:
     - shell
   stage: deploy
   rules:
-    - !reference [.on-develop, rules]
-    - changes: !reference [.backend-changes, changes]
-    - changes:
-      - docker-compose.yml
+    - if: $CI_COMMIT_REF_NAME == "develop"
   before_script:
     - docker info
   script:
