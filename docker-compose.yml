@@ -1,5 +1,3 @@
-version: "3.4"
-
 include:
   - svc_Core/docker-compose.yml
   - svc_Auth/docker-compose.yml

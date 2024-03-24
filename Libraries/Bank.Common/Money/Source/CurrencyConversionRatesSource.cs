@@ -12,7 +12,8 @@ public class CurrencyConversionRatesSource(
 {
     public async Task<Dictionary<Currency, decimal>> GetConversionRates(Currency source)
     {
-        var response = await client.GetAsJson<CurrencyConversionRatesDto>(options.Value.Address);
+        var address = options.Value.Address + source;
+        var response = await client.GetAsJson<CurrencyConversionRatesDto>(address);
 
         if (response is null || response.Result != "success")
             throw new FailedRequestException("Could not retrieve conversion rates.");
