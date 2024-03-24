@@ -8,23 +8,13 @@ variables:
   AUTH_TAG: auth
   CREDIT_TAG: credit
 
-.backend-changes:
-  changes:
-    - Libraries/**/*
-    - svc_Core/**/*
-    - svc_Auth/**/*
-    - svc_Credit/**/*
-
 .build:
   tags:
     - build
     - docker
   stage: build
   image: docker:25.0
-  rules:
-    - if: $CI_COMMIT_REF_NAME == "develop"
-      changes: !reference [.backend-changes, changes]
-  variables:
+  variables: 
     DOCKER_TLS_CERTDIR: "/certs"
   services:
     - name: docker:25.0-dind
@@ -40,6 +30,11 @@ variables:
 
 build-core:
   extends: .build
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "develop"
+      changes: 
+        - Libraries/**/*
+        - svc_Core/**/*
   script:
     - echo 'Building Core service...'
     - docker build . --rm -f svc_Core/Core.dockerfile -t $IMAGE_NAME:$CORE_TAG
@@ -49,6 +44,11 @@ build-core:
 
 build-auth:
   extends: .build
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "develop"
+      changes: 
+        - Libraries/**/*
+        - svc_Auth/**/*
   script:
     - echo 'Building Auth service...'
     - docker build . --rm -f svc_Auth/Auth.dockerfile -t $IMAGE_NAME:$AUTH_TAG
@@ -58,6 +58,11 @@ build-auth:
 
 build-credit:
   extends: .build
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "develop"
+      changes: 
+        - Libraries/**/*
+        - svc_Credit/**/*
   script:
     - echo 'Building Credit service...'
     - docker build . --rm -f svc_Credit/Credit.dockerfile -t $IMAGE_NAME:$CREDIT_TAG
