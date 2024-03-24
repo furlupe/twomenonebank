@@ -36,13 +36,9 @@ public abstract class WebApiException<TDetails> : ApplicationException, IWebApiE
         };
 }
 
-public abstract class ProblemDetailsException : WebApiException<ProblemDetails>
-{
-    protected ProblemDetailsException(
-        string type,
-        int statusCode,
-        string? title,
-        string? detail = null
-    )
-        : base(type, statusCode, title, detail) { }
-}
+public abstract class ProblemDetailsException(
+    string type,
+    int statusCode,
+    string? title,
+    string? detail = null
+) : WebApiException<ProblemDetails>(type, statusCode, title, detail) { }

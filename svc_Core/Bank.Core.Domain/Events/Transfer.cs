@@ -27,7 +27,7 @@ public class Transfer
     protected void ValidateEquality() =>
         Validation.Check(
             ExceptionConstants.MsgInvalidAction,
-            Source.Value == Target.Value,
+            Source.ForeignValue == Target.ForeignValue,
             "Withdrawal and deposit values must be equal."
         );
 

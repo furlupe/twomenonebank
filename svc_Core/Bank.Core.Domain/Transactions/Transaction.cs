@@ -1,6 +1,8 @@
-﻿namespace Bank.Core.Domain.Transactions;
+﻿using Bank.Common.Money;
+
+namespace Bank.Core.Domain.Transactions;
 
 public class Transaction
 {
-    public long Value { get; set; }
+    public Money Value { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using Bank.Common.Pagination;
 using Bank.Core.App.Dto.Pagination;
+using Bank.Core.Domain;
 using Bank.Core.Domain.Events;
 using Bank.Core.Domain.Transactions;
 
@@ -11,7 +12,7 @@ public interface ITransactionService
         Guid id,
         TransactionQueryParameters queryParameters
     );
-    Task Deposit(Guid accountId, Deposit dto);
-    Task Withdraw(Guid accountId, Withdraw dto);
-    Task RepayCredit(Guid accountId, RepayCredit dto);
+    Task Deposit(Account source, Deposit transaction);
+    Task Withdraw(Account source, Withdrawal transaction);
+    Task RepayCredit(Account source, Domain.Transactions.CreditPayment transaction);
 }

@@ -1,8 +1,10 @@
 ﻿using Bank.Common.DateTimeProvider;
+using Bank.Common.Money.Converter;
 using Bank.Common.Pagination;
 using Bank.Core.App.Dto.Pagination;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.App.Utils;
+using Bank.Core.Domain;
 using Bank.Core.Domain.Events;
 using Bank.Core.Domain.Transactions;
 using Bank.Core.Persistence;
@@ -10,41 +12,41 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Core.App.Services;
 
-public class TransactionService(CoreDbContext db, IDateTimeProvider dateProvider)
-    : ITransactionService
+public class TransactionService(
+    CoreDbContext db,
+    IDateTimeProvider dateProvider,
+    ICurrencyConverter converter
+) : ITransactionService
 {
     public async Task<PageDto<AccountEvent>> GetAccountTransactions(
         Guid id,
         TransactionQueryParameters queryParameters
     )
     {
-        var transactions = await db
+        var query = db
             .Accounts.AsNoTrackingWithIdentityResolution()
             .Where(x => x.Id == id)
             .SelectMany(x => x.Events)
-            .GetPage(queryParameters, x => x);
+            .WhereResolvedAt(queryParameters);
 
-        return transactions;
+        return await query.GetPage(queryParameters, x => x);
     }
 
-    public async Task Deposit(Guid accountId, Deposit transaction)
+    public async Task Deposit(Account source, Deposit transaction)
     {
-        var account = await db.Accounts.SingleOrThrowAsync(x => x.Id == accountId);
-        account.Deposit(transaction, dateProvider.UtcNow);
+        await source.Deposit(transaction, dateProvider.UtcNow, converter);
         await db.SaveChangesAsync();
     }
 
-    public async Task Withdraw(Guid accountId, Withdraw transaction)
+    public async Task Withdraw(Account source, Withdrawal transaction)
     {
-        var account = await db.Accounts.SingleOrThrowAsync(x => x.Id == accountId);
-        account.Withdraw(transaction, dateProvider.UtcNow);
+        await source.Withdraw(transaction, dateProvider.UtcNow, converter);
         await db.SaveChangesAsync();
     }
 
-    public async Task RepayCredit(Guid accountId, RepayCredit transaction)
+    public async Task RepayCredit(Account source, Domain.Transactions.CreditPayment transaction)
     {
-        var account = await db.Accounts.SingleOrThrowAsync(x => x.Id == accountId);
-        account.RepayCredit(transaction, dateProvider.UtcNow);
+        await source.RepayCredit(transaction, dateProvider.UtcNow, converter);
         await db.SaveChangesAsync();
     }
 }

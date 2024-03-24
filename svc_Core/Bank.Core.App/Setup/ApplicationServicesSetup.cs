@@ -1,5 +1,7 @@
 ﻿using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
+using Bank.Common.Money.Cache;
+using Bank.Common.Money.Converter;
 using Bank.Core.App.Services;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.Persistence;
@@ -14,9 +16,14 @@ public static class ApplicationServicesSetup
         builder.AddInfrastrucureServices();
 
         var services = builder.Services;
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IAccountService, AccountService>();
-        services.AddScoped<ITransactionService, TransactionService>();
+
+        services
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IAccountService, AccountService>()
+            .AddScoped<ITransactionService, TransactionService>();
+
+        services.AddScoped<ICurrencyConversionRatesCacheBackingStore, CoreDbContext>();
+        builder.AddCurrencyConverter();
 
         return builder;
     }

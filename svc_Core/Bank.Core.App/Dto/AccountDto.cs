@@ -1,11 +1,12 @@
-﻿using Bank.Core.Domain;
+﻿using Bank.Common.Money;
+using Bank.Core.Domain;
 
 namespace Bank.Core.App.Dto;
 
 public class AccountDto
 {
     public Guid Id { get; set; }
-    public long Balance { get; set; }
+    public Money Balance { get; set; }
     public string Name { get; set; }
 
     public static AccountDto From(Account account) =>

@@ -19,13 +19,11 @@ public class BackedCache<TKey, TValue, TBackingStore>(
         }
         else
         {
-            using (var store = _storeFactory.GetScopedStore())
+            var store = _storeFactory.GetScopedStore();
+            var backedEntry = await store.TryGetAsync(key);
+            if (backedEntry != null && backedEntry.ExpiresAt >= expiresAt)
             {
-                var backedEntry = await store.TryGetAsync(key);
-                if (backedEntry != null && backedEntry.ExpiresAt >= expiresAt)
-                {
-                    return backedEntry.Value;
-                }
+                return backedEntry.Value;
             }
         }
 
@@ -48,10 +46,10 @@ public class BackedCache<TKey, TValue, TBackingStore>(
     public virtual async Task AddOrUpdateAsync(TKey key, TValue value, DateTime expiresAt)
     {
         Entry entry = new(value, expiresAt);
-        using (var store = _storeFactory.GetScopedStore())
-        {
-            await store.AddOrUpdateAsync(key, entry);
-        }
+
+        var store = _storeFactory.GetScopedStore();
+        await store.AddOrUpdateAsync(key, entry);
+
         base.AddOrUpdate(key, entry);
     }
 
@@ -60,10 +58,9 @@ public class BackedCache<TKey, TValue, TBackingStore>(
 
     public virtual async Task ClearAsync()
     {
-        using (var store = _storeFactory.GetScopedStore())
-        {
-            await store.ClearAsync();
-        }
+        var store = _storeFactory.GetScopedStore();
+        await store.ClearAsync();
+
         base.Clear();
     }
 
@@ -84,12 +81,7 @@ public class BackedCache<TKey, TValue, TBackingStore>(
     public class CacheBackingStoreFactory(IServiceProvider serviceProvider)
         : ICacheBackingStoreFactory
     {
-        public TBackingStore GetScopedStore()
-        {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                return scope.ServiceProvider.GetRequiredService<TBackingStore>();
-            }
-        }
+        public TBackingStore GetScopedStore() =>
+            serviceProvider.CreateScope().ServiceProvider.GetRequiredService<TBackingStore>();
     }
 }
