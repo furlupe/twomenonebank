@@ -6,18 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Core.Persistence;
 
-public class CoreDbContext : DbContext
+public partial class CoreDbContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Account> Accounts { get; set; }
 
-    public CoreDbContext(
-        DbContextOptions<CoreDbContext> options,
-        IDateTimeProvider dateTimeProvider
-    )
+    public CoreDbContext(DbContextOptions<CoreDbContext> options, IDateTimeProvider dateProvider)
         : base(options)
     {
-        _dateTimeProvider = dateTimeProvider;
+        _dateTimeProvider = dateProvider;
     }
 
     protected IDateTimeProvider _dateTimeProvider;
@@ -56,6 +53,12 @@ public class CoreDbContext : DbContext
                     t.OwnsOne(x => x.Target, b => b.OwnsOne(x => x.CreditPayment));
                 }
             );
+        });
+
+        // CurrencyConversionRatesCacheBackingStore
+        modelBuilder.Entity<CurrencyExhangeRateRecord>(c =>
+        {
+            c.HasKey(x => new { x.Source, x.Target });
         });
 
         base.OnModelCreating(modelBuilder);

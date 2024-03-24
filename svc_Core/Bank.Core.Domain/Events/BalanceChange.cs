@@ -1,27 +1,40 @@
-﻿using Bank.Common.Utils;
+﻿using Bank.Common.Money;
+using Bank.Common.Utils;
 
 namespace Bank.Core.Domain.Events;
 
 public class BalanceChange
 {
-    public long Value { get; protected set; }
+    public Money NativeValue { get; protected set; }
+    public Money ForeignValue { get; protected set; }
     public Account Account { get; protected set; }
     public Guid AccountId { get; protected set; }
 
     public BalanceChangeType EventType { get; protected set; }
     public CreditPayment? CreditPayment { get; protected set; }
 
-    public BalanceChange(Account account, long value, CreditPayment creditPayment)
-        : this(account, value, BalanceChangeType.CreditPayment)
+    public BalanceChange(
+        Account account,
+        Money nativeValue,
+        Money foreignValue,
+        CreditPayment creditPayment
+    )
+        : this(account, nativeValue, foreignValue, BalanceChangeType.CreditPayment)
     {
         CreditPayment = creditPayment;
         ValidateType();
     }
 
-    public BalanceChange(Account account, long value, BalanceChangeType type)
+    public BalanceChange(
+        Account account,
+        Money nativeValue,
+        Money foreignValue,
+        BalanceChangeType type
+    )
     {
         Account = account;
-        Value = value;
+        NativeValue = nativeValue;
+        ForeignValue = foreignValue;
         EventType = type;
 
         ValidateValue();
@@ -30,7 +43,7 @@ public class BalanceChange
     protected void ValidateValue() =>
         Validation.Check(
             ExceptionConstants.MsgInvalidAction,
-            Value > 0,
+            NativeValue.Amount > 0,
             "Balance change value must be positive."
         );
 

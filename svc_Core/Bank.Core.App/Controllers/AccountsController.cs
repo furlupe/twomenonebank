@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bank.Core.App.Controllers;
 
 [Route("accounts")]
+[ApiController]
 [Authorize(Policy = Policies.CreateUserIfNeeded)]
 public class AccountsController(
     IAccountService accountService,
@@ -41,7 +42,7 @@ public class AccountsController(
     [HttpGet("{id}/history")]
     public async Task<PageDto<AccountEventDto>> GetAccountOperations(
         [FromRoute] Guid id,
-        TransactionQueryParameters queryParameters
+        [FromQuery] TransactionQueryParameters queryParameters
     )
     {
         if (!await accountService.IsAccountOwnedBy(id, User.GetId()))

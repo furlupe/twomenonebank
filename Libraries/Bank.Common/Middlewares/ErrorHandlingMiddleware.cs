@@ -57,6 +57,7 @@ public class ErrorHandlingMiddleware(RequestDelegate next, IHostEnvironment env)
     private static void AddTraceId(HttpContext context, ProblemDetails details)
     {
         string traceId = Activity.Current?.Id ?? context.TraceIdentifier;
+        Console.WriteLine($"TraceId: {traceId}");
         if (traceId is { })
         {
             details.Extensions["traceId"] = traceId;

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bank.Core.App.Controllers;
 
 [Route("manage/accounts")]
+[ApiController]
 [Authorize(Policy = Policies.EmployeeOrHigher)]
 public class AccountsEmployeeController(
     IUserService userService,

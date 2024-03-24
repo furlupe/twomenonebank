@@ -1,6 +1,6 @@
 ﻿namespace Bank.Core.Domain.Transactions;
 
-public class RepayCredit : Withdraw
+public class CreditPayment : Withdrawal
 {
     public Guid CreditId { get; set; }
 }

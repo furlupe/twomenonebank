@@ -8,7 +8,12 @@ public class JsonConfigurationDefaults
 {
     public static readonly Action<JsonOptions> JsonOptions = options =>
     {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        SerializerOptions!(options.JsonSerializerOptions);
+    };
+
+    public static readonly Action<JsonSerializerOptions> SerializerOptions = options =>
+    {
+        options.Converters.Add(new JsonStringEnumConverter());
+        options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     };
 }
