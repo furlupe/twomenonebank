@@ -35,6 +35,7 @@ build-core:
       changes: 
         - Libraries/**/*
         - svc_Core/**/*
+    - when: manual
   script:
     - echo 'Building Core service...'
     - docker build . --rm -f svc_Core/Core.dockerfile -t $IMAGE_NAME:$CORE_TAG
@@ -49,6 +50,7 @@ build-auth:
       changes: 
         - Libraries/**/*
         - svc_Auth/**/*
+    - when: manual
   script:
     - echo 'Building Auth service...'
     - docker build . --rm -f svc_Auth/Auth.dockerfile -t $IMAGE_NAME:$AUTH_TAG
@@ -63,6 +65,7 @@ build-credit:
       changes: 
         - Libraries/**/*
         - svc_Credit/**/*
+    - when: manual
   script:
     - echo 'Building Credit service...'
     - docker build . --rm -f svc_Credit/Credit.dockerfile -t $IMAGE_NAME:$CREDIT_TAG
