@@ -2,6 +2,7 @@
 using Bank.Auth.Common.Attributes;
 using Bank.Auth.Common.Enumerations;
 using Bank.Auth.Common.Policies;
+using Bank.Auth.Http.AuthClient;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,13 @@ namespace Bank.Credit.App.Controllers
     [ApiController]
     public class VersionController : ControllerBase
     {
+        private readonly AuthClient _authClient;
+
+        public VersionController(AuthClient authClient)
+        {
+            _authClient = authClient;
+        }
+
         [HttpGet]
         public string Version() =>
             typeof(VersionController)
@@ -30,5 +38,9 @@ namespace Bank.Credit.App.Controllers
         [Authorize]
         [CalledByStaff]
         public string VersionNotForUsers() => Version();
+
+        [HttpGet("through-auth")]
+        public Task<string> VersionOfAuth()
+            => _authClient.Version();
     }
 }

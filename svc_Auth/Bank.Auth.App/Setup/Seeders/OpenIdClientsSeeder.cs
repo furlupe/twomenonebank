@@ -1,4 +1,6 @@
-﻿using Bank.Auth.Domain;
+﻿using Bank.Auth.Common.Options;
+using Bank.Auth.Domain;
+using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -7,10 +9,12 @@ namespace Bank.Auth.App.Setup.Seeders
     public class OpenIdClientsSeeder : IHostedService
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly string _innerClientSecret;
 
-        public OpenIdClientsSeeder(IServiceProvider serviceProvider)
+        public OpenIdClientsSeeder(IServiceProvider serviceProvider, IOptions<AuthOptions> tokenOptions)
         {
             _serviceProvider = serviceProvider;
+            _innerClientSecret = tokenOptions.Value.Secret;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -22,11 +26,10 @@ namespace Bank.Auth.App.Setup.Seeders
 
             var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
-            OpenIddictApplicationDescriptor client =
-                new()
-                {
-                    ClientId = "amogus",
-                    Permissions =
+            var mobileClient = new OpenIddictApplicationDescriptor()
+            {
+                ClientId = "amogus",
+                Permissions =
                     {
                         Permissions.Endpoints.Token,
                         Permissions.Endpoints.Authorization,
@@ -36,13 +39,29 @@ namespace Bank.Auth.App.Setup.Seeders
                         Permissions.GrantTypes.AuthorizationCode,
                         Permissions.ResponseTypes.Code,
                     }
-                };
+            };
+            mobileClient.RedirectUris.Add(new Uri("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
 
-            client.RedirectUris.Add(new Uri("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
+            List<OpenIddictApplicationDescriptor> clients = [
+                mobileClient,
+                new()
+                {
+                    ClientId = "innerservice",
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Token,
+                        Permissions.GrantTypes.ClientCredentials,
+                    },
+                    ClientSecret = _innerClientSecret
+                }
+            ];
 
-            if (await manager.FindByClientIdAsync(client.ClientId!, cancellationToken) is null)
+            foreach ( var client in clients )
             {
-                await manager.CreateAsync(client, cancellationToken);
+                if (await manager.FindByClientIdAsync(client.ClientId!, cancellationToken) is null)
+                {
+                    await manager.CreateAsync(client, cancellationToken);
+                }
             }
         }
 

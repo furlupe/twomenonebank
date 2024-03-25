@@ -1,6 +1,7 @@
 using System.Reflection;
 using Bank.Auth.Common.Extensions;
 using Bank.Auth.Common.Policies.Handlers;
+using Bank.Auth.Http.AuthClient;
 using Bank.Common.Extensions;
 using Bank.Credit.App.Services;
 using Bank.Credit.App.Setup;
@@ -28,6 +29,7 @@ builder
 builder.AddPersistance();
 builder.ConfigureAuth(opt => opt.RegisterPolicies());
 builder.ConfigureHangfire();
+builder.AddAuthClient();
 
 var app = builder.Build();
 

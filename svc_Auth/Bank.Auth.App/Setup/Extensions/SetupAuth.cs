@@ -1,4 +1,5 @@
-﻿using Bank.Auth.App.Setup.Seeders;
+﻿using Bank.Auth.App.AuthenticationValidators;
+using Bank.Auth.App.Setup.Seeders;
 using Bank.Auth.Common.Extensions;
 using Bank.Auth.Common.Options;
 using Bank.Auth.Domain;
@@ -69,7 +70,7 @@ namespace Bank.Auth.App.Setup.Extensions
                     options
                         .AllowRefreshTokenFlow()
                         .AllowAuthorizationCodeFlow()
-                        .AllowPasswordFlow();
+                        .AllowClientCredentialsFlow();
 
                     options
                         .DisableAccessTokenEncryption()
@@ -95,6 +96,8 @@ namespace Bank.Auth.App.Setup.Extensions
                 });
 
             services.AddHostedService<OpenIdClientsSeeder>().AddHostedService<UserSeeder>();
+            services.AddHttpContextAccessor()
+                .AddScoped<GrantValidatorFactory>();
 
             return builder;
         }
