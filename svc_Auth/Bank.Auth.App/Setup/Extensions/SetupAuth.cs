@@ -34,7 +34,7 @@ namespace Bank.Auth.App.Setup.Extensions
                     }
                 );
 
-            services.AddAuthorization(options => options.RegisterPolicies());
+            services.AddAuthorization();
 
             var authOptions = builder.GetConfigurationValue<AuthOptions>();
 

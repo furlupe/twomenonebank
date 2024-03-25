@@ -1,5 +1,4 @@
-﻿using Bank.Auth.Common.Enumerations;
-using Bank.Auth.Common.Options;
+﻿using Bank.Auth.Common.Options;
 using Bank.Auth.Common.Policies.Handlers;
 using Bank.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -19,38 +18,25 @@ namespace Bank.Auth.Common.Extensions
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static WebApplicationBuilder ConfigureAuth(
-            this WebApplicationBuilder builder, 
-            Action<AuthorizationOptions>? authSettings = null
+            this WebApplicationBuilder builder
         )
         {
             var authOptions = builder.GetConfigurationValue<AuthOptions>();
 
             var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(authOptions.Key));
 
-            return builder.ConfigureAuth(authOptions.Host, securityKey, authSettings);
+            return builder.ConfigureAuth(authOptions.Host, securityKey);
         }
 
-        public static AuthorizationOptions RegisterPolicies(this AuthorizationOptions options)
+        public static WebApplicationBuilder AddUserCreationPolicy(this WebApplicationBuilder builder)
         {
-            options.AddPolicy(
-                Policies.Policies.EmployeeOrHigher,
-                builder =>
-                {
-                    builder.AddRequirements(
-                        new RoleAuthorizationRequirement([Role.Admin, Role.Employee])
-                    );
-                }
+            builder.Services.AddScoped<IAuthorizationHandler, CreateUserAuthorizationHandler>();
+            builder.Services.AddAuthorizationBuilder()
+                .AddPolicy(Policies.Policies.CreateUserIfNeeded,
+                builder => builder.AddRequirements(new CreateUserAuthorizationRequirement())
             );
 
-            options.AddPolicy(
-                Policies.Policies.CreateUserIfNeeded,
-                builder =>
-                {
-                    builder.AddRequirements(new CreateUserAuthorizationRequirement());
-                }
-            );
-
-            return options;
+            return builder;
         }
 
         /// <summary>
@@ -63,11 +49,9 @@ namespace Bank.Auth.Common.Extensions
         public static WebApplicationBuilder ConfigureAuth(
             this WebApplicationBuilder builder,
             string issuer,
-            SecurityKey issuerSigningKey,
-            Action<AuthorizationOptions>? authSettings = null
+            SecurityKey issuerSigningKey
         )
         {
-            authSettings ??= opt => { };
             var services = builder.Services;
 
             services
@@ -100,11 +84,7 @@ namespace Bank.Auth.Common.Extensions
                     }
                 );
 
-            services.AddScoped<IAuthorizationHandler, CreateUserAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, RoleAuthorizationHandler>();
-
-            services.AddAuthorization(authSettings);
-
+            services.AddAuthorization();
             return builder;
         }
     }
