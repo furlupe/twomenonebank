@@ -1,4 +1,5 @@
-﻿using Bank.Auth.Common.Extensions;
+﻿using Bank.Auth.Common.Attributes;
+using Bank.Auth.Common.Extensions;
 using Bank.Auth.Common.Policies;
 using Bank.Common.Pagination;
 using Bank.Core.App.Dto;
@@ -13,7 +14,7 @@ namespace Bank.Core.App.Controllers;
 
 [Route("accounts")]
 [ApiController]
-[Authorize(Policy = Policies.CreateUserIfNeeded)]
+[Authorize, CalledByUser]
 public class AccountsController(
     IAccountService accountService,
     ITransactionService transactionService

@@ -1,4 +1,5 @@
-﻿using Bank.Auth.Common.Policies;
+﻿using Bank.Auth.Common.Attributes;
+using Bank.Auth.Common.Policies;
 using Bank.Common.Pagination;
 using Bank.Core.App.Dto;
 using Bank.Core.App.Dto.Events;
@@ -11,9 +12,8 @@ namespace Bank.Core.App.Controllers;
 
 [Route("manage/accounts")]
 [ApiController]
-[Authorize(Policy = Policies.EmployeeOrHigher)]
+[Authorize, CalledByStaff]
 public class AccountsEmployeeController(
-    IUserService userService,
     IAccountService accountService,
     ITransactionService transactionService
 ) : ControllerBase
