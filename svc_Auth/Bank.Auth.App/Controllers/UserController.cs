@@ -72,33 +72,7 @@ namespace Bank.Auth.App.Controllers
                 }
             }
 
-            List<string> stringRoles = registerDto.Roles.Select(r => r.ToString()).ToList();
-
-            var user = new User()
-            {
-                Email = registerDto.Email,
-                Name = registerDto.Username,
-                UserName = registerDto.Email,
-                Roles = stringRoles
-            };
-            var result = await _userManager.CreateAsync(user);
-
-            if (!result.Succeeded)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            await _userManager.AddPasswordAsync(user, registerDto.Password);
-
-            List<Claim> claims =
-            [
-                new Claim(Claims.Subject, user.Id.ToString()),
-            ];
-            stringRoles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
-
-            await _userManager.AddClaimsAsync(user, claims);
-
-            return Ok();
+            return await CreateUser(registerDto);
         }
 
         private async Task<ActionResult<UserDto>> GetUserById(Guid userId)
@@ -128,7 +102,8 @@ namespace Bank.Auth.App.Controllers
                 Email = user.Email,
                 Name = user.Name,
                 Roles = roles,
-                IsBanned = user.LockoutEnd != null
+                IsBanned = user.IsBanned,
+                Phone = user.PhoneNumber
             };
         }
 
@@ -148,6 +123,43 @@ namespace Bank.Auth.App.Controllers
                 on ? DateTime.SpecifyKind(DateTime.MaxValue, DateTimeKind.Utc) : null
             );
             return result.Succeeded ? Ok() : BadRequest();
+        }
+
+        private async Task<IActionResult> CreateUser(RegisterDto registerDto)
+        {
+            if (await _userManager.Users.AnyAsync(u => u.PhoneNumber == registerDto.Phone))
+            {
+                return BadRequest("phone_taken");
+            }
+
+            List<string> stringRoles = registerDto.Roles.Select(r => r.ToString()).ToList();
+
+            var user = new User()
+            {
+                Email = registerDto.Email,
+                Name = registerDto.Username,
+                UserName = registerDto.Email,
+                Roles = stringRoles
+            };
+
+            var result = await _userManager.CreateAsync(user);
+            if (!result.Succeeded) return BadRequest(result.Errors);
+
+            result = await _userManager.AddPasswordAsync(user, registerDto.Password);
+            if (!result.Succeeded) return BadRequest(result.Errors);
+
+            result = await _userManager.SetPhoneNumberAsync(user, registerDto.Phone);
+            if (!result.Succeeded) return BadRequest(result.Errors);
+
+            List<Claim> claims =
+            [
+                new Claim(Claims.Subject, user.Id.ToString()),
+            ];
+            stringRoles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
+
+            await _userManager.AddClaimsAsync(user, claims);
+
+            return Ok();
         }
     }
 }

@@ -7,5 +7,6 @@ namespace Bank.Auth.Common.Options
     {
         public string Host { get; set; }
         public string Key { get; set; }
+        public string Secret { get; set; }
     }
 }

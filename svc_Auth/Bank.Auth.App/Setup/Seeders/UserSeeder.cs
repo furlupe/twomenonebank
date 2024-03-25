@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using Bank.Auth.Common.Claims;
 using Bank.Auth.Common.Enumerations;
 using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
@@ -33,7 +32,8 @@ namespace Bank.Auth.App.Setup.Seeders
                     {
                         Email = "amogus@mail.ru",
                         UserName = "amogus@mail.ru",
-                        Roles = [Role.Admin.ToString(), Role.Employee.ToString()]
+                        Roles = [Role.Admin.ToString(), Role.Employee.ToString()],
+                        PhoneNumber = "1234567890",
                     };
 
                 await manager.CreateAsync(user);

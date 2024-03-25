@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Bank.Auth.App.AuthenticationValidators;
 using Bank.Auth.App.ViewModels;
 using Bank.Auth.Common.Claims;
 using Bank.Auth.Common.Enumerations;
@@ -20,14 +21,17 @@ namespace Bank.Auth.App.Controllers
     {
         public readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly GrantValidatorFactory _grantValidatorFactory;
 
         public AuthenticationController(
             UserManager<User> userManager,
-            SignInManager<User> signInManager
+            SignInManager<User> signInManager,
+            GrantValidatorFactory grantValidatorFactory
         )
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _grantValidatorFactory = grantValidatorFactory;
         }
 
         /// <summary>
@@ -56,52 +60,16 @@ namespace Bank.Auth.App.Controllers
             var request = HttpContext.GetOpenIddictServerRequest();
             ArgumentNullException.ThrowIfNull(request);
 
-            ClaimsPrincipal? claimsPrincipal = null;
+            var validator = _grantValidatorFactory.Create(request);
+            var validationResult = await validator.ValidateAsync(request);
 
-            if (request.IsPasswordGrantType())
+            if (validationResult.IsSuccess && validationResult.User != null)
             {
-                var user = await FindUserByCredentials(request.Username!, request.Password!);
-                if (user == null)
-                    throw new InvalidOperationException("invalid_username_password");
-
-                var claims = await _userManager.GetClaimsAsync(user);
-
-                var identity = new ClaimsIdentity(
-                    claims,
-                    OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
-                );
-
-                claimsPrincipal = new ClaimsPrincipal(identity);
-                claimsPrincipal.SetDestinations(claim =>
-                    [Destinations.AccessToken, Destinations.IdentityToken]
-                );
-                claimsPrincipal.SetScopes(request.GetScopes());
-            }
-            else if (request.IsAuthorizationCodeGrantType() || request.IsRefreshTokenGrantType())
-            {
-                claimsPrincipal = (
-                    await HttpContext.AuthenticateAsync(
-                        OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
-                    )
-                ).Principal;
-
-                if (claimsPrincipal == null)
-                    throw new InvalidOperationException("ClaimsPrincipal is null");
-
-                claimsPrincipal.AddClaim(BankClaims.Caller, Caller.Human.ToString());
-                claimsPrincipal.SetDestinations(_ =>
-                    [Destinations.AccessToken, Destinations.IdentityToken]
-                );
-            }
-            else
-            {
-                throw new InvalidOperationException("Unsupported grant");
+                return SignIn(validationResult.User, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
-            if (claimsPrincipal == null)
-                throw new InvalidOperationException("ClaimsPrincipal is null");
+            throw new InvalidOperationException(validationResult.ErrorMessage);
 
-            return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
         [HttpGet("~/connect/authorize")]
@@ -165,7 +133,7 @@ namespace Bank.Auth.App.Controllers
             ViewBag.ReturnUrl = model.ReturnUrl;
 
             User? user = await FindUserByCredentials(model.Email, model.Password);
-            if (user == null)
+            if (user == null || user.IsBanned)
             {
                 return View(model);
             }

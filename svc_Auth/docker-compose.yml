@@ -3,6 +3,7 @@ version: "3.4"
 services:
   auth-app:
     container_name: twomenonebank-auth-app
+    hostname: twomenonebank-auth-host
     image: happypiece/twomenonebank:auth
     depends_on:
       - db
