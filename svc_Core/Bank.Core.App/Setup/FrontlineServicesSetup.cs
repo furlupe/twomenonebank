@@ -12,7 +12,7 @@ public static class FrontlineServicesSetup
 {
     public static WebApplicationBuilder AddFrontlineServices(this WebApplicationBuilder builder)
     {
-        builder.ConfigureAuth(opt => opt.RegisterPolicies());
+        builder.ConfigureAuth().AddUserCreationPolicy();
 
         var services = builder.Services;
         services.AddHealthChecks();

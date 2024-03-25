@@ -27,7 +27,7 @@ builder
     .AddTransient<CreditBackroundService>();
 
 builder.AddPersistance();
-builder.ConfigureAuth(opt => opt.RegisterPolicies());
+builder.ConfigureAuth().AddUserCreationPolicy();
 builder.ConfigureHangfire();
 builder.AddAuthClient();
 
