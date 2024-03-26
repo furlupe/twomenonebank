@@ -19,7 +19,7 @@ namespace Bank.Credit.App.Controllers
             _userService = userService;
         }
 
-        [HttpGet("me")]
+        [HttpGet("me"), CalledByHuman]
         public Task<UserDto> GetMe() => _userService.GetUser(User.GetId());
 
         [HttpGet("{userId}"), CalledByStaff]
