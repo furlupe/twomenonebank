@@ -24,7 +24,7 @@ builder
     .Services.AddTransient<TariffService>()
     .AddScoped<IUserService, AuthHandlerUserService>()
     .AddTransient<CreditService>()
-    .AddTransient<CreditBackroundService>();
+    .AddTransient<CreditUserService>();
 
 builder.AddPersistance();
 builder.ConfigureAuth().AddUserCreationPolicy();

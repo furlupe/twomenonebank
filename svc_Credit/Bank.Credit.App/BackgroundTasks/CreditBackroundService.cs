@@ -1,4 +1,5 @@
-﻿using Bank.Credit.Persistance;
+﻿using Bank.Credit.App.Utils;
+using Bank.Credit.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Credit.App.Services
@@ -30,23 +31,18 @@ namespace Bank.Credit.App.Services
 
                 foreach (var credit in credits)
                 {
-                    using var transaction = await _dbContext.Database.BeginTransactionAsync();
-                    try
-                    {
-                        credit.MoveNextPaymentDate();
-                        credit.ApplyRate();
-                        credit.AddPenalty();
-
-                        await _dbContext.SaveChangesAsync();
-                        await transaction.CommitAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(
-                            $"Credit transaction (id = {credit.Id}) has prolapsed, exception: {ex.Message}, innerException: {ex.InnerException}"
-                        );
-                        await transaction.RollbackAsync();
-                    }
+                    await _dbContext.ExecuteInTransaction(
+                        () =>
+                        {
+                            credit.MoveNextPaymentDate();
+                            credit.ApplyRate();
+                            credit.AddPenalty();
+                        },
+                        ex =>
+                            Console.WriteLine(
+                                $"Credit transaction (id = {credit.Id}) has prolapsed, exception: {ex.Message}, innerException: {ex.InnerException}"
+                            )
+                    );
                 }
             }
         }

@@ -40,7 +40,6 @@ namespace Bank.Credit.App.Controllers
         public string VersionNotForUsers() => Version();
 
         [HttpGet("through-auth")]
-        public Task<string> VersionOfAuth()
-            => _authClient.Version();
+        public Task<string> VersionOfAuth() => _authClient.Version();
     }
 }
