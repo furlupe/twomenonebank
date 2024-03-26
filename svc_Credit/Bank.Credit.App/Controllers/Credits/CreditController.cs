@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Bank.Auth.Common.Attributes;
-using Bank.Auth.Common.Enumerations;
 using Bank.Auth.Common.Extensions;
 using Bank.Auth.Common.Policies;
 using Bank.Common.Pagination;
 using Bank.Credit.App.Dto;
 using Bank.Credit.App.Services;
+using Bank.Credit.Domain.Credit.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -57,7 +57,16 @@ namespace Bank.Credit.App.Controllers.Credits
         [HttpGet("my/{creditId}/operations")]
         public async Task<ActionResult<PageDto<CreditOperationDto>>> GetCurrentUserCreditOperations(
             Guid creditId,
-            [FromQuery, Range(1, int.MaxValue)] int page = 1
-        ) => Ok(await _creditService.GetCreditOperationHistory(creditId, page, User.GetId()));
+            [FromQuery, Range(1, int.MaxValue)] int page = 1,
+            [FromQuery] List<CreditEventType>? types = null
+        ) =>
+            Ok(
+                await _creditService.GetCreditOperationHistory(
+                    creditId,
+                    page,
+                    ofUser: User.GetId(),
+                    ofTypes: types
+                )
+            );
     }
 }

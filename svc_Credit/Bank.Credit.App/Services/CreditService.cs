@@ -98,17 +98,19 @@ namespace Bank.Credit.App.Services
         public async Task<PageDto<CreditOperationDto>> GetCreditOperationHistory(
             Guid creditId,
             int page,
-            Guid? userId = null
+            List<CreditEventType>? ofTypes = null,
+            Guid? ofUser = null
         )
         {
+            ofTypes ??= [.. Enum.GetValues<CreditEventType>()];
             var credit = await _dbContext.Credits.SingleAsync(x =>
-                x.Id == creditId && (userId == null || x.User.Id == userId)
+                x.Id == creditId && (ofUser == null || x.User.Id == ofUser)
             );
 
             IQueryable<CreditEvent> query = _dbContext.Set<CreditEvent>();
 
             return await query
-                .Where(x => x.AggregateId == credit.Id)
+                .Where(x => x.AggregateId == credit.Id && ofTypes.Contains(x.Type))
                 .GetPage(new() { PageNumber = page }, FormEventDtoFromEventEntity);
         }
 

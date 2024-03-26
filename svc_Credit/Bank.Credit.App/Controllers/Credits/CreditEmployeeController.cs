@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Bank.Auth.Common.Attributes;
-using Bank.Auth.Common.Enumerations;
 using Bank.Common.Pagination;
 using Bank.Credit.App.Dto;
 using Bank.Credit.App.Services;
+using Bank.Credit.Domain.Credit.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +35,8 @@ namespace Bank.Credit.App.Controllers.Credits
         [HttpGet("{creditId}/operations")]
         public async Task<ActionResult<PageDto<CreditOperationDto>>> GetCreditOperations(
             Guid creditId,
-            [FromQuery, Range(1, int.MaxValue)] int page = 1
-        ) => Ok(await _creditService.GetCreditOperationHistory(creditId, page));
+            [FromQuery, Range(1, int.MaxValue)] int page = 1,
+            [FromQuery] List<CreditEventType>? types = null
+        ) => Ok(await _creditService.GetCreditOperationHistory(creditId, page, ofTypes: types));
     }
 }
