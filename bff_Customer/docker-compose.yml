@@ -1,0 +1,8 @@
+services:
+  client-bff:
+    image: happypiece/twomenonebank:client-bff
+    ports:
+      - "5000:5000"
+    environment:
+      - TWOMENONEBANK_HOST=localhost
+      - AUTH_PORT=5001
