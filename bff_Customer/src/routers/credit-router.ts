@@ -13,7 +13,28 @@ export class CreditRouter extends BaseRouter {
             const { page } = req.query;
             const response = await this._creditClient.getMyCredits(parseInt(page as string ?? '1'));
 
-            return response.data;
-        })
+            console.log()
+
+            return res.json(response.data);
+        });
+
+        router.get("/my/:id", async (req, res) => {
+             const response = await this._creditClient.getMyCreditById(req.params.id);
+
+             return res.json(response.data);
+        });
+
+        router.get("/my/:id/operations", async (req, res) => {
+            const response = await this._creditClient.getMyCreditOperations(req.params.id);
+
+            return res.json(response.data);
+        });
+
+        router.get("/manage/tariff", async (req, res) => {
+            const { page } = req.query;
+            const response = await this._creditClient.getTariffs(parseInt(page as string ?? '1'));
+
+            return res.json(response.data);
+        });
     }
 }
