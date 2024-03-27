@@ -10,5 +10,9 @@
     @Html.LabelFor(m => m.Password)
     @Html.PasswordFor(m => m.Password)
     <br/>
+    @if (Model != null && Model.WasFailed == true)
+    {
+        <p style="color:red;font-family:'Comic Sans MS'">wrong credentials bozo</p>
+    }
     <input type="submit" value="Log in"/>
 }

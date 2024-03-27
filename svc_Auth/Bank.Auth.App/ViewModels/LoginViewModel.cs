@@ -10,5 +10,6 @@ namespace Bank.Auth.App.ViewModels
         [Required]
         public string Password { get; set; }
         public string? ReturnUrl { get; set; }
+        public bool WasFailed { get; set; } = false;
     }
 }

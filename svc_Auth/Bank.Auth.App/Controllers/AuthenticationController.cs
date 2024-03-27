@@ -135,6 +135,7 @@ namespace Bank.Auth.App.Controllers
             User? user = await FindUserByCredentials(model.Email, model.Password);
             if (user == null || user.IsBanned)
             {
+                model.WasFailed = true;
                 return View(model);
             }
 
