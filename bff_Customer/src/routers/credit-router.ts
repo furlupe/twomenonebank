@@ -3,6 +3,7 @@ import { BaseRouter } from "./base-router";
 import { Router } from "express";
 import TYPES from "../types";
 import { CreditClient } from "../clients/credit-client";
+import { OpenCreditDto } from "src/dto/open-credit-dto";
 
 @injectable()
 export class CreditRouter extends BaseRouter {
@@ -35,6 +36,24 @@ export class CreditRouter extends BaseRouter {
             const response = await this._creditClient.getTariffs(parseInt(page as string ?? '1'));
 
             return res.json(response.data);
+        });
+
+        router.post("/", async (req, res) => {
+            const response = await this._creditClient.openCredit(req.body as OpenCreditDto);
+
+            return res.send(response.status);
+        });
+
+        router.post("/:id/pay", async (req, res) => {
+            const response = await this._creditClient.payCredit(req.params.id);
+
+            return res.send(response.status);
+        });
+
+        router.post("/:id/pay-penalty", async (req, res) => {
+            const response = await this._creditClient.payPenalty(req.params.id);
+
+            return res.send(response.status);
         });
     }
 }
