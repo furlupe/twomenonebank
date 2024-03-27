@@ -3,18 +3,12 @@ import { inject, injectable } from "inversify";
 import TYPES from "../types";
 import { AxiosAccessor } from "../axios-accessor";
 
-export interface IAuthClient {
-    token(code: string, redirectUri: string): Promise<AxiosResponse<any, any>>;
-    authorize(redirectUri: string): Promise<AxiosResponse<any, any>>;
-    me(): Promise<AxiosResponse<any, any>>;
-}
-
 @injectable()
-export class AuthClient implements IAuthClient {
+export class AuthClient {
     private readonly _axios: AxiosInstance;
 
     constructor(@inject(TYPES.AxiosAccessor) axiosAccessor: AxiosAccessor) {
-        this._axios = axiosAccessor.get();
+        this._axios = axiosAccessor.getAuth();
     }
 
     async token(code: string, redirectUri: string): Promise<AxiosResponse<any, any>> {

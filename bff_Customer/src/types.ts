@@ -2,6 +2,7 @@ const routerTypes = {
     AuthRouter: Symbol.for("AuthRouter"),
     UserRouter: Symbol.for("UserRouter"),
     VersionRouter: Symbol.for("VersionRouter"),
+    CreditRouter: Symbol.for("CreditRouter")
 }
 
 const accessorTypes = {
@@ -9,10 +10,15 @@ const accessorTypes = {
     StoreAccessor: Symbol.for("StoreAccessor")
 }
 
+const clientTypes = {
+    AuthClient: Symbol.for("AuthClient"),
+    CreditClient: Symbol.for("CreditClient")
+}
+
 const TYPES = {
     ...routerTypes,
     ...accessorTypes,
-    IAuthClient: Symbol.for("IAuthClient"),
+    ...clientTypes,
     AppOptions: Symbol.for("AppOptions"),
 }
 

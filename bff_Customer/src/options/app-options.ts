@@ -2,11 +2,12 @@ import { injectable } from "inversify";
 
 @injectable()
 export class AppOptions {
-    public readonly hostname: string;
-    public readonly authPort: number;
+    public readonly authHost: string;
+    public readonly creditHost: string;
+    public readonly coreHost: string = "";
 
     constructor() {
-        this.hostname = process.env.TWOMENONEBANK_HOST;
-        this.authPort = parseInt(process.env.AUTH_PORT);
+        this.authHost = process.env.TWOMENONEBANK_AUTH_HOST;
+        this.creditHost = process.env.TWOMENONEBANK_CREDIT_HOST;
     }
 }
