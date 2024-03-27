@@ -29,7 +29,7 @@ diContainer.bind<BaseRouter>(TYPES.UserRouter).to(UserRouter);
 diContainer.bind<BaseRouter>(TYPES.CreditRouter).to(CreditRouter);
 
 const app = express();
-const port = 5000;
+const port = process.env.BFF_PORT || 5000;
 
 app.use((req, _res, next) => {
     const store = diContainer.get<StoreAccessor>(TYPES.StoreAccessor).get();
