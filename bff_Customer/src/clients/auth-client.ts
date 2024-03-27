@@ -8,7 +8,7 @@ export class AuthClient {
     private readonly _axios: AxiosInstance;
 
     constructor(@inject(TYPES.AxiosAccessor) axiosAccessor: AxiosAccessor) {
-        this._axios = axiosAccessor.getAuth();
+        this._axios = axiosAccessor.getAuthAxios();
     }
 
     async token(code: string, redirectUri: string): Promise<AxiosResponse<any, any>> {

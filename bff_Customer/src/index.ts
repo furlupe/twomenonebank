@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import "express-async-errors";
 import express from 'express';
 import { AuthRouter } from './routers/auth-router';
 import { Container } from 'inversify';

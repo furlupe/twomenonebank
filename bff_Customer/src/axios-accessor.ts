@@ -22,7 +22,7 @@ export class AxiosAccessor {
         this._store = storeAccessor.get();
     }
 
-    public getAuth(): AxiosInstance {
+    public getAuthAxios(): AxiosInstance {
         if (this._axiosAuth == null) {
             this._axiosAuth = this._createAxiosInstance(this._options.authHost);
         }
@@ -30,7 +30,7 @@ export class AxiosAccessor {
         return this._axiosAuth;
     }
 
-    public getCredit(): AxiosInstance {
+    public getCreditAxios(): AxiosInstance {
         if (this._axiosCredit == null) {
             this._axiosCredit = this._createAxiosInstance(this._options.creditHost);
         }
@@ -38,7 +38,7 @@ export class AxiosAccessor {
         return this._axiosCredit;
     }
 
-    public getCore(): AxiosInstance {
+    public getCoreAxios(): AxiosInstance {
         if (this._axiosCore == null) {
             this._axiosCore = this._createAxiosInstance(this._options.coreHost);
         }

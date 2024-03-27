@@ -8,7 +8,7 @@ export class CreditClient {
     private readonly _axios: AxiosInstance;
 
     constructor(@inject(TYPES.AxiosAccessor) axios: AxiosAccessor) {
-        this._axios = axios.getCredit();
+        this._axios = axios.getCreditAxios();
     }
 
     getMyCredits(page: number = 1): Promise<AxiosResponse<any, any>> {
