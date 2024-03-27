@@ -1,8 +1,19 @@
-const TYPES = {
-    IAuthClient: Symbol.for("IAuthClient"),
+const routerTypes = {
     AuthRouter: Symbol.for("AuthRouter"),
+    UserRouter: Symbol.for("UserRouter"),
     VersionRouter: Symbol.for("VersionRouter"),
-    AppOptions: Symbol.for("AppOptions")
+}
+
+const accessorTypes = {
+    AxiosAccessor: Symbol.for("AxiosAccessor"),
+    StoreAccessor: Symbol.for("StoreAccessor")
+}
+
+const TYPES = {
+    ...routerTypes,
+    ...accessorTypes,
+    IAuthClient: Symbol.for("IAuthClient"),
+    AppOptions: Symbol.for("AppOptions"),
 }
 
 export default TYPES;
