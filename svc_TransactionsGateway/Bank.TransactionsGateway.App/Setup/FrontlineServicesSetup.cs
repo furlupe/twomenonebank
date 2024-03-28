@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
+using Bank.Amqp;
 using Bank.Auth.Common.Extensions;
-using Bank.Auth.Common.Policies.Handlers;
 using Bank.Common.Constants;
 using Bank.Common.Extensions;
 using Bank.Common.Middlewares;
-using Bank.TransactionsGateway.App.Services;
 
 namespace Bank.TransactionsGateway.App.Setup;
 
@@ -12,9 +11,10 @@ public static class FrontlineServicesSetup
 {
     public static WebApplicationBuilder AddFrontlineServices(this WebApplicationBuilder builder)
     {
-        builder.ConfigureAuth(x => { });
+        builder.ConfigureAuth();
 
         var services = builder.Services;
+
         services.AddHealthChecks();
         services.AddControllers().AddJsonOptions(JsonConfigurationDefaults.JsonOptions);
         services.AddEndpointsApiExplorer();

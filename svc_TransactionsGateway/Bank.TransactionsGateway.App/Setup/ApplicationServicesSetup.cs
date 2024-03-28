@@ -1,7 +1,12 @@
-﻿using Bank.Common.DateTimeProvider;
+﻿using System.Text.Json;
+using Bank.Amqp;
+using Bank.Auth.Http.AuthClient;
+using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
+using Bank.Core.Common;
 using Bank.Exceptions.WebApiException;
 using Bank.TransactionsGateway.App.Services;
+using MassTransit;
 
 namespace Bank.TransactionsGateway.App.Setup;
 
@@ -22,6 +27,8 @@ public static class ApplicationServicesSetup
     )
     {
         builder.AddConfiguration();
+        builder.AddMassTransit();
+        builder.AddAuthClient();
 
         var services = builder.Services;
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();

@@ -2,12 +2,42 @@
 
 namespace Bank.Core.Common;
 
-public abstract class Transaction
+public class Transaction
 {
-    public Guid TargetId { get; set; }
     public Money Value { get; set; }
+    public Guid InitiatorId { get; set; }
+    public TransactionType Type { get; set; }
+    public BalanceChange? BalanceChange { get; set; }
+    public Transfer? Transfer { get; set; }
+
+    public enum TransactionType
+    {
+        BalanceChange,
+        Transfer,
+    }
 }
 
-public class DepositTransaction : Transaction { }
+public class Transfer
+{
+    public Guid SourceAccountId { get; set; }
+    public Guid TargetAccountId { get; set; }
+}
 
-public class WithdrawalTransaction : Transaction { }
+public class BalanceChange
+{
+    public Guid TargetAccountId { get; set; }
+    public BalanceChangeType Type { get; set; }
+    public CreditPayment? CreditPayment { get; set; }
+
+    public enum BalanceChangeType
+    {
+        Deposit,
+        Withdrawal,
+        CreditPayment,
+    }
+}
+
+public class CreditPayment
+{
+    public Guid CreditId { get; set; }
+}

@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Auth.Common", "Bank.Au
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Core.Common", "Bank.Core.Common\Bank.Core.Common.csproj", "{8FA5323F-B87E-4F25-8FCE-D11C25787C58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.Auth.Http", "Bank.Auth.Http\Bank.Auth.Http.csproj", "{885F7CF6-D073-4F87-B33E-F007BD62A8E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Auth.Http", "Bank.Auth.Http\Bank.Auth.Http.csproj", "{885F7CF6-D073-4F87-B33E-F007BD62A8E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.Amqp", "Bank.Amqp\Bank.Amqp.csproj", "{8F464EF6-F5D1-488D-B71A-AD688138909D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{885F7CF6-D073-4F87-B33E-F007BD62A8E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{885F7CF6-D073-4F87-B33E-F007BD62A8E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{885F7CF6-D073-4F87-B33E-F007BD62A8E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F464EF6-F5D1-488D-B71A-AD688138909D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F464EF6-F5D1-488D-B71A-AD688138909D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F464EF6-F5D1-488D-B71A-AD688138909D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F464EF6-F5D1-488D-B71A-AD688138909D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,3 +10,13 @@ public abstract class TransactionDto
 public class DepositDto : TransactionDto { }
 
 public class WithdrawalDto : TransactionDto { }
+
+public class CreditPaymentDto : TransactionDto
+{
+    public Guid CreditId { get; set; }
+}
+
+public class TransferDto : TransactionDto
+{
+    public string TransfereeIdentifier { get; set; }
+}

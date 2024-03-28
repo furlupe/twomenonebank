@@ -6,6 +6,7 @@ services:
     image: happypiece/twomenonebank:core
     depends_on:
       - db
+      - rabbit
     ports:
       - "0.0.0.0:27000:27000"
       - "0.0.0.0:27001:27001"

@@ -4,19 +4,14 @@ using Bank.Common.Pagination;
 using Bank.Core.App.Dto.Pagination;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.App.Utils;
-using Bank.Core.Domain;
 using Bank.Core.Domain.Events;
-using Bank.Core.Domain.Transactions;
 using Bank.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Core.App.Services;
 
-public class TransactionService(
-    CoreDbContext db,
-    IDateTimeProvider dateProvider,
-    ICurrencyConverter converter
-) : ITransactionService
+public class TransactionService(CoreDbContext db, ITransactionFactory transactionFactory)
+    : ITransactionService
 {
     public async Task<PageDto<AccountEvent>> GetAccountTransactions(
         Guid id,
@@ -32,21 +27,10 @@ public class TransactionService(
         return await query.GetPage(queryParameters, x => x);
     }
 
-    public async Task Deposit(Account source, Deposit transaction)
+    public async Task Perform(Common.Transaction model)
     {
-        await source.Deposit(transaction, dateProvider.UtcNow, converter);
-        await db.SaveChangesAsync();
-    }
-
-    public async Task Withdraw(Account source, Withdrawal transaction)
-    {
-        await source.Withdraw(transaction, dateProvider.UtcNow, converter);
-        await db.SaveChangesAsync();
-    }
-
-    public async Task RepayCredit(Account source, Domain.Transactions.CreditPayment transaction)
-    {
-        await source.RepayCredit(transaction, dateProvider.UtcNow, converter);
+        var transaction = await transactionFactory.Create(model);
+        await transaction.Perform();
         await db.SaveChangesAsync();
     }
 }
