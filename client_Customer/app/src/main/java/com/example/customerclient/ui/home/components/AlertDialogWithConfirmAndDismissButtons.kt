@@ -1,4 +1,4 @@
-package com.example.customerclient.ui.bottombar.home.components
+package com.example.customerclient.ui.home.components
 
 import android.app.AlertDialog
 import android.app.Dialog

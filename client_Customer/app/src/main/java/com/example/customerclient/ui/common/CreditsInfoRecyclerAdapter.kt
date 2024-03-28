@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.customerclient.R
 import com.example.customerclient.databinding.ItemCreditInfoBinding
-import com.example.customerclient.ui.bottombar.home.CreditShortInfo
+import com.example.customerclient.ui.home.CreditShortInfo
 
 class CreditsInfoRecyclerAdapter(
     private val items: List<CreditShortInfo>,

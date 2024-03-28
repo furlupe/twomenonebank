@@ -13,10 +13,10 @@ import com.example.customerclient.data.paging.credit.TariffsPagingSource
 import com.example.customerclient.data.remote.database.CreditDao
 import com.example.customerclient.data.remote.database.entity.CreditEntity
 import com.example.customerclient.domain.repositories.CreditRepository
-import com.example.customerclient.ui.bottombar.home.CreditShortInfo
 import com.example.customerclient.ui.credit.create.Tariff
 import com.example.customerclient.ui.credit.info.CreditHistory
 import com.example.customerclient.ui.credit.info.CreditInfo
+import com.example.customerclient.ui.home.CreditShortInfo
 import kotlinx.coroutines.flow.Flow
 
 class CreditRepositoryImpl(

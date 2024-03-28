@@ -1,7 +1,7 @@
 package com.example.customerclient.domain.usecases.credit
 
 import com.example.customerclient.domain.repositories.CreditRepository
-import com.example.customerclient.ui.bottombar.home.CreditShortInfo
+import com.example.customerclient.ui.home.CreditShortInfo
 
 class SaveUserCreditInfoToDatabaseUseCase(
     private val creditRepository: CreditRepository

@@ -13,7 +13,7 @@ class SharedPreferencesStorage(context: Context) : TokenStorage, UserStorage {
 
     private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
-    private val sharedPreferences = EncryptedSharedPreferences.create(
+    private val encryptedSharedPreferences = EncryptedSharedPreferences.create(
         ENCRYPTED_SHARED_PREFS_NAME,
         masterKeyAlias,
         context,
@@ -21,8 +21,10 @@ class SharedPreferencesStorage(context: Context) : TokenStorage, UserStorage {
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 
+    private val sharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+
     override fun saveTokens(token: TokenDto) {
-        sharedPreferences.edit()
+        encryptedSharedPreferences.edit()
             .putString(TokenStorage.ACCESS_TOKEN, token.access_token)
             .putString(TokenStorage.REFRESH_TOKEN, token.refresh_token)
             .putLong(TokenStorage.EXPIRED_IN, token.expires_in)
@@ -30,39 +32,53 @@ class SharedPreferencesStorage(context: Context) : TokenStorage, UserStorage {
     }
 
     override fun getRefreshToken(): String {
-        return sharedPreferences.getString(
+        return encryptedSharedPreferences.getString(
             TokenStorage.REFRESH_TOKEN, ""
         ).toString()
     }
 
     override fun getAccessToken(): String {
-        return sharedPreferences.getString(
+        return encryptedSharedPreferences.getString(
             TokenStorage.ACCESS_TOKEN, ""
         ).toString()
     }
 
     override fun getExpiredTime(): Long {
-        return sharedPreferences.getLong(
+        return encryptedSharedPreferences.getLong(
             TokenStorage.EXPIRED_IN, 0L
         )
     }
 
     override fun deleteTokens() {
-        sharedPreferences.edit()
+        encryptedSharedPreferences.edit()
             .remove(TokenStorage.ACCESS_TOKEN)
             .remove(TokenStorage.REFRESH_TOKEN)
             .apply()
     }
 
     override fun saveUserId(userId: String) {
-        sharedPreferences.edit()
+        encryptedSharedPreferences.edit()
             .putString(UserStorage.USER_ID, userId)
             .apply()
     }
 
     override fun getUserId(): String {
-        return sharedPreferences.getString(
+        return encryptedSharedPreferences.getString(
             UserStorage.USER_ID, ""
         ).toString()
+    }
+
+    override fun swipeUserTheme() {
+        when (sharedPreferences.getInt(UserStorage.USER_THEME, 0)) {
+            1 -> sharedPreferences.edit().putInt(UserStorage.USER_THEME, 2).apply()
+            else -> sharedPreferences.edit().putInt(UserStorage.USER_THEME, 1).apply()
+        }
+    }
+
+    override fun getCurrentUserTheme(): UserTheme {
+        return when (sharedPreferences.getInt(UserStorage.USER_THEME, 0)) {
+            1 -> UserTheme.LIGHT
+            else -> UserTheme.DARK
+        }
     }
 }

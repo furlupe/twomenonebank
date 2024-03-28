@@ -14,8 +14,8 @@ import com.example.customerclient.R
 import com.example.customerclient.databinding.FragmentBillInfoBinding
 import com.example.customerclient.ui.bill.BillsListener
 import com.example.customerclient.ui.bill.info.components.BillsHistoryRecyclerAdapter
-import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithConfirmAndDismissButtons
 import com.example.customerclient.ui.common.AlertDialogWithEditTextField
+import com.example.customerclient.ui.home.components.AlertDialogWithConfirmAndDismissButtons
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf

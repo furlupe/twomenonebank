@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.example.customerclient.common.Constants.PAGE_BILL_LIMIT
 import com.example.customerclient.data.api.core.AccountsApi
 import com.example.customerclient.data.api.dto.toBillInfo
-import com.example.customerclient.ui.bottombar.home.BillInfo
+import com.example.customerclient.ui.home.BillInfo
 import retrofit2.HttpException
 import java.io.IOException
 

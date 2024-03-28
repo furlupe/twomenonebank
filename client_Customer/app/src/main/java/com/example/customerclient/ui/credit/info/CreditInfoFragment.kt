@@ -11,9 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customerclient.databinding.FragmentCreditInfoBinding
-import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithConfirmAndDismissButtons
 import com.example.customerclient.ui.credit.CreditsListener
 import com.example.customerclient.ui.credit.info.components.CreditsHistoryRecyclerAdapter
+import com.example.customerclient.ui.home.components.AlertDialogWithConfirmAndDismissButtons
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel

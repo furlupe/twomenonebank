@@ -3,7 +3,6 @@ package com.example.customerclient.data.repository
 import com.example.customerclient.data.api.auth.UserApi
 import com.example.customerclient.data.api.dto.RegisterDto
 import com.example.customerclient.data.api.dto.toUserInfo
-import com.example.customerclient.data.storage.SharedPreferencesRepositoryImpl
 import com.example.customerclient.domain.models.UserInfo
 import com.example.customerclient.domain.repositories.UserRepository
 

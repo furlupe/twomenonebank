@@ -1,4 +1,4 @@
-package com.example.customerclient.ui.auth.signin
+package com.example.customerclient.ui.auth
 
 import android.os.Bundle
 import android.view.LayoutInflater

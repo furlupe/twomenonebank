@@ -1,7 +1,7 @@
 package com.example.customerclient.ui.common
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.customerclient.ui.bottombar.home.CreditShortInfo
+import com.example.customerclient.ui.home.CreditShortInfo
 
 class CreditsInfoDiffCallback : DiffUtil.ItemCallback<CreditShortInfo>() {
     override fun areItemsTheSame(oldItem: CreditShortInfo, newItem: CreditShortInfo): Boolean {

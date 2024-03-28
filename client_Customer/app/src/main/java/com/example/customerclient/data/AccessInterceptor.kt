@@ -1,6 +1,6 @@
 package com.example.customerclient.data
 
-import com.example.customerclient.data.storage.SharedPreferencesRepositoryImpl
+import com.example.customerclient.data.repository.SharedPreferencesRepositoryImpl
 import com.example.customerclient.domain.repositories.AuthRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor

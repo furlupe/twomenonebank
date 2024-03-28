@@ -1,17 +1,19 @@
-package com.example.customerclient.ui.bottombar.home
+package com.example.customerclient.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.customerclient.data.storage.UserTheme
 import com.example.customerclient.databinding.FragmentHomeBinding
-import com.example.customerclient.ui.bottombar.home.components.AlertDialogWithEditTextConfirmAndDismissButtons
-import com.example.customerclient.ui.bottombar.home.components.BillsInfoRecyclerAdapter
 import com.example.customerclient.ui.common.CreditsInfoRecyclerAdapter
+import com.example.customerclient.ui.home.components.AlertDialogWithEditTextConfirmAndDismissButtons
+import com.example.customerclient.ui.home.components.BillsInfoRecyclerAdapter
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -32,6 +34,19 @@ class HomeFragment : Fragment() {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        binding.switchModeButton.setOnClickListener {
+            viewModel.swipeMode()
+        }
+
+        lifecycleScope.launch {
+            viewModel.theme.collect {
+                when (it) {
+                    UserTheme.LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    UserTheme.DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+            }
+        }
 
         lifecycleScope.launch {
             viewModel.uiState.collect { homeState ->

@@ -1,13 +1,14 @@
 package com.example.customerclient.di
 
 import androidx.lifecycle.SavedStateHandle
-import com.example.customerclient.ui.auth.signin.SignInViewModel
+import com.example.customerclient.ui.MainViewModel
+import com.example.customerclient.ui.auth.SignInViewModel
 import com.example.customerclient.ui.bill.all.AllBillsViewModel
 import com.example.customerclient.ui.bill.info.BillInfoViewModel
-import com.example.customerclient.ui.bottombar.home.HomeViewModel
 import com.example.customerclient.ui.credit.all.AllCreditsViewModel
 import com.example.customerclient.ui.credit.create.CreateCreditViewModel
 import com.example.customerclient.ui.credit.info.CreditInfoViewModel
+import com.example.customerclient.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -26,7 +27,8 @@ val viewModelModule = module {
             saveUserBillInfoToDatabaseUseCase = get(),
             getUserBillsInfoFromDatabaseUseCase = get(),
             getUserCreditsInfoFromDatabaseUseCase = get(),
-            saveUserCreditInfoToDatabaseUseCase = get()
+            saveUserCreditInfoToDatabaseUseCase = get(),
+            sharedPreferencesRepositoryImpl = get()
         )
     }
 
@@ -66,5 +68,9 @@ val viewModelModule = module {
             createCreditUseCase = get(),
             getCreditTariffsUseCase = get()
         )
+    }
+
+    viewModel {
+        MainViewModel(sharedPreferencesRepositoryImpl = get())
     }
 }

@@ -1,6 +1,6 @@
 package com.example.customerclient.data.api.dto
 
-import com.example.customerclient.ui.bottombar.home.CreditShortInfo
+import com.example.customerclient.ui.home.CreditShortInfo
 
 data class CreditShortDto(
     val id: String,

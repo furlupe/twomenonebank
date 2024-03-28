@@ -1,6 +1,6 @@
 package com.example.customerclient.data.api.dto
 
-import com.example.customerclient.ui.bottombar.home.BillInfo
+import com.example.customerclient.ui.home.BillInfo
 
 data class AccountDto(
     val id: String,

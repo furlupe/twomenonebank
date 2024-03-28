@@ -2,7 +2,7 @@
 <network-security-config>
     <base-config cleartextTrafficPermitted="true"></base-config>
     <domain-config>
-        <domain includeSubdomains="true">147.45.102.122</domain>
+        <domain includeSubdomains="true">185.177.219.207</domain>
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>

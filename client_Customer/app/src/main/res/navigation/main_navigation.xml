@@ -2,12 +2,22 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottom_bar_navigation"
-    app:startDestination="@+id/navigation_home">
+    android:id="@+id/main_navigation.xml"
+    app:startDestination="@+id/navigation_sign_in">
+
+    <fragment
+        android:id="@+id/navigation_sign_in"
+        android:name="com.example.customerclient.ui.auth.SignInFragment"
+        android:label="@string/label_sign_in"
+        tools:layout="@layout/fragment_sign_in">
+        <action
+            android:id="@+id/action_navigation_sign_in_to_bottom_bar_navigation"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.customerclient.ui.bottombar.home.HomeFragment"
+        android:name="com.example.customerclient.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -17,12 +27,6 @@
             android:id="@+id/action_navigation_home_to_billsActivity"
             app:destination="@id/billsActivity" />
     </fragment>
-
-    <fragment
-        android:id="@+id/navigation_history"
-        android:name="com.example.customerclient.ui.bottombar.history.HistoryFragment"
-        android:label="@string/title_history"
-        tools:layout="@layout/fragment_history" />
 
     <activity
         android:id="@+id/billsActivity"
@@ -47,4 +51,5 @@
             android:name="screenCreditType"
             app:argType="string" />
     </activity>
+
 </navigation>
