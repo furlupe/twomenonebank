@@ -15,9 +15,7 @@ class SignInViewModel(
     private val _state = MutableStateFlow(SignInState())
     val state: StateFlow<SignInState> = _state
 
-    fun connect(login: String, password: String) = viewModelScope.launch {
-        connectUseCase(login, password)
-
+    fun connect() = viewModelScope.launch {
         _state.update { prevState ->
             prevState.copy(navigateToMain = true)
         }

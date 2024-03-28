@@ -61,14 +61,28 @@ class AccountOperationTabAdapter(
             BALANCE_CHANGE -> {
                 val operationViewHolder = holder as BalanceChangeViewHolder
                 operationViewHolder.event.text = operation.balanceChange?.eventType?.descr
-                operationViewHolder.amount.text = operation.balanceChange?.value.toString()
+                operationViewHolder.nativeValue.text = buildString {
+                    append(operation.balanceChange?.nativeValue?.amount)
+                    append(operation.balanceChange?.nativeValue?.currency)
+                }
+                operationViewHolder.foreignValue.text = buildString {
+                    append(operation.balanceChange?.foreignValue?.amount)
+                    append(operation.balanceChange?.foreignValue?.currency)
+                }
                 operationViewHolder.date.text = operation.resolvedAt
             }
 
             TRANSFER -> {
                 val operationViewHolder = holder as TransferViewHolder
                 operationViewHolder.event.text = operation.eventType.descr
-                operationViewHolder.amount.text = operation.balanceChange?.value.toString()
+                operationViewHolder.sourceAmount.text = buildString {
+                    append(operation.balanceChange?.nativeValue?.amount)
+                    append(operation.balanceChange?.nativeValue?.currency)
+                }
+                operationViewHolder.sourceAmount.text = buildString {
+                    append(operation.balanceChange?.foreignValue?.amount)
+                    append(operation.balanceChange?.foreignValue?.currency)
+                }
                 operationViewHolder.source.text = operation.transfer?.source?.accountId
                 operationViewHolder.target.text = operation.transfer?.target?.accountId
                 operationViewHolder.date.text = operation.resolvedAt
@@ -133,26 +147,30 @@ class AccountOperationTabAdapter(
 
     inner class BalanceChangeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal val event: TextView
-        internal val amount: TextView
+        internal val nativeValue: TextView
+        internal val foreignValue: TextView
         internal val date: TextView
 
         init {
             event = itemView.findViewById<View>(R.id.tvEventType) as TextView
-            amount = itemView.findViewById<View>(R.id.tvAmount) as TextView
+            nativeValue = itemView.findViewById<View>(R.id.tvNativeValue) as TextView
+            foreignValue = itemView.findViewById<View>(R.id.tvForeignValue) as TextView
             date = itemView.findViewById<View>(R.id.tvDate) as TextView
         }
     }
 
     inner class TransferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal val event: TextView
-        internal val amount: TextView
+        internal val sourceAmount: TextView
+        internal val targetAmount: TextView
         internal val source: TextView
         internal val target: TextView
         internal val date: TextView
 
         init {
             event = itemView.findViewById<View>(R.id.tvEventType) as TextView
-            amount = itemView.findViewById<View>(R.id.tvAmount) as TextView
+            sourceAmount = itemView.findViewById<View>(R.id.tvSourceAmount) as TextView
+            targetAmount = itemView.findViewById<View>(R.id.tvTargetAmount) as TextView
             source = itemView.findViewById<View>(R.id.tvSource) as TextView
             target = itemView.findViewById<View>(R.id.tvTarget) as TextView
             date = itemView.findViewById<View>(R.id.tvDate) as TextView

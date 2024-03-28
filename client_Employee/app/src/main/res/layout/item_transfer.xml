@@ -14,11 +14,10 @@
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/tvTarget"
-        app:layout_constraintEnd_toStartOf="@+id/tvTarget"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvSource"
-        app:layout_constraintTop_toTopOf="@+id/tvTarget" />
+        app:layout_constraintBottom_toBottomOf="@+id/tvTargetAmount"
+        app:layout_constraintTop_toTopOf="@+id/tvTarget"
+        app:srcCompat="@drawable/baseline_arrow_right_alt_24"
+        tools:layout_editor_absoluteX="177dp" />
 
     <TextView
         android:id="@+id/tvEventType"
@@ -32,55 +31,65 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/tvAmount"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Amount"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/md_theme_onBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvEventType" />
-
-    <TextView
         android:id="@+id/tvDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="22.10.2023"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/md_theme_onSurfaceVariant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSource" />
+        app:layout_constraintTop_toBottomOf="@+id/tvSourceAmount" />
 
     <TextView
         android:id="@+id/tvSource"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="Source"
-        android:textAlignment="textEnd"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/imageView2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintTop_toTopOf="@+id/tvTarget" />
+
+    <TextView
+        android:id="@+id/tvSourceAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="1$"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTargetAmount"
+        app:layout_constraintEnd_toEndOf="@+id/tvSource"
+        app:layout_constraintStart_toStartOf="@+id/tvSource"
+        app:layout_constraintTop_toBottomOf="@+id/tvSource" />
 
     <TextView
         android:id="@+id/tvTarget"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Target"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/tvAmount" />
+        app:layout_constraintTop_toBottomOf="@+id/tvEventType" />
+
+    <TextView
+        android:id="@+id/tvTargetAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="1$"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintEnd_toEndOf="@+id/tvTarget"
+        app:layout_constraintStart_toStartOf="@+id/tvTarget"
+        app:layout_constraintTop_toBottomOf="@+id/tvTarget" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

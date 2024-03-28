@@ -22,7 +22,7 @@
         android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="tvRegisterUser,etUsername,etEmail,etPassword,radioGroup,rbUser,rbEmployee,btRegister" />
+        app:constraint_referenced_ids="tvRegisterUser,etUsername,etEmail,etPassword,rbUser,rbEmployee,btRegister,etPhone,cbUser,cbEmployee" />
 
     <TextView
         android:id="@+id/tvRegisterUser"
@@ -42,12 +42,12 @@
     <EditText
         android:id="@+id/etUsername"
         style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
-        android:background="@drawable/bg_et_register"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_et_register"
         android:ems="10"
         android:hint="Username"
         android:inputType="text"
@@ -58,12 +58,12 @@
     <EditText
         android:id="@+id/etEmail"
         style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
-        android:background="@drawable/bg_et_register"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_et_register"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -74,48 +74,18 @@
     <EditText
         android:id="@+id/etPassword"
         style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
-        android:background="@drawable/bg_et_register"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_et_register"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etEmail" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:checkedButton="@id/rbUser"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword">
-
-        <RadioButton
-            android:id="@+id/rbUser"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="User" />
-
-        <RadioButton
-            android:id="@+id/rbEmployee"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Employee" />
-
-    </RadioGroup>
 
     <Button
         android:id="@+id/btRegister"
@@ -127,6 +97,48 @@
         android:text="Register"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/cbUser" />
+
+    <EditText
+        android:id="@+id/etPhone"
+        style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_et_register"
+        android:ems="10"
+        android:hint="Phone"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+
+    <CheckBox
+        android:id="@+id/cbUser"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:checked="true"
+        android:text="User"
+        app:layout_constraintBottom_toBottomOf="@+id/cbEmployee"
+        app:layout_constraintEnd_toStartOf="@+id/cbEmployee"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cbEmployee" />
+
+    <CheckBox
+        android:id="@+id/cbEmployee"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Employee"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cbUser"
+        app:layout_constraintTop_toBottomOf="@+id/etPhone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

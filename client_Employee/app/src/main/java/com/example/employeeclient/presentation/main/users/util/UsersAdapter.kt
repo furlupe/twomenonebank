@@ -9,10 +9,12 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.employeeclient.R
+import com.example.employeeclient.domain.model.enums.Role
 import com.example.employeeclient.domain.model.user.UserDomain
 import java.util.LinkedList
 
@@ -61,7 +63,22 @@ class UsersAdapter(
             ITEM -> {
                 val userViewHolder = holder as UserViewHolder
                 userViewHolder.name.text = user.name
-                userViewHolder.role.text = user.roles.name
+
+                userViewHolder.adminRole.background = context?.let {
+                    val drawable =
+                        if (user.roles.contains(Role.Admin)) R.drawable.bg_role_text else R.drawable.bg_disabled_role_text
+                    AppCompatResources.getDrawable(it, drawable)
+                }
+                userViewHolder.employeeRole.background = context?.let {
+                    val drawable =
+                        if (user.roles.contains(Role.Employee)) R.drawable.bg_role_text else R.drawable.bg_disabled_role_text
+                    AppCompatResources.getDrawable(it, drawable)
+                }
+                userViewHolder.userRole.background = context?.let {
+                    val drawable =
+                        if (user.roles.contains(Role.User)) R.drawable.bg_role_text else R.drawable.bg_disabled_role_text
+                    AppCompatResources.getDrawable(it, drawable)
+                }
 
                 userViewHolder.accounts.setOnClickListener {
                     onAccountsClick(user.id, user.name)
@@ -71,8 +88,13 @@ class UsersAdapter(
                 }
 
                 if (user.isBanned) {
-                    userViewHolder.role.background =
-                        context?.let { AppCompatResources.getDrawable(it, R.drawable.bg_banned_role_text) }
+                    userViewHolder.card.background =
+                        context?.let {
+                            AppCompatResources.getDrawable(
+                                it,
+                                R.drawable.bg_banned_card
+                            )
+                        }
                 }
             }
 
@@ -130,14 +152,20 @@ class UsersAdapter(
     }
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        internal val card: ConstraintLayout
         internal val name: TextView
-        internal val role: TextView
+        internal val adminRole: TextView
+        internal val employeeRole: TextView
+        internal val userRole: TextView
         internal val accounts: Button
         internal val credits: Button
 
         init {
+            card = itemView.findViewById<View>(R.id.userItem) as ConstraintLayout
             name = itemView.findViewById<View>(R.id.tvUserName) as TextView
-            role = itemView.findViewById<View>(R.id.tvUserRole) as TextView
+            adminRole = itemView.findViewById<View>(R.id.tvUserRoleAdmin) as TextView
+            employeeRole = itemView.findViewById<View>(R.id.tvUserRoleEmployee) as TextView
+            userRole = itemView.findViewById<View>(R.id.tvUserRoleUser) as TextView
             accounts = itemView.findViewById<View>(R.id.btAccounts) as Button
             credits = itemView.findViewById<View>(R.id.btCredits) as Button
         }

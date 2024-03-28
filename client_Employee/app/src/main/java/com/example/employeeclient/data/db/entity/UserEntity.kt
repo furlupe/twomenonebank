@@ -16,6 +16,8 @@ data class UserEntity(
     val email: String,
     @ColumnInfo(name = "password")
     val password: String,
-    @ColumnInfo(name = "role")
-    val role: Int
+    @ColumnInfo(name = "phone")
+    val phone: String,
+    @ColumnInfo(name = "roles")
+    val roles: List<Int>
 )
