@@ -14,8 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Bank.Amqp\Bank.Amqp.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Auth.Common\Bank.Auth.Common.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Common\Bank.Common.csproj" />
+    <ProjectReference Include="..\..\Libraries\Bank.Core.Common\Bank.Core.Common.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Exceptions\Bank.Exceptions.csproj" />
     <ProjectReference Include="..\..\svc_Auth\Bank.Auth.Shared\Bank.Auth.Shared.csproj" />
     <ProjectReference Include="..\Bank.Core.Domain\Bank.Core.Domain.csproj" />

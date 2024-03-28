@@ -1,11 +1,14 @@
-﻿using Bank.Common.DateTimeProvider;
+﻿using Bank.Amqp;
+using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
 using Bank.Common.Money.Cache;
 using Bank.Common.Money.Converter;
 using Bank.Core.App.Services;
+using Bank.Core.App.Services.Amqp;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.Persistence;
 using Bank.Exceptions.WebApiException;
+using MassTransit;
 
 namespace Bank.Core.App.Setup;
 
@@ -20,7 +23,8 @@ public static class ApplicationServicesSetup
         services
             .AddScoped<IUserService, UserService>()
             .AddScoped<IAccountService, AccountService>()
-            .AddScoped<ITransactionService, TransactionService>();
+            .AddScoped<ITransactionService, TransactionService>()
+            .AddScoped<ITransactionFactory, TransactionFactory>();
 
         services.AddScoped<ICurrencyConversionRatesCacheBackingStore, CoreDbContext>();
         builder.AddCurrencyConverter();
@@ -33,6 +37,10 @@ public static class ApplicationServicesSetup
     )
     {
         builder.AddConfiguration();
+        builder.AddMassTransit(configure: cfg =>
+        {
+            cfg.AddConsumer<TransactionsConsumer>();
+        });
 
         var services = builder.Services;
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();

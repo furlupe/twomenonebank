@@ -21,9 +21,17 @@ public class FailedRequestException : ProblemDetailsException
     public FailedRequestException(ProblemDetails original, HttpResponseMessage response)
         : this(GetDetail(original, response)) { }
 
+    public FailedRequestException(ProblemDetails original)
+        : this(GetDetail(original)) { }
+
     private static string GetDetail(ProblemDetails original, HttpResponseMessage response)
     {
         return GetDetail(response) + " " + $"{original.Title} {original.Detail}";
+    }
+
+    private static string GetDetail(ProblemDetails original)
+    {
+        return $"Request failed with status code {original.Status}: {original.Title} {original.Detail}";
     }
 
     private static string GetDetail(HttpResponseMessage response)

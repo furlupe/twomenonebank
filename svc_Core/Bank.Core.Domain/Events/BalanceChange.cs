@@ -36,16 +36,7 @@ public class BalanceChange
         NativeValue = nativeValue;
         ForeignValue = foreignValue;
         EventType = type;
-
-        ValidateValue();
     }
-
-    protected void ValidateValue() =>
-        Validation.Check(
-            ExceptionConstants.MsgInvalidAction,
-            NativeValue.Amount > 0,
-            "Balance change value must be positive."
-        );
 
     protected void ValidateType() =>
         Validation.Check(

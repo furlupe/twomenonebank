@@ -20,8 +20,25 @@ services:
     networks:
       - twomenonebank-network
 
+  rabbit:
+    container_name: twomenonebank-rabbit
+    hostname: twomenonebank-rabbit-host
+    image: rabbitmq:management
+    ports:
+      - "${RABBIT_PORT:-5672}:5672"
+      - "${RABBIT_MANAGEMENT_PORT:-15672}:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=$RABBIT_USER
+      - RABBITMQ_DEFAULT_PASS=$RABBIT_PASSWORD
+    volumes:
+      - twomenonebank-rabbit:/var/lib/rabbitmq/
+    restart: always
+    networks:
+      - twomenonebank-network
+
 volumes:
   twomenonebank-db:
+  twomenonebank-rabbit:
 
 networks:
   twomenonebank-network:

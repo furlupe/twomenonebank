@@ -1,10 +1,7 @@
-﻿using Bank.Common.Utils;
+﻿namespace Bank.Core.Domain.Events;
 
-namespace Bank.Core.Domain.Events;
-
-public class Transfer
+public class Transfer : DomainEvent
 {
-    public Guid Id { get; protected set; }
     public BalanceChange Source { get; protected set; }
     public BalanceChange Target { get; protected set; }
 
@@ -12,24 +9,7 @@ public class Transfer
     {
         Source = source;
         Target = target;
-
-        ValidateCircuit();
-        ValidateEquality();
     }
-
-    protected void ValidateCircuit() =>
-        Validation.Check(
-            ExceptionConstants.MsgInvalidAction,
-            Source.Account.Id != Target.Account.Id,
-            "Source and target can't be the same account."
-        );
-
-    protected void ValidateEquality() =>
-        Validation.Check(
-            ExceptionConstants.MsgInvalidAction,
-            Source.ForeignValue == Target.ForeignValue,
-            "Withdrawal and deposit values must be equal."
-        );
 
     protected Transfer() { }
 }

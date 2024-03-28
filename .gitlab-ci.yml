@@ -7,6 +7,7 @@ variables:
   CORE_TAG: core
   AUTH_TAG: auth
   CREDIT_TAG: credit
+  TRANSACTIONS_GATEWAY_TAG: transactions-gateway
 
 .build:
   tags:
@@ -14,7 +15,7 @@ variables:
     - docker
   stage: build
   image: docker:25.0
-  variables: 
+  variables:
     DOCKER_TLS_CERTDIR: "/certs"
   services:
     - name: docker:25.0-dind
@@ -32,7 +33,7 @@ build-core:
   extends: .build
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
-      changes: 
+      changes:
         - Libraries/**/*
         - svc_Core/**/*
     - when: manual
@@ -48,7 +49,7 @@ build-auth:
   extends: .build
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
-      changes: 
+      changes:
         - Libraries/**/*
         - svc_Auth/**/*
     - when: manual
@@ -64,7 +65,7 @@ build-credit:
   extends: .build
   rules:
     - if: $CI_COMMIT_REF_NAME == "develop"
-      changes: 
+      changes:
         - Libraries/**/*
         - svc_Credit/**/*
     - when: manual
@@ -74,6 +75,22 @@ build-credit:
     - docker build . --rm -f svc_Credit/Credit.dockerfile -t $IMAGE_NAME:$CREDIT_TAG
     - echo 'Builds completed, pushing to registry...'
     - docker push $IMAGE_NAME:$CREDIT_TAG
+    - echo 'Build completed.'
+
+build-transactions-gateway:
+  extends: .build
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "develop"
+      changes:
+        - Libraries/**/*
+        - svc_TransactionsGateway/**/*
+    - when: manual
+      allow_failure: true
+  script:
+    - echo 'Building TransactionsGateway service...'
+    - docker build . --rm -f svc_TransactionsGateway/TransactionsGateway.dockerfile -t $IMAGE_NAME:$TRANSACTIONS_GATEWAY_TAG
+    - echo 'Builds completed, pushing to registry...'
+    - docker push $IMAGE_NAME:$TRANSACTIONS_GATEWAY_TAG
     - echo 'Build completed.'
 
 deploy:
@@ -94,6 +111,7 @@ deploy:
     - docker cp $CORE_APPSETTINGS twomenonebank-core-app:/app/appsettings.Local.json
     - docker cp $AUTH_APPSETTINGS twomenonebank-auth-app:/app/appsettings.Local.json
     - docker cp $CREDIT_APPSETTINGS twomenonebank-credit-app:/app/appsettings.Local.json
+    - docker cp $TRANSACTIONS_GATEWAY_APPSETTINGS twomenonebank-transactions-gateway-app:/app/appsettings.Local.json
     - docker compose start
     - echo 'Deploy completed.'
   after_script:

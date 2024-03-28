@@ -14,7 +14,7 @@ namespace Bank.Core.App.Controllers;
 
 [Route("accounts")]
 [ApiController]
-[Authorize, CalledByUser]
+[Authorize(Policy = Policies.CreateUserIfNeeded), CalledByUser]
 public class AccountsController(
     IAccountService accountService,
     ITransactionService transactionService
