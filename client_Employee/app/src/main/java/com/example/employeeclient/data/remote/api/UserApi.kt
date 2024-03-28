@@ -34,4 +34,7 @@ interface UserApi {
     suspend fun getUser(
         @Path("userId") userId: String
     ): UserDto
+
+    @GET("api/User/me")
+    suspend fun me(): UserDto
 }

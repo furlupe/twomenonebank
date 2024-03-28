@@ -10,47 +10,56 @@ import com.example.employeeclient.domain.model.account.AccountsPageDomain
 import com.example.employeeclient.domain.model.account.event.AccountEventDomain
 import com.example.employeeclient.domain.model.account.event.AccountEventsPageDomain
 import com.example.employeeclient.domain.model.account.event.BalanceChangeDomain
+import com.example.employeeclient.domain.model.account.event.BalanceDomain
 import com.example.employeeclient.domain.model.account.event.TransferDomain
 import com.example.employeeclient.domain.model.enums.AccountEventState
 import com.example.employeeclient.domain.model.enums.AccountEventType
 import com.example.employeeclient.domain.model.enums.BalanceChangeType
+import com.example.employeeclient.domain.model.enums.Currency
+
+fun BalanceDto.toDomain() = BalanceDomain(
+    amount = amount,
+    currency = Currency.fromString(currency)
+)
 
 fun AccountDto.toDomain() = AccountDomain(
-    id = this.id,
-    balance = this.balance,
-    name = this.name ?: "Unnamed",
+    id = id,
+    balance = balance.toDomain(),
+    name = name ?: "Unnamed",
 )
 
 fun AccountsPageDto.toDomain() = AccountsPageDomain(
-    currentPage = this.pageInfo.currentPage,
-    totalPages = this.pageInfo.totalPages,
-    items = this.items?.map { it.toDomain() } ?: emptyList()
+    currentPage = pageInfo.currentPage,
+    totalPages = pageInfo.totalPages,
+    items = items?.map { it.toDomain() } ?: emptyList()
 )
 
 fun BalanceChangeDto.toDomain() = BalanceChangeDomain(
-    value = this.value,
-    accountId = this.accountId,
-    eventType = BalanceChangeType.valueOf(this.eventType)
+    nativeValue = nativeValue.toDomain(),
+    foreignValue = foreignValue.toDomain(),
+    accountId = accountId,
+    eventType = BalanceChangeType.valueOf(eventType),
+    creditId = creditPayment?.creditId
 )
 
 fun TransferDto.toDomain() = TransferDomain(
-    id = this.id,
-    source = this.source.toDomain(),
-    target = this.target.toDomain()
+    id = id,
+    source = source.toDomain(),
+    target = target.toDomain()
 )
 
 fun AccountEventDto.toDomain() = AccountEventDomain(
-    id = this.id,
-    comment = this.comment ?: "No comment",
-    eventType = AccountEventType.fromString(this.eventType),
-    balanceChange = this.balanceChange?.toDomain(),
-    transfer = this.transfer?.toDomain(),
-    resolvedAt = this.resolvedAt.parseDateToReadable(),
-    state = AccountEventState.valueOf(this.state)
+    id = id,
+    comment = comment ?: "No comment",
+    eventType = AccountEventType.fromString(eventType),
+    balanceChange = balanceChange?.toDomain(),
+    transfer = transfer?.toDomain(),
+    resolvedAt = resolvedAt.parseDateToReadable(),
+    state = AccountEventState.valueOf(state)
 )
 
 fun AccountEventsPageDto.toDomain() = AccountEventsPageDomain(
-    currentPage = this.pageInfo.currentPage,
-    totalPages = this.pageInfo.totalPages,
-    items = this.items?.map { it.toDomain() } ?: emptyList()
+    currentPage = pageInfo.currentPage,
+    totalPages = pageInfo.totalPages,
+    items = items?.map { it.toDomain() } ?: emptyList()
 )

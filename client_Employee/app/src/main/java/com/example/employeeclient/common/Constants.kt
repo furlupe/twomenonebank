@@ -1,9 +1,11 @@
 package com.example.employeeclient.common
 
 object Constants {
-    const val BASE_URL_AUTH = "http://147.45.102.122:28000/"
-    const val BASE_URL_CORE = "http://147.45.102.122:27000/"
-    const val BASE_URL_CREDIT = "http://147.45.102.122:29000/"
+    const val SHARED_PREFS_THEME = "theme"
+
+    const val BASE_URL_AUTH = "http://185.177.219.207:28000/"
+    const val BASE_URL_CORE = "http://185.177.219.207:27000/"
+    const val BASE_URL_CREDIT = "http://185.177.219.207:29000/"
 
     const val CONNECT_TIMEOUT = 15L
     const val READ_TIMEOUT = 60L

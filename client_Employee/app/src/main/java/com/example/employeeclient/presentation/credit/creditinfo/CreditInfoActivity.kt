@@ -4,13 +4,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import androidx.viewpager2.widget.ViewPager2
+import com.example.employeeclient.common.ThemeChangeActivity
 import com.example.employeeclient.databinding.ActivityCreditInfoBinding
 import com.example.employeeclient.presentation.credit.creditinfo.util.CreditInfoListener
 import com.example.employeeclient.presentation.credit.creditinfo.util.SectionsPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class CreditInfoActivity : AppCompatActivity(), CreditInfoListener {
+class CreditInfoActivity : ThemeChangeActivity(), CreditInfoListener {
 
     private lateinit var binding: ActivityCreditInfoBinding
     private val args: CreditInfoActivityArgs by navArgs()

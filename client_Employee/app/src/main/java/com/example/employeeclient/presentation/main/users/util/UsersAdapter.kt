@@ -61,7 +61,7 @@ class UsersAdapter(
             ITEM -> {
                 val userViewHolder = holder as UserViewHolder
                 userViewHolder.name.text = user.name
-                userViewHolder.role.text = user.role.name
+                userViewHolder.role.text = user.roles.name
 
                 userViewHolder.accounts.setOnClickListener {
                     onAccountsClick(user.id, user.name)

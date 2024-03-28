@@ -28,4 +28,14 @@ interface AuthApi {
         @Field("client_id") clientId: String = "amogus",
     ): TokenDto
 
+    @FormUrlEncoded
+    @Headers("Content-Type:application/x-www-form-urlencoded")
+    @POST("connect/authorize")
+    suspend fun authorize(
+        @Field("client_id") clientId: String = "amogus",
+        @Field("response_type") responseType: String = "code",
+        @Field("redirect_uri") redirectUri: String,
+        @Field("scope") scope: String = "offline_access",
+    )
+
 }

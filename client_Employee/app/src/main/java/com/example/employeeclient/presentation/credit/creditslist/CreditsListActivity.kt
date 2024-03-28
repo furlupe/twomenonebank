@@ -4,16 +4,17 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import com.example.employeeclient.R
+import com.example.employeeclient.common.ThemeChangeActivity
 import com.example.employeeclient.databinding.ActivityCreditsListBinding
 
-class CreditsListActivity : AppCompatActivity(), CreditsListListener {
+class CreditsListActivity : ThemeChangeActivity(), CreditsListListener {
 
     private lateinit var binding: ActivityCreditsListBinding
     private val args: CreditsListActivityArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.AppTheme)
+//        setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_credits_list)
     }
 
