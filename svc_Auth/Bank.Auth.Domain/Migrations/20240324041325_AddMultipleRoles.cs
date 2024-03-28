@@ -11,30 +11,28 @@ namespace Bank.Auth.Domain.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Role",
-                table: "AspNetUsers");
+            migrationBuilder.DropColumn(name: "Role", table: "AspNetUsers");
 
             migrationBuilder.AddColumn<List<string>>(
                 name: "Roles",
                 table: "AspNetUsers",
                 type: "text[]",
-                nullable: false);
+                nullable: false
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Roles",
-                table: "AspNetUsers");
+            migrationBuilder.DropColumn(name: "Roles", table: "AspNetUsers");
 
             migrationBuilder.AddColumn<string>(
                 name: "Role",
                 table: "AspNetUsers",
                 type: "text",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: ""
+            );
         }
     }
 }

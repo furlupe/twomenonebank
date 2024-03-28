@@ -39,10 +39,7 @@ namespace Bank.Auth.App.Setup.Seeders
                 await manager.CreateAsync(user);
                 await manager.AddPasswordAsync(user, "balls");
 
-                List<Claim> claims =
-                [
-                    new Claim(Claims.Subject, user.Id.ToString()),
-                ];
+                List<Claim> claims = [new Claim(Claims.Subject, user.Id.ToString()),];
                 user.Roles.ForEach(r => claims.Add(new Claim(ClaimTypes.Role, r)));
 
                 await manager.AddClaimsAsync(user, claims);

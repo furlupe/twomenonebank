@@ -17,11 +17,7 @@ builder.Services.AddMvc(o => o.EnableEndpointRouting = false);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o => o.AddAuth().UseXmlComments(Assembly.GetExecutingAssembly()));
 
-builder
-    .AddConfiguration()
-    .AddAuth()
-    .AddPersistance()
-    .AddAuthClient();
+builder.AddConfiguration().AddAuth().AddPersistance().AddAuthClient();
 
 var app = builder.Build();
 await app.UsePersistance();

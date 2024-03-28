@@ -10,7 +10,7 @@ namespace Bank.Auth.App.AuthenticationValidators.Validators
             {
                 return await CommitValidation(request);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return GrantValidationResult.Failure(ex.Message);
             }

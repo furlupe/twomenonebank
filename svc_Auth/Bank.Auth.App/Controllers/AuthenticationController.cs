@@ -65,11 +65,13 @@ namespace Bank.Auth.App.Controllers
 
             if (validationResult.IsSuccess && validationResult.User != null)
             {
-                return SignIn(validationResult.User, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                return SignIn(
+                    validationResult.User,
+                    OpenIddictServerAspNetCoreDefaults.AuthenticationScheme
+                );
             }
 
             throw new InvalidOperationException(validationResult.ErrorMessage);
-
         }
 
         [HttpGet("~/connect/authorize")]

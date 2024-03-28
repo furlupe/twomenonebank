@@ -39,8 +39,7 @@ namespace Bank.Auth.App.Controllers
         public string VersionAuthenticatedForService() => Version();
 
         [HttpGet("through-service")]
-        public Task<string> VersionThroughtService()
-            => _authClient.Version();
+        public Task<string> VersionThroughtService() => _authClient.Version();
 
         [HttpGet("view")]
         public IActionResult Index() => View((object)Version());

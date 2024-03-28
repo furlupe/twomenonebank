@@ -6,6 +6,7 @@ namespace Bank.Auth.App.AuthenticationValidators
     public class GrantValidatorFactory
     {
         private IHttpContextAccessor _httpContextAccessor;
+
         public GrantValidatorFactory(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
