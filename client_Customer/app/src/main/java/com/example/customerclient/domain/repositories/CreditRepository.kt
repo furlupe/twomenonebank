@@ -1,10 +1,10 @@
 package com.example.customerclient.domain.repositories
 
 import androidx.paging.PagingData
-import com.example.customerclient.ui.bottombar.home.CreditShortInfo
 import com.example.customerclient.ui.credit.create.Tariff
 import com.example.customerclient.ui.credit.info.CreditHistory
 import com.example.customerclient.ui.credit.info.CreditInfo
+import com.example.customerclient.ui.home.CreditShortInfo
 import kotlinx.coroutines.flow.Flow
 
 interface CreditRepository {

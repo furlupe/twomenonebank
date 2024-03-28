@@ -16,7 +16,7 @@ import com.example.customerclient.data.remote.database.BillDao
 import com.example.customerclient.data.remote.database.entity.BillEntity
 import com.example.customerclient.domain.repositories.BillRepository
 import com.example.customerclient.ui.bill.info.BillHistory
-import com.example.customerclient.ui.bottombar.home.BillInfo
+import com.example.customerclient.ui.home.BillInfo
 import kotlinx.coroutines.flow.Flow
 
 class BillRepositoryImpl(

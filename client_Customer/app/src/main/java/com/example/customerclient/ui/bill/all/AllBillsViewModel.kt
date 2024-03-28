@@ -6,10 +6,12 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsPagedInfoUseCase
-import com.example.customerclient.ui.bottombar.home.BillInfo
+import com.example.customerclient.ui.home.BillInfo
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AllBillsViewModel(
     private val getUserBillsPagedInfoUseCase: GetUserBillsPagedInfoUseCase,
@@ -31,7 +33,12 @@ class AllBillsViewModel(
                         _billsInfoState.value = bills
                     }
             } catch (e: Exception) {
-                _billsInfoState.value = PagingData.from(getUserBillsInfoFromDatabaseUseCase())
+                withContext(Dispatchers.IO) {
+                    val allUserBills = getUserBillsInfoFromDatabaseUseCase()
+                    withContext(Dispatchers.Main) {
+                        _billsInfoState.value = PagingData.Companion.from(allUserBills)
+                    }
+                }
             }
 
         }

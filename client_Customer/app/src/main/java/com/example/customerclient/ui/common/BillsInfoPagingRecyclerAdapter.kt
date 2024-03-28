@@ -7,7 +7,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.customerclient.R
 import com.example.customerclient.databinding.ItemBillInfoBinding
-import com.example.customerclient.ui.bottombar.home.BillInfo
+import com.example.customerclient.ui.home.BillInfo
 
 class BillsInfoPagingRecyclerAdapter(
     private val onBillClick: (String) -> Unit

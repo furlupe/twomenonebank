@@ -1,4 +1,4 @@
-package com.example.customerclient.ui.auth.signin
+package com.example.customerclient.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

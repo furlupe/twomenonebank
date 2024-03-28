@@ -10,7 +10,7 @@ import com.example.customerclient.domain.usecases.bill.DepositUseCase
 import com.example.customerclient.domain.usecases.bill.GetBillHistoryUseCase
 import com.example.customerclient.domain.usecases.bill.GetBillInfoUseCase
 import com.example.customerclient.domain.usecases.bill.WithdrawUseCase
-import com.example.customerclient.ui.bottombar.home.BillInfo
+import com.example.customerclient.ui.home.BillInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

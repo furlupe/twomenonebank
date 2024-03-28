@@ -15,8 +15,8 @@ import com.example.customerclient.data.remote.database.CreditDatabase
 import com.example.customerclient.data.repository.AuthRepositoryImpl
 import com.example.customerclient.data.repository.BillRepositoryImpl
 import com.example.customerclient.data.repository.CreditRepositoryImpl
+import com.example.customerclient.data.repository.SharedPreferencesRepositoryImpl
 import com.example.customerclient.data.repository.UserRepositoryImpl
-import com.example.customerclient.data.storage.SharedPreferencesRepositoryImpl
 import com.example.customerclient.data.storage.SharedPreferencesStorage
 import com.example.customerclient.domain.repositories.AuthRepository
 import com.example.customerclient.domain.repositories.BillRepository

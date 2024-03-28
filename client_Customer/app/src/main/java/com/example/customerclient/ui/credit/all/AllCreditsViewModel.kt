@@ -7,7 +7,7 @@ import androidx.paging.cachedIn
 import androidx.paging.filter
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoPagingUseCase
-import com.example.customerclient.ui.bottombar.home.CreditShortInfo
+import com.example.customerclient.ui.home.CreditShortInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged

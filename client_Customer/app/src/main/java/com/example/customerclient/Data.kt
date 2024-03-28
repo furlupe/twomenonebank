@@ -2,7 +2,7 @@ package com.example.customerclient
 
 import com.example.customerclient.ui.bill.info.BillHistory
 import com.example.customerclient.ui.bill.info.HistoryOperationType
-import com.example.customerclient.ui.bottombar.home.BillInfo
+import com.example.customerclient.ui.home.BillInfo
 
 val dollarExchangeRate = 90.82
 val euroExchangeRate = 99.06

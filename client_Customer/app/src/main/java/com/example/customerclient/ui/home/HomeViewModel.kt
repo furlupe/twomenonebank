@@ -1,7 +1,9 @@
-package com.example.customerclient.ui.bottombar.home
+package com.example.customerclient.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.customerclient.data.repository.SharedPreferencesRepositoryImpl
+import com.example.customerclient.data.storage.UserTheme
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
 import com.example.customerclient.domain.usecases.bill.OpenBillUseCase
@@ -17,7 +19,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 
 class HomeViewModel(
     private val getUserInfoUseCase: GetUserInfoUseCase,
@@ -27,11 +28,15 @@ class HomeViewModel(
     private val getUserBillsInfoFromDatabaseUseCase: GetUserBillsInfoFromDatabaseUseCase,
     private val saveUserBillInfoToDatabaseUseCase: SaveUserBillInfoToDatabaseUseCase,
     private val getUserCreditsInfoFromDatabaseUseCase: GetUserCreditsInfoFromDatabaseUseCase,
-    private val saveUserCreditInfoToDatabaseUseCase: SaveUserCreditInfoToDatabaseUseCase
+    private val saveUserCreditInfoToDatabaseUseCase: SaveUserCreditInfoToDatabaseUseCase,
+    private val sharedPreferencesRepositoryImpl: SharedPreferencesRepositoryImpl,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.Loading)
     val uiState: StateFlow<HomeState> = _uiState.asStateFlow()
+
+    private val _theme: MutableStateFlow<UserTheme> = MutableStateFlow(UserTheme.LIGHT)
+    val theme: StateFlow<UserTheme> = _theme.asStateFlow()
 
     fun getUserBillsAndCreditsInfo() {
         viewModelScope.launch {
@@ -53,7 +58,7 @@ class HomeViewModel(
                     )
                 }
 
-            } catch (e: HttpException) {
+            } catch (e: Throwable) {
                 withContext(Dispatchers.IO) {
                     val billsInfo = getUserBillsInfoFromDatabaseUseCase()
                     val creditsInfo = getUserCreditsInfoFromDatabaseUseCase()
@@ -68,6 +73,15 @@ class HomeViewModel(
                     }
                 }
 
+            }
+        }
+    }
+
+    fun swipeMode() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                sharedPreferencesRepositoryImpl.swipeUserTheme()
+                _theme.update { sharedPreferencesRepositoryImpl.getUserTheme() }
             }
         }
     }

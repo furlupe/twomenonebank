@@ -2,7 +2,7 @@ package com.example.customerclient.domain.repositories
 
 import androidx.paging.PagingData
 import com.example.customerclient.ui.bill.info.BillHistory
-import com.example.customerclient.ui.bottombar.home.BillInfo
+import com.example.customerclient.ui.home.BillInfo
 import kotlinx.coroutines.flow.Flow
 
 interface BillRepository {

@@ -2,7 +2,6 @@ package com.example.customerclient.data.repository
 
 import com.example.customerclient.data.api.auth.AuthenticationApi
 import com.example.customerclient.data.api.dto.TokenDto
-import com.example.customerclient.data.storage.SharedPreferencesRepositoryImpl
 import com.example.customerclient.domain.repositories.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

@@ -1,6 +1,8 @@
-package com.example.customerclient.data.storage
+package com.example.customerclient.data.repository
 
 import com.example.customerclient.data.api.dto.TokenDto
+import com.example.customerclient.data.storage.SharedPreferencesStorage
+import com.example.customerclient.data.storage.UserTheme
 
 class SharedPreferencesRepositoryImpl(
     private val sharedPreferencesStorage: SharedPreferencesStorage
@@ -33,4 +35,8 @@ class SharedPreferencesRepositoryImpl(
     fun getUserId(): String {
         return sharedPreferencesStorage.getUserId()
     }
+
+    fun swipeUserTheme() = sharedPreferencesStorage.swipeUserTheme()
+
+    fun getUserTheme(): UserTheme = sharedPreferencesStorage.getCurrentUserTheme()
 }
