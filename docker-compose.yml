@@ -2,6 +2,7 @@ include:
   - svc_Core/docker-compose.yml
   - svc_Auth/docker-compose.yml
   - svc_Credit/docker-compose.yml
+  - svc_TransactionsGateway/docker-compose.yml
 
 services:
   db:
