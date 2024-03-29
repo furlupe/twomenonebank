@@ -29,8 +29,8 @@ services:
       - "${RABBIT_PORT:-5672}:5672"
       - "${RABBIT_MANAGEMENT_PORT:-15672}:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=$RABBIT_USER
-      - RABBITMQ_DEFAULT_PASS=$RABBIT_PASSWORD
+      - RABBITMQ_DEFAULT_USER=${RABBIT_USER:-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_PASSWORD:-guest}
     volumes:
       - twomenonebank-rabbit:/var/lib/rabbitmq/
     restart: always
