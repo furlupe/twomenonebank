@@ -1,10 +1,13 @@
 package com.example.employeeclient.presentation.main.users
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat.recreate
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
@@ -36,15 +39,36 @@ class UsersFragment : Fragment() {
         binding.rvUsers.setLayoutManager(linearLayoutManager)
 
         binding.btSettings.setOnClickListener {
-            val prefs = PreferenceManager
-                .getDefaultSharedPreferences(context)
-            val currentTheme = prefs.getInt(Constants.SHARED_PREFS_THEME, R.style.AppTheme)
+            val currentNightMode =
+                resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
-            if (currentTheme == R.style.AppTheme) {
-                prefs.edit().putInt(Constants.SHARED_PREFS_THEME, R.style.AppTheme_Dark).apply()
-            } else {
-                prefs.edit().putInt(Constants.SHARED_PREFS_THEME, R.style.AppTheme).apply()
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+
+            when (currentNightMode) {
+                Configuration.UI_MODE_NIGHT_NO -> {
+                    AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_YES
+                    )
+
+                    prefs
+                        .edit()
+                        .putInt(Constants.SHARED_PREFS_THEME, 1)
+                        .apply()
+                }
+
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_NO
+                    )
+
+                    prefs
+                        .edit()
+                        .putInt(Constants.SHARED_PREFS_THEME, 0)
+                        .apply()
+                }
             }
+
+            recreate(requireActivity())
         }
 
         val adapter = UsersAdapter(

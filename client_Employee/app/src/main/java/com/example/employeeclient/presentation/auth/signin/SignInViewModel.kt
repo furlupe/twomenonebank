@@ -19,11 +19,16 @@ class SignInViewModel(
     val state: StateFlow<SignInState> = _state
 
     fun connect(code: String) = viewModelScope.launch {
-        connectUseCase(code)
+        try {
+            connectUseCase(code)
 
-        _state.update { prevState ->
-            prevState.copy(navigateToMain = true)
+            _state.update { prevState ->
+                prevState.copy(navigateToMain = true)
+            }
+        } catch(_: Exception) {
+
         }
+
     }
 
     fun authorize() = viewModelScope.launch {

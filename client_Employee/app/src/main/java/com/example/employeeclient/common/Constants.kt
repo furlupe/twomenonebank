@@ -3,6 +3,8 @@ package com.example.employeeclient.common
 object Constants {
     const val SHARED_PREFS_THEME = "theme"
 
+    const val DEEP_LINK = "myschema://twomenonebank.com/employee"
+
     const val BASE_URL_AUTH = "http://185.177.219.207:28000/"
     const val BASE_URL_CORE = "http://185.177.219.207:27000/"
     const val BASE_URL_CREDIT = "http://185.177.219.207:29000/"

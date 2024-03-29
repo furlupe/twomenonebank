@@ -8,10 +8,6 @@ class AuthRepositoryImpl(
     private val api: AuthApi
 ): AuthRepository {
 
-    override suspend fun authorize(deeplink: String) {
-        api.authorize(redirectUri = deeplink)
-    }
-
     override suspend fun authorize() {
         api.authorize()
     }
