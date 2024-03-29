@@ -67,10 +67,13 @@ namespace Bank.Auth.App.Setup.Seeders
 
             foreach (var client in clients)
             {
-                if (await manager.FindByClientIdAsync(client.ClientId!, cancellationToken) is null)
+                var existingClient = await manager.FindByClientIdAsync(client.ClientId!, cancellationToken);
+                if (existingClient != null)
                 {
-                    await manager.CreateAsync(client, cancellationToken);
+                    await manager.DeleteAsync(existingClient, cancellationToken);
                 }
+
+                await manager.CreateAsync(client, cancellationToken);
             }
         }
 
