@@ -1,20 +1,20 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.CustomerClient" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple</item>
-        <item name="colorPrimaryVariant">@color/blue</item>
+        <item name="colorPrimary">@color/white</item>
         <item name="colorOnPrimary">@color/black</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/gray</item>
-        <item name="colorSecondaryVariant">@color/gray</item>
+
+        <item name="colorSecondary">@color/white</item>
         <item name="colorOnSecondary">@color/black</item>
 
         <item name="background">@color/black</item>
         <item name="colorOnBackground">@color/white</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/purple</item>
 
+        <item name="colorSurface">@color/dark_purple</item>
+        <item name="colorSurfaceVariant">@color/purple</item>
+        <item name="colorOnSurface">@color/white</item>
+
+        <item name="android:statusBarColor">@color/purple</item>
         <item name="app_background">@drawable/dark_gradient_background</item>
     </style>
 </resources>

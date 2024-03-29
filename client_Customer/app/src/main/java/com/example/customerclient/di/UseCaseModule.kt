@@ -1,5 +1,6 @@
 package com.example.customerclient.di
 
+import com.example.customerclient.domain.usecases.auth.AuthorizeUseCase
 import com.example.customerclient.domain.usecases.auth.SignInUseCase
 import com.example.customerclient.domain.usecases.bill.CloseBillUseCase
 import com.example.customerclient.domain.usecases.bill.DepositUseCase
@@ -28,6 +29,7 @@ val useCaseModule = module {
 
     // - Auth
     single<SignInUseCase> { SignInUseCase(authRepository = get()) }
+    single<AuthorizeUseCase> { AuthorizeUseCase(authRepository = get()) }
 
     // - Bill
     single<GetUserBillsInfoUseCase> { GetUserBillsInfoUseCase(billRepository = get()) }

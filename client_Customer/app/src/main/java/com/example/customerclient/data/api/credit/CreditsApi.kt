@@ -12,6 +12,16 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CreditsApi {
+    @POST("api/Credit")
+    suspend fun createCredit(@Body createCreditBody: CreateCreditDto)
+
+    @POST("api/Credit/{creditId}/pay")
+    suspend fun payCredit(@Path("creditId") creditId: String)
+
+    @POST("api/Credit/{creditId}/pay-penalty")
+    suspend fun payPenaltyCredit(@Path("creditId") creditId: String)
+
+
     @GET("api/Credit/my")
     suspend fun getUserCredits(@Query("page") page: Int): CreditsPageDto
 
@@ -24,11 +34,6 @@ interface CreditsApi {
         @Query("page") page: Int
     ): CreditOperationPageDto
 
-    @POST("api/Credit")
-    suspend fun createCredit(@Body createCreditBody: CreateCreditDto)
-
-    @POST("api/Credit/{creditId}/pay")
-    suspend fun payCredit(@Path("creditId") creditId: String)
 
     @GET("api/manage/Tariff")
     suspend fun getCreditsTariffs(@Query("page") page: Int): TariffsPageDto
