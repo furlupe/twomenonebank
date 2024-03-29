@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation.xml"
-    app:startDestination="@+id/navigation_sign_in">
+    app:startDestination="@id/navigation_sign_in">
 
     <fragment
         android:id="@+id/navigation_sign_in"
@@ -11,7 +11,7 @@
         android:label="@string/label_sign_in"
         tools:layout="@layout/fragment_sign_in">
         <action
-            android:id="@+id/action_navigation_sign_in_to_bottom_bar_navigation"
+            android:id="@+id/action_navigation_sign_in_to_navigation_home"
             app:destination="@id/navigation_home" />
     </fragment>
 

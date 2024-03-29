@@ -5,7 +5,7 @@ import com.example.customerclient.ui.home.CreditShortInfo
 data class CreditShortDto(
     val id: String,
     val amount: Int,
-    val tariff: String,
+    val tariff: String?,
     val days: Int,
     val isClosed: Boolean
 )

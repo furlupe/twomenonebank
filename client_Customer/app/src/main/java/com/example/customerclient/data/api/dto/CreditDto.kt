@@ -8,7 +8,9 @@ data class CreditDto(
     val amount: Int,
     val baseAmount: Int,
     val days: Int,
-    val penalty: Int
+    val penalty: Int,
+    val periodicPayment: Int,
+    val isClosed: Boolean,
 )
 
 fun CreditDto.toCreditInfo() = CreditInfo(

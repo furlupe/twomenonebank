@@ -31,7 +31,7 @@ class CreditRepositoryImpl(
                 CreditEntity(
                     it.id,
                     it.balance,
-                    it.type,
+                    it.type ?: "",
                     it.date,
                     it.isClosed
                 )

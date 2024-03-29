@@ -6,9 +6,7 @@
     android:background="?attr/app_background"
 
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-
-    tools:context=".ui.home.HomeFragment">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/userWelcome"
@@ -45,6 +43,7 @@
         android:paddingBottom="16dp"
 
         android:background="@drawable/card_background"
+        android:backgroundTint="?colorSurface"
         android:elevation="8dp"
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +85,8 @@
 
             app:layout_constraintBottom_toBottomOf="@+id/billTitle"
             app:layout_constraintEnd_toEndOf="@+id/billView"
-            app:layout_constraintTop_toTopOf="@+id/billTitle" />
+            app:layout_constraintTop_toTopOf="@+id/billTitle"
+            app:tint="?colorPrimary" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/createNewBillCard"
@@ -100,6 +100,7 @@
             android:layout_marginTop="16dp"
 
             android:background="@drawable/card_background"
+            android:backgroundTint="?colorSurfaceVariant"
             android:elevation="8dp"
 
             app:layout_constraintBottom_toBottomOf="parent"
@@ -113,6 +114,8 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
+                app:tint="?colorSecondary"
 
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
@@ -129,7 +132,7 @@
                 android:layout_marginTop="4dp"
 
                 android:text="@string/open_bill_title"
-                android:textColor="@color/black"
+                android:textColor="?colorOnBackground"
                 android:textSize="12sp"
                 android:textStyle="bold"
 
@@ -146,7 +149,7 @@
 
                 android:text="Откройте счёт на\nлучших условиях"
                 android:minLines="2"
-                android:textColor="@color/gray"
+                android:textColor="?colorOnSurface"
                 android:textSize="11sp"
 
                 app:layout_constraintStart_toStartOf="@+id/createNewBillTitle"
@@ -210,6 +213,7 @@
         android:paddingBottom="16dp"
 
         android:background="@drawable/card_background"
+        android:backgroundTint="?colorSurface"
         android:elevation="8dp"
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -239,6 +243,7 @@
             android:id="@+id/addCreditButton"
 
             android:src="@drawable/ic_add_blue_24dp"
+            app:tint="?colorPrimary"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -265,6 +270,7 @@
             android:layout_marginTop="16dp"
 
             android:background="@drawable/card_background"
+            android:backgroundTint="?colorSurfaceVariant"
             android:elevation="8dp"
 
             app:layout_constraintBottom_toBottomOf="parent"
@@ -283,7 +289,8 @@
                 android:layout_marginTop="16dp"
 
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="?colorSecondary" />
 
             <TextView
                 android:id="@+id/createNewCreditTitle"
@@ -294,7 +301,7 @@
                 android:layout_marginTop="4dp"
 
                 android:text="@string/take_out_loan_title"
-                android:textColor="@color/black"
+                android:textColor="?colorOnBackground"
                 android:textSize="12sp"
                 android:textStyle="bold"
 
@@ -311,7 +318,7 @@
 
                 android:text="Подобрать кредит\nна любые цели"
                 android:minLines="2"
-                android:textColor="@color/gray"
+                android:textColor="?colorOnSurface"
                 android:textSize="11sp"
 
                 app:layout_constraintStart_toStartOf="@+id/createNewCreditTitle"

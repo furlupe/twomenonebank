@@ -32,7 +32,7 @@ class HomeViewModel(
     private val sharedPreferencesRepositoryImpl: SharedPreferencesRepositoryImpl,
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.Loading)
+    private val _uiState: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.Content())
     val uiState: StateFlow<HomeState> = _uiState.asStateFlow()
 
     private val _theme: MutableStateFlow<UserTheme> = MutableStateFlow(UserTheme.LIGHT)
@@ -42,19 +42,21 @@ class HomeViewModel(
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
-                val billsInfo = getUserBillsInfoUseCase()
-                val creditsInfo = getUserCreditsInfoUseCase().filter { !it.isClosed }
+                //val billsInfo = getUserBillsInfoUseCase()
+                //val creditsInfo = getUserCreditsInfoUseCase().filter { !it.isClosed }
 
-                withContext(Dispatchers.IO) {
+                /*withContext(Dispatchers.IO) {
                     saveUserBillInfoToDatabaseUseCase(billsInfo)
                     saveUserCreditInfoToDatabaseUseCase(creditsInfo)
-                }
+                }*/
 
                 _uiState.update {
                     HomeState.Content(
                         userName = userInfo.name,
-                        billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1) else billsInfo,
-                        creditsInfo = if (creditsInfo.size > 2) creditsInfo.slice(0..1) else creditsInfo
+                        billsInfo = listOf(),
+                        creditsInfo = listOf()
+                        //billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1) else billsInfo,
+                        //creditsInfo = if (creditsInfo.size > 2) creditsInfo.slice(0..1) else creditsInfo
                     )
                 }
 
@@ -79,9 +81,13 @@ class HomeViewModel(
 
     fun swipeMode() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                sharedPreferencesRepositoryImpl.swipeUserTheme()
-                _theme.update { sharedPreferencesRepositoryImpl.getUserTheme() }
+            try {
+                withContext(Dispatchers.IO) {
+                    sharedPreferencesRepositoryImpl.swipeUserTheme()
+                    _theme.update { sharedPreferencesRepositoryImpl.getUserTheme() }
+                }
+
+            } catch (e: Throwable) {
             }
         }
     }
@@ -102,7 +108,7 @@ sealed class HomeState {
     data class Content(
         val userName: String = "",
         val billsInfo: List<BillInfo> = listOf(),
-        val creditsInfo: List<CreditShortInfo>,
+        val creditsInfo: List<CreditShortInfo> = listOf(),
         val fromDatabase: Boolean = false,
     ) : HomeState()
 
@@ -123,7 +129,7 @@ data class BillInfo(
 
 data class CreditShortInfo(
     val id: String,
-    val type: String,
+    val type: String? = "",
     val balance: String,
     val date: String,
     val nextFee: String,

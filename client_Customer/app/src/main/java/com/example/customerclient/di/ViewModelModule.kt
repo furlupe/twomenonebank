@@ -1,7 +1,6 @@
 package com.example.customerclient.di
 
 import androidx.lifecycle.SavedStateHandle
-import com.example.customerclient.ui.MainViewModel
 import com.example.customerclient.ui.auth.SignInViewModel
 import com.example.customerclient.ui.bill.all.AllBillsViewModel
 import com.example.customerclient.ui.bill.info.BillInfoViewModel
@@ -16,7 +15,7 @@ val viewModelModule = module {
     includes(appModule)
     includes(useCaseModule)
 
-    viewModel { SignInViewModel(signInUseCase = get()) }
+    viewModel { SignInViewModel(authorizeUseCase = get()) }
 
     viewModel {
         HomeViewModel(
@@ -68,9 +67,5 @@ val viewModelModule = module {
             createCreditUseCase = get(),
             getCreditTariffsUseCase = get()
         )
-    }
-
-    viewModel {
-        MainViewModel(sharedPreferencesRepositoryImpl = get())
     }
 }

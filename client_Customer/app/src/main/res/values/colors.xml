@@ -8,4 +8,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#FF60D088</color>
     <color name="red">#FFD08860</color>
+
+    <color name="dark_purple">#FF6034b0</color>
 </resources>

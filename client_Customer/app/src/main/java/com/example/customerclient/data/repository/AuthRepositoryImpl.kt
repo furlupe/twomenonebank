@@ -10,12 +10,17 @@ class AuthRepositoryImpl(
     private val api: AuthenticationApi,
     private val sharedPreferencesRepositoryImpl: SharedPreferencesRepositoryImpl
 ) : AuthRepository {
-    override suspend fun authorize(email: String, password: String): TokenDto {
+    override suspend fun authorize() {
         return withContext(Dispatchers.IO) {
-            val tokens = api.connect(username = email, password = password)
+            api.authorize()
+        }
+    }
+
+    override suspend fun signIn(code: String) {
+        return withContext(Dispatchers.IO) {
+            val tokens = api.connect(code = code)
             val expiresIn = tokens.expires_in
             sharedPreferencesRepositoryImpl.saveTokens(tokens.copy(expires_in = expiresIn + System.currentTimeMillis() / 1000))
-            tokens
         }
     }
 
