@@ -25,7 +25,7 @@ namespace Bank.Auth.App.Setup.Extensions
             {
                 using (var db = scope.ServiceProvider.GetRequiredService<BankAuthDbContext>())
                 {
-                        await db.Database.MigrateAsync();
+                    await db.Database.MigrateAsync();
                 }
             }
         }

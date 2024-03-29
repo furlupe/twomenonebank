@@ -21,7 +21,7 @@ namespace Bank.Auth.App.Controllers
         }
 
         [HttpGet("id"), CalledByService]
-        public async Task<Guid> GetUserIdByPhone([FromQuery] string phoneNumber)
-            => (await _userManager.Users.SingleAsync(x => x.PhoneNumber == phoneNumber)).Id;
+        public async Task<Guid> GetUserIdByPhone([FromQuery] string phoneNumber) =>
+            (await _userManager.Users.SingleAsync(x => x.PhoneNumber == phoneNumber)).Id;
     }
 }

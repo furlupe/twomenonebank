@@ -1,6 +1,6 @@
 ﻿using Bank.Auth.App.AuthenticationValidators;
+using Bank.Auth.App.Options;
 using Bank.Auth.App.Setup.Seeders;
-using Bank.Auth.Common.Extensions;
 using Bank.Auth.Common.Options;
 using Bank.Auth.Domain;
 using Bank.Auth.Domain.Models;
@@ -15,6 +15,8 @@ namespace Bank.Auth.App.Setup.Extensions
     {
         public static WebApplicationBuilder AddAuth(this WebApplicationBuilder builder)
         {
+            builder.BindOptions<Deeplinks>();
+
             var services = builder.Services;
 
             services
@@ -96,8 +98,7 @@ namespace Bank.Auth.App.Setup.Extensions
                 });
 
             services.AddHostedService<OpenIdClientsSeeder>().AddHostedService<UserSeeder>();
-            services.AddHttpContextAccessor()
-                .AddScoped<GrantValidatorFactory>();
+            services.AddHttpContextAccessor().AddScoped<GrantValidatorFactory>();
 
             return builder;
         }

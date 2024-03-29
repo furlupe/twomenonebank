@@ -32,8 +32,7 @@ namespace Bank.Auth.App.Controllers
 
         [HttpGet("{userId}")]
         [CalledByStaff]
-        public Task<ActionResult<UserDto>> GetUser(Guid userId)
-            => GetUserById(userId);
+        public Task<ActionResult<UserDto>> GetUser(Guid userId) => GetUserById(userId);
 
         [HttpGet]
         [CalledByStaff]
@@ -41,10 +40,7 @@ namespace Bank.Auth.App.Controllers
         {
             return await _userManager
                 .Users.Where(x => x.Id != User.GetId())
-                .GetPage(
-                    new() { PageNumber = page },
-                    UserToDto
-                );
+                .GetPage(new() { PageNumber = page }, UserToDto);
         }
 
         [HttpPost("{userId}/ban")]
@@ -143,18 +139,18 @@ namespace Bank.Auth.App.Controllers
             };
 
             var result = await _userManager.CreateAsync(user);
-            if (!result.Succeeded) return BadRequest(result.Errors);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
 
             result = await _userManager.AddPasswordAsync(user, registerDto.Password);
-            if (!result.Succeeded) return BadRequest(result.Errors);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
 
             result = await _userManager.SetPhoneNumberAsync(user, registerDto.Phone);
-            if (!result.Succeeded) return BadRequest(result.Errors);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
 
-            List<Claim> claims =
-            [
-                new Claim(Claims.Subject, user.Id.ToString()),
-            ];
+            List<Claim> claims = [new Claim(Claims.Subject, user.Id.ToString()),];
             stringRoles.ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
 
             await _userManager.AddClaimsAsync(user, claims);

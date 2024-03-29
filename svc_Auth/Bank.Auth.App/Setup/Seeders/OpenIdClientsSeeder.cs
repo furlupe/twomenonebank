@@ -1,4 +1,5 @@
-﻿using Bank.Auth.Common.Options;
+﻿using Bank.Auth.App.Options;
+using Bank.Auth.Common.Options;
 using Bank.Auth.Domain;
 using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
@@ -11,7 +12,10 @@ namespace Bank.Auth.App.Setup.Seeders
         private readonly IServiceProvider _serviceProvider;
         private readonly string _innerClientSecret;
 
-        public OpenIdClientsSeeder(IServiceProvider serviceProvider, IOptions<AuthOptions> tokenOptions)
+        public OpenIdClientsSeeder(
+            IServiceProvider serviceProvider,
+            IOptions<AuthOptions> tokenOptions
+        )
         {
             _serviceProvider = serviceProvider;
             _innerClientSecret = tokenOptions.Value.Secret;
@@ -30,19 +34,24 @@ namespace Bank.Auth.App.Setup.Seeders
             {
                 ClientId = "amogus",
                 Permissions =
-                    {
-                        Permissions.Endpoints.Token,
-                        Permissions.Endpoints.Authorization,
-                        Permissions.GrantTypes.Password,
-                        Permissions.GrantTypes.RefreshToken,
-                        Permissions.Scopes.Profile,
-                        Permissions.GrantTypes.AuthorizationCode,
-                        Permissions.ResponseTypes.Code,
-                    }
+                {
+                    Permissions.Endpoints.Token,
+                    Permissions.Endpoints.Authorization,
+                    Permissions.GrantTypes.Password,
+                    Permissions.GrantTypes.RefreshToken,
+                    Permissions.Scopes.Profile,
+                    Permissions.GrantTypes.AuthorizationCode,
+                    Permissions.ResponseTypes.Code,
+                }
             };
-            mobileClient.RedirectUris.Add(new Uri("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
 
-            List<OpenIddictApplicationDescriptor> clients = [
+            var deeplinks = scope
+                .ServiceProvider.GetRequiredService<IOptions<Deeplinks>>()
+                .Value.Links;
+            deeplinks.ForEach(link => mobileClient.RedirectUris.Add(new Uri(link)));
+
+            List<OpenIddictApplicationDescriptor> clients =
+            [
                 mobileClient,
                 new()
                 {
@@ -56,7 +65,7 @@ namespace Bank.Auth.App.Setup.Seeders
                 }
             ];
 
-            foreach ( var client in clients )
+            foreach (var client in clients)
             {
                 if (await manager.FindByClientIdAsync(client.ClientId!, cancellationToken) is null)
                 {

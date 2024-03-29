@@ -10,11 +10,15 @@ namespace Bank.Auth.App.AuthenticationValidators.Validators
     public class AuthorizationCodeGrantValidator : BaseGrantValidator
     {
         private IHttpContextAccessor _httpContext;
-        public AuthorizationCodeGrantValidator(IHttpContextAccessor httpContext) 
+
+        public AuthorizationCodeGrantValidator(IHttpContextAccessor httpContext)
         {
             _httpContext = httpContext;
         }
-        protected async override Task<GrantValidationResult> CommitValidation(OpenIddictRequest request)
+
+        protected override async Task<GrantValidationResult> CommitValidation(
+            OpenIddictRequest request
+        )
         {
             if (_httpContext.HttpContext == null)
             {
