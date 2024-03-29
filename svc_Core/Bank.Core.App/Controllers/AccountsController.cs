@@ -50,7 +50,7 @@ public class AccountsController(
             throw new NotFoundException();
         var transactions = await transactionService.GetAccountTransactions(id, queryParameters);
 
-        return transactions.Cast(AccountEventDto.From);
+        return transactions.Cast((x) => AccountEventDto.From(x));
     }
 
     [HttpPost("open")]

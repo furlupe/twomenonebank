@@ -6,6 +6,7 @@ using Bank.TransactionsGateway.App.Dto;
 using Bank.TransactionsGateway.App.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Bank.Core.Common.Transfer;
 
 namespace Bank.TransactionsGateway.App.Controllers;
 
@@ -15,8 +16,12 @@ namespace Bank.TransactionsGateway.App.Controllers;
 public class TransactionsController(ITransactionService transactionService, AuthClient authClient)
     : ControllerBase
 {
-    [HttpPost("{id}/transfer")]
-    public async Task Transfer([FromRoute] Guid id, [FromBody] TransferDto transaction)
+    [HttpPost("{id}/transfer/p2p/{transfereeIdentifier}")]
+    public async Task TransferP2P(
+        [FromRoute] Guid id,
+        string transfereeIdentifier,
+        [FromBody] TransferDto transaction
+    )
     {
         await transactionService.Dispatch(
             new()
@@ -26,10 +31,32 @@ public class TransactionsController(ITransactionService transactionService, Auth
                 Type = Transaction.TransactionType.Transfer,
                 Transfer = new()
                 {
+                    SourceAccountId = await authClient.GetUserIdByPhone(transfereeIdentifier),
                     TargetAccountId = id,
-                    SourceAccountId = await authClient.GetUserIdByPhone(
-                        transaction.TransfereeIdentifier
-                    ),
+                    Type = TransferType.p2p
+                }
+            }
+        );
+    }
+
+    [HttpPost("{sourceId}/transfer/me2me/{targetId}")]
+    public async Task TransferMe2Me(
+        [FromRoute] Guid sourceId,
+        [FromRoute] Guid targetId,
+        [FromBody] TransferDto transaction
+    )
+    {
+        await transactionService.Dispatch(
+            new()
+            {
+                Value = transaction.Value,
+                InitiatorId = User.GetId(),
+                Type = Transaction.TransactionType.Transfer,
+                Transfer = new()
+                {
+                    SourceAccountId = sourceId,
+                    TargetAccountId = targetId,
+                    Type = TransferType.me2me
                 }
             }
         );

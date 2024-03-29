@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Bank.Core.Common;
 using Bank.Exceptions.WebApiException;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,19 @@ public class TestController() : ControllerBase
                     Method = HttpMethod.Get,
                     RequestUri = new Uri("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
                 }
+            }
+        );
+    }
+
+    [HttpGet("problem")]
+    public async Task<TransactionResponse> Response()
+    {
+        return TransactionResponse.Failure(
+            "w rizz",
+            new ProblemDetails()
+            {
+                Detail = "Never",
+                Extensions = new Dictionary<string, object?>() { { "gonna give", "you up" } }
             }
         );
     }

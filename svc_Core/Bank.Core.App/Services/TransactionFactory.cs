@@ -15,18 +15,15 @@ public class TransactionFactory(
 {
     public async Task<Transaction> Create(Common.Transaction transaction)
     {
-        var initiatorAccountId = transaction.Type switch
-        {
-            Common.Transaction.TransactionType.BalanceChange
-                => transaction.BalanceChange!.TargetAccountId,
-            Common.Transaction.TransactionType.Transfer => transaction.Transfer!.SourceAccountId,
-            _ => throw new ArgumentException(nameof(transaction.Type))
-        };
+        var initiatorOwnsSource = await accountService.IsAccountOwnedBy(
+            transaction.SourceAccountId,
+            transaction.InitiatorId
+        );
 
-        if (!await accountService.IsAccountOwnedBy(initiatorAccountId, transaction.InitiatorId))
-            throw NotFoundException.ForModel<Account>(initiatorAccountId);
+        if (!initiatorOwnsSource)
+            throw NotFoundException.ForModel<Account>(transaction.SourceAccountId);
 
-        var initiatorAccount = await accountService.GetAccount(initiatorAccountId);
+        var sourceAccount = await accountService.GetAccount(transaction.SourceAccountId);
 
         return transaction.Type switch
         {
@@ -37,31 +34,31 @@ public class TransactionFactory(
                         => new Deposit(
                             transaction.Value,
                             timeProvider.UtcNow,
-                            initiatorAccount,
+                            sourceAccount,
                             currencyConverter
                         ),
                     Common.BalanceChange.BalanceChangeType.Withdrawal
                         => new Withdrawal(
                             transaction.Value,
                             timeProvider.UtcNow,
-                            initiatorAccount,
+                            sourceAccount,
                             currencyConverter
                         ),
                     Common.BalanceChange.BalanceChangeType.CreditPayment
-                        => new Domain.Transactions.CreditPayment(
+                        => new CreditPayment(
                             transaction.Value,
                             timeProvider.UtcNow,
-                            initiatorAccount,
+                            sourceAccount,
                             transaction.BalanceChange.CreditPayment!.CreditId,
                             currencyConverter
                         ),
                     _ => throw new ArgumentException(nameof(transaction.BalanceChange.Type))
                 },
             Common.Transaction.TransactionType.Transfer
-                => new Domain.Transactions.Transfer(
+                => new Transfer(
                     transaction.Value,
                     timeProvider.UtcNow,
-                    initiatorAccount,
+                    sourceAccount,
                     await accountService.GetAccount(transaction.Transfer!.TargetAccountId),
                     currencyConverter
                 ),

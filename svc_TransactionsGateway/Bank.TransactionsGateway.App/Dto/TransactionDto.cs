@@ -1,4 +1,5 @@
 ﻿using Bank.Common.Money;
+using static Bank.Core.Common.Transfer;
 
 namespace Bank.TransactionsGateway.App.Dto;
 
@@ -18,5 +19,5 @@ public class CreditPaymentDto : TransactionDto
 
 public class TransferDto : TransactionDto
 {
-    public string TransfereeIdentifier { get; set; }
+    public string? Message { get; set; }
 }

@@ -10,11 +10,13 @@ public class Transfer(
     DateTime now,
     Account source,
     Account target,
-    ICurrencyConverter converter
+    ICurrencyConverter converter,
+    string? message = null
 ) : Transaction(value, now)
 {
     public Account Source { get; protected init; } = source;
     public Account Target { get; protected init; } = target;
+    public string Message { get; protected init; } = message ?? "Transferred.";
 
     public override async Task Perform()
     {
@@ -34,7 +36,7 @@ public class Transfer(
         );
 
         return new AccountEvent(
-            $"Transferred.",
+            Message,
             AccountEventType.Transfer,
             Now,
             transfer: new Events.Transfer(withdrawal.BalanceChange, deposit.BalanceChange) { }

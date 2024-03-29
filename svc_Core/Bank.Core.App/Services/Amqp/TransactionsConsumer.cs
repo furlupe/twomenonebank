@@ -18,8 +18,8 @@ public class TransactionsConsumer(ITransactionService transactionService) : ICon
         {
             if (wae.ToResult() is ObjectResult { Value: ProblemDetails details })
                 await context.RespondAsync(TransactionResponse.Failure(ex.Message, details));
-
-            await context.RespondAsync(TransactionResponse.Failure(ex.Message));
+            else
+                await context.RespondAsync(TransactionResponse.Failure(ex.Message));
             return;
         }
         catch (Exception ex)
