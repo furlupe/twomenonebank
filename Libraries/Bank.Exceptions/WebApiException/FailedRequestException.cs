@@ -5,7 +5,7 @@ namespace Bank.Exceptions.WebApiException;
 
 public class FailedRequestException : ProblemDetailsException
 {
-    private const string _msg = "An error occured while communicating to an external service.";
+    private const string _msg = "An error occured while communicating to a service.";
 
     public FailedRequestException(string message)
         : base(
@@ -15,19 +15,24 @@ public class FailedRequestException : ProblemDetailsException
             message
         ) { }
 
-    public FailedRequestException(HttpResponseMessage response)
-        : this(GetDetail(response)) { }
+    public FailedRequestException(ProblemDetails original, string? message = null)
+        : base(
+            original.Type ?? ErrorTypes.InternalServerError,
+            original.Status ?? StatusCodes.Status500InternalServerError,
+            original.Title,
+            message ?? original.Detail
+        ) { }
 
     public FailedRequestException(ProblemDetails original, HttpResponseMessage response)
-        : this(GetDetail(original, response)) { }
-
-    public FailedRequestException(ProblemDetails original)
-        : this(GetDetail(original)) { }
+        : this(original, GetDetail(original, response)) { }
 
     private static string GetDetail(ProblemDetails original, HttpResponseMessage response)
     {
         return GetDetail(response) + " " + $"{original.Title} {original.Detail}";
     }
+
+    public FailedRequestException(HttpResponseMessage response)
+        : this(GetDetail(response)) { }
 
     private static string GetDetail(ProblemDetails original)
     {

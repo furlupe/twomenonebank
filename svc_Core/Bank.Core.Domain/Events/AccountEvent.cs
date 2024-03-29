@@ -3,7 +3,6 @@
 public class AccountEvent : DomainEvent
 {
     public string Comment { get; protected set; }
-
     public AccountEventType EventType { get; protected set; }
     public BalanceChange? BalanceChange { get; protected set; }
     public Transfer? Transfer { get; protected set; }
