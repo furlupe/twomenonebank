@@ -28,13 +28,9 @@ public class TransactionsController(ITransactionService transactionService, Auth
             {
                 Value = transaction.Value,
                 InitiatorId = User.GetId(),
+                SourceAccountId = await authClient.GetUserIdByPhone(transfereeIdentifier),
                 Type = Transaction.TransactionType.Transfer,
-                Transfer = new()
-                {
-                    SourceAccountId = await authClient.GetUserIdByPhone(transfereeIdentifier),
-                    TargetAccountId = id,
-                    Type = TransferType.p2p
-                }
+                Transfer = new() { TargetAccountId = id, Type = TransferType.p2p }
             }
         );
     }
@@ -51,13 +47,9 @@ public class TransactionsController(ITransactionService transactionService, Auth
             {
                 Value = transaction.Value,
                 InitiatorId = User.GetId(),
+                SourceAccountId = sourceId,
                 Type = Transaction.TransactionType.Transfer,
-                Transfer = new()
-                {
-                    SourceAccountId = sourceId,
-                    TargetAccountId = targetId,
-                    Type = TransferType.me2me
-                }
+                Transfer = new() { TargetAccountId = targetId, Type = TransferType.me2me }
             }
         );
     }
@@ -70,12 +62,9 @@ public class TransactionsController(ITransactionService transactionService, Auth
             {
                 Value = transaction.Value,
                 InitiatorId = User.GetId(),
+                SourceAccountId = id,
                 Type = Transaction.TransactionType.BalanceChange,
-                BalanceChange = new()
-                {
-                    TargetAccountId = id,
-                    Type = BalanceChange.BalanceChangeType.Deposit
-                }
+                BalanceChange = new() { Type = BalanceChange.BalanceChangeType.Deposit }
             }
         );
     }
@@ -88,12 +77,9 @@ public class TransactionsController(ITransactionService transactionService, Auth
             {
                 Value = transaction.Value,
                 InitiatorId = User.GetId(),
+                SourceAccountId = id,
                 Type = Transaction.TransactionType.BalanceChange,
-                BalanceChange = new()
-                {
-                    TargetAccountId = id,
-                    Type = BalanceChange.BalanceChangeType.Withdrawal
-                }
+                BalanceChange = new() { Type = BalanceChange.BalanceChangeType.Withdrawal }
             }
         );
     }
@@ -107,10 +93,10 @@ public class TransactionsController(ITransactionService transactionService, Auth
             {
                 Value = transaction.Value,
                 InitiatorId = User.GetId(),
+                SourceAccountId = id,
                 Type = Transaction.TransactionType.BalanceChange,
                 BalanceChange = new()
                 {
-                    TargetAccountId = id,
                     Type = BalanceChange.BalanceChangeType.CreditPayment,
                     CreditPayment = new() { CreditId = transaction.CreditId }
                 }
