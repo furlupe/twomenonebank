@@ -49,6 +49,7 @@ class OkHttpProvider {
 
                 val logLevel = HttpLoggingInterceptor.Level.BODY
                 addInterceptor(HttpLoggingInterceptor().setLevel(logLevel))
+                followRedirects(false)
             }
 
             return client.build()

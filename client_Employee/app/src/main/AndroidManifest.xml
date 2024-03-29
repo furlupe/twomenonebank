@@ -41,10 +41,20 @@
         <activity
             android:name=".presentation.auth.AuthActivity"
             android:exported="true">
+<!--            <nav-graph android:value="@navigation/auth_navigation" />-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="myschema"
+                    android:host="twomenonebank.com"
+                    android:pathPrefix="/employee"/>
             </intent-filter>
         </activity>
     </application>

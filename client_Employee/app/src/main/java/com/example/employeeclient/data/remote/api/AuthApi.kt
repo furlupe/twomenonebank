@@ -14,7 +14,7 @@ interface AuthApi {
     suspend fun authorize(
         @Field("client_id") clientId: String = "amogus",
         @Field("response_type") responseType: String = "code",
-        @Field("redirect_uri") redirectUri: String,
+        @Field("redirect_uri") redirectUri: String = "myschema://twomenonebank.com/employee",
         @Field("scope") scope: String = "offline_access",
     )
 
@@ -22,17 +22,16 @@ interface AuthApi {
     @Headers("Content-Type:application/x-www-form-urlencoded")
     @POST("connect/token")
     suspend fun connect(
-        @Field("grant_type") grantType: String = "password",
-        @Field("username") username: String,
-        @Field("password") password: String,
+        @Field("grant_type") grantType: String = "authorization_code",
+        @Field("code") code: String,
         @Field("client_id") clientId: String = "amogus",
-        @Field("scope") scope: String = "offline_access",
+        @Field("redirect_uri") redirectUri: String = "myschema://twomenonebank.com/employee",
     ): TokenDto
 
     @FormUrlEncoded
     @Headers("Content-Type:application/x-www-form-urlencoded")
     @POST("connect/token")
-    suspend fun connect(
+    suspend fun connectRefresh(
         @Field("grant_type") grantType: String = "refresh_token",
         @Field("refresh_token") refreshToken: String,
         @Field("client_id") clientId: String = "amogus",

@@ -1,6 +1,7 @@
 package com.example.employeeclient.presentation.main.users
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.employeeclient.R
+import com.example.employeeclient.common.Constants
 import com.example.employeeclient.databinding.FragmentUsersBinding
 import com.example.employeeclient.presentation.main.users.util.UsersAdapter
 import kotlinx.coroutines.launch
@@ -33,15 +35,29 @@ class UsersFragment : Fragment() {
         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rvUsers.setLayoutManager(linearLayoutManager)
 
+        binding.btSettings.setOnClickListener {
+            val prefs = PreferenceManager
+                .getDefaultSharedPreferences(context)
+            val currentTheme = prefs.getInt(Constants.SHARED_PREFS_THEME, R.style.AppTheme)
+
+            if (currentTheme == R.style.AppTheme) {
+                prefs.edit().putInt(Constants.SHARED_PREFS_THEME, R.style.AppTheme_Dark).apply()
+            } else {
+                prefs.edit().putInt(Constants.SHARED_PREFS_THEME, R.style.AppTheme).apply()
+            }
+        }
+
         val adapter = UsersAdapter(
             context = context,
             onLoadNextClick = { viewModel.loadNextPage() },
             onAccountsClick = { id: String, username: String ->
-                val action = UsersFragmentDirections.actionNavigationUsersToAccountListActivity(id, username)
+                val action =
+                    UsersFragmentDirections.actionNavigationUsersToAccountListActivity(id, username)
                 findNavController().navigate(action)
             },
             onCreditsClick = { id: String, username: String ->
-                val action = UsersFragmentDirections.actionNavigationUsersToCreditsListActivity(id, username)
+                val action =
+                    UsersFragmentDirections.actionNavigationUsersToCreditsListActivity(id, username)
                 findNavController().navigate(action)
             }
         )

@@ -3,6 +3,7 @@ package com.example.employeeclient.presentation.account.accountinfo.tabs.operati
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.employeeclient.data.remote.dto.account.event.RequestAccountHistoryBodyDto
 import com.example.employeeclient.domain.repository.remote.AccountRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +23,7 @@ class AccountOperationsTabViewModel(
 
     private fun getCreditOperations(page: Int) = viewModelScope.launch {
         try {
-            val events = accountRepository.getAccountOperations(creditId, page)
+            val events = accountRepository.getAccountOperations(creditId, RequestAccountHistoryBodyDto())
 //            val items = events.items.map { event ->
 //                val updatedBalanceChange = event.balanceChange?.copy(
 //                    accountName = accountRepository.getAccount(event.balanceChange.accountId).name
