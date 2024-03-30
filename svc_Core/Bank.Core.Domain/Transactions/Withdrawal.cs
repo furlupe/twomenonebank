@@ -13,7 +13,7 @@ public class Withdrawal(Money value, DateTime now, Account target, ICurrencyConv
         ValidateValue();
         var nativeValue = await GetNativeValue(Value);
         ValidateWithdrawal(nativeValue);
-        Target.Balance += nativeValue;
+        Target.Balance -= nativeValue;
 
         return new(
             $"Withdrew {FormatValues(nativeValue, Value)}.",

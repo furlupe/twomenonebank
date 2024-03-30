@@ -1,4 +1,6 @@
-﻿using Bank.Common.Pagination;
+﻿using System.Security.Principal;
+using Bank.Common.Pagination;
+using Bank.Common.Utils;
 using Bank.Core.App.Dto;
 using Bank.Core.App.Dto.Pagination;
 using Bank.Core.App.Services.Contracts;
@@ -51,4 +53,18 @@ public class AccountService(CoreDbContext db, IUserService userService) : IAccou
 
     public async Task<bool> IsAccountOwnedBy(Guid accountId, Guid userId) =>
         await db.Accounts.AnyAsync(x => x.Id == accountId && x.UserId == userId);
+
+    public async Task<Account> GetUserDefaultAccount(Guid userId)
+    {
+        var account = await db.Accounts.FirstOrDefaultAsync(x => x.UserId == userId);
+        CheckDefaultAccount(account);
+        return account!;
+    }
+
+    public void CheckDefaultAccount(Account? account) =>
+        Validation.Check(
+            ExceptionConstants.MsgInvalidAction,
+            account != null,
+            "Could not transfer: transferee does not have an account set for incoming transfers."
+        );
 }

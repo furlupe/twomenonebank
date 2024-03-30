@@ -59,7 +59,7 @@ public class TransactionFactory(
                     transaction.Value,
                     timeProvider.UtcNow,
                     sourceAccount,
-                    await accountService.GetAccount(transaction.Transfer!.TargetAccountId),
+                    await accountService.GetUserDefaultAccount(transaction.Transfer!.TargetUserId),
                     currencyConverter
                 ),
             _ => throw new ArgumentException(nameof(transaction.Type))
