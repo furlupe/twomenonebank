@@ -21,7 +21,8 @@ export const TYPES = {
     ...routerTypes,
     ...providerTypes,
     ...clientTypes,
-    AppOptions: Symbol.for("AppOptions")
+    AppOptions: Symbol.for("AppOptions"),
+    UserRepository: Symbol.for("UserRepository")
 }
 
 export default TYPES;

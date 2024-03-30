@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { AppOptions } from "../common/app_options";
+import { HostsOptions } from "../common/hosts_options";
 import { Store, StoreProvider } from "../common/store_provider";
 import { inject, injectable } from "inversify";
 import {AsyncLocalStorage} from 'node:async_hooks';
@@ -12,11 +12,11 @@ export class AxiosProvider {
     private _axiosCredit: AxiosInstance | null = null;
     private _axiosTransactions: AxiosInstance | null = null;
 
-    private readonly _options: AppOptions;
+    private readonly _options: HostsOptions;
     private readonly _store: AsyncLocalStorage<Store>;
 
     constructor(
-        @inject(TYPES.AppOptions) options: AppOptions,
+        @inject(TYPES.AppOptions) options: HostsOptions,
         @inject(TYPES.StoreProvider) storeAccessor: StoreProvider
     ) {
         this._options = options;
