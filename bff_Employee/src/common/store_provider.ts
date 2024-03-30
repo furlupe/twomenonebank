@@ -1,12 +1,12 @@
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 import { AsyncLocalStorage } from 'node:async_hooks';
 
 export type Store = {
-    authorizationHeader: string;
+    authorizationHeader?: string;
 }
 
 @injectable()
-export class StoreAccessor {
+export class StoreProvider {
     private _store: AsyncLocalStorage<Store> | null = null;
 
     public get(): AsyncLocalStorage<Store> {

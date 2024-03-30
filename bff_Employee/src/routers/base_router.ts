@@ -3,13 +3,13 @@ import { injectable } from "inversify";
 
 @injectable()
 export abstract class BaseRouter {
-    router(): Router {
+    protected abstract mapRouterEndpoints(router: Router): void;
+
+    create(): Router {
         const router = Router();
 
         this.mapRouterEndpoints(router);
 
         return router;
     }
-
-    protected abstract mapRouterEndpoints(router: Router): void;
 }
