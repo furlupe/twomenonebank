@@ -8,19 +8,21 @@ import com.example.customerclient.data.AccessInterceptor
 import com.example.customerclient.data.api.auth.AuthenticationApi
 import com.example.customerclient.data.api.auth.UserApi
 import com.example.customerclient.data.api.core.AccountsApi
-import com.example.customerclient.data.api.core.TransactionsApi
 import com.example.customerclient.data.api.credit.CreditsApi
+import com.example.customerclient.data.api.transactions.TransactionsApi
 import com.example.customerclient.data.remote.database.BillDatabase
 import com.example.customerclient.data.remote.database.CreditDatabase
 import com.example.customerclient.data.repository.AuthRepositoryImpl
 import com.example.customerclient.data.repository.BillRepositoryImpl
 import com.example.customerclient.data.repository.CreditRepositoryImpl
 import com.example.customerclient.data.repository.SharedPreferencesRepositoryImpl
+import com.example.customerclient.data.repository.TransactionRepositoryImpl
 import com.example.customerclient.data.repository.UserRepositoryImpl
 import com.example.customerclient.data.storage.SharedPreferencesStorage
 import com.example.customerclient.domain.repositories.AuthRepository
 import com.example.customerclient.domain.repositories.BillRepository
 import com.example.customerclient.domain.repositories.CreditRepository
+import com.example.customerclient.domain.repositories.TransactionRepository
 import com.example.customerclient.domain.repositories.UserRepository
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -159,9 +161,14 @@ val appModule = module {
             .build().create(AccountsApi::class.java)
     }
 
+    single<BillRepository> {
+        BillRepositoryImpl(accountsApi = get(), billDao = get())
+    }
+
+    // - Transactions
     single<TransactionsApi> {
         Retrofit.Builder()
-            .baseUrl(Constants.BASE_CORE_URL)
+            .baseUrl(Constants.BASE_TRANSACTIONS_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(
                 OkHttpClient.Builder()
@@ -174,7 +181,6 @@ val appModule = module {
             .build().create(TransactionsApi::class.java)
     }
 
-    single<BillRepository> {
-        BillRepositoryImpl(accountsApi = get(), transactionsApi = get(), billDao = get())
-    }
+    single<TransactionRepository> { TransactionRepositoryImpl(transactionsApi = get()) }
+
 }

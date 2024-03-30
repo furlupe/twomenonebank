@@ -59,8 +59,8 @@ class HomeFragment : Fragment() {
         }
 
         binding.switchModeButton.setOnClickListener {
-            viewModel.swipeMode()
             callback?.swipeTheme()
+            viewModel.swipeMode()
         }
 
         return binding.root

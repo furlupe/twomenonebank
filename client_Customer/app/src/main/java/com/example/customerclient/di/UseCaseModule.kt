@@ -21,6 +21,8 @@ import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoPagin
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoUseCase
 import com.example.customerclient.domain.usecases.credit.PayCreditUseCase
 import com.example.customerclient.domain.usecases.credit.SaveUserCreditInfoToDatabaseUseCase
+import com.example.customerclient.domain.usecases.transaction.Me2MeTransactionUseCase
+import com.example.customerclient.domain.usecases.transaction.P2PTransactionUseCase
 import com.example.customerclient.domain.usecases.user.GetUserInfoUseCase
 import org.koin.dsl.module
 
@@ -38,8 +40,8 @@ val useCaseModule = module {
     single<GetBillHistoryUseCase> { GetBillHistoryUseCase(billRepository = get()) }
     single<OpenBillUseCase> { OpenBillUseCase(billRepository = get()) }
     single<CloseBillUseCase> { CloseBillUseCase(billRepository = get()) }
-    single<DepositUseCase> { DepositUseCase(billRepository = get()) }
-    single<WithdrawUseCase> { WithdrawUseCase(billRepository = get()) }
+    single<DepositUseCase> { DepositUseCase(transactionRepository = get()) }
+    single<WithdrawUseCase> { WithdrawUseCase(transactionRepository = get()) }
 
     single<GetUserBillsInfoFromDatabaseUseCase> { GetUserBillsInfoFromDatabaseUseCase(billRepository = get()) }
     single<SaveUserBillInfoToDatabaseUseCase> { SaveUserBillInfoToDatabaseUseCase(billRepository = get()) }
@@ -67,4 +69,7 @@ val useCaseModule = module {
     // - User
     single<GetUserInfoUseCase> { GetUserInfoUseCase(userRepository = get()) }
 
+    // - Transaction
+    single<P2PTransactionUseCase> { P2PTransactionUseCase(transactionRepository = get()) }
+    single<Me2MeTransactionUseCase> { Me2MeTransactionUseCase(transactionRepository = get()) }
 }

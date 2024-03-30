@@ -6,15 +6,19 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.example.customerclient.R
 import com.example.customerclient.common.Constants.WEB_SITE_URL
 import com.example.customerclient.databinding.ActivityMainBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity(), MainListener {
 
     private lateinit var binding: ActivityMainBinding
-
+    private val viewModel: MainViewModel by viewModel()
     private var code: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +34,15 @@ class MainActivity : AppCompatActivity(), MainListener {
 
         val navController = navHostFragment.navController
         if (code != null && savedInstanceState == null) {
-            navController.navigate(R.id.action_navigation_sign_in_to_navigation_home)
+            code?.let { viewModel.signIn(it) }
+        }
+
+        lifecycleScope.launch {
+            viewModel.uiState.collectLatest {
+                if (it == MainState.NavigateToHomeFragment && savedInstanceState == null) navController.navigate(
+                    R.id.action_navigation_sign_in_to_navigation_home
+                )
+            }
         }
     }
 

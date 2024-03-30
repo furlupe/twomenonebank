@@ -3,7 +3,6 @@ package com.example.customerclient.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.customerclient.data.repository.SharedPreferencesRepositoryImpl
-import com.example.customerclient.data.storage.UserTheme
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
 import com.example.customerclient.domain.usecases.bill.OpenBillUseCase
@@ -35,27 +34,22 @@ class HomeViewModel(
     private val _uiState: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.Content())
     val uiState: StateFlow<HomeState> = _uiState.asStateFlow()
 
-    private val _theme: MutableStateFlow<UserTheme> = MutableStateFlow(UserTheme.LIGHT)
-    val theme: StateFlow<UserTheme> = _theme.asStateFlow()
-
     fun getUserBillsAndCreditsInfo() {
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
-                //val billsInfo = getUserBillsInfoUseCase()
+                val billsInfo = getUserBillsInfoUseCase()
                 //val creditsInfo = getUserCreditsInfoUseCase().filter { !it.isClosed }
 
-                /*withContext(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
                     saveUserBillInfoToDatabaseUseCase(billsInfo)
-                    saveUserCreditInfoToDatabaseUseCase(creditsInfo)
-                }*/
+                    //saveUserCreditInfoToDatabaseUseCase(creditsInfo)
+                }
 
                 _uiState.update {
                     HomeState.Content(
                         userName = userInfo.name,
-                        billsInfo = listOf(),
-                        creditsInfo = listOf()
-                        //billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1) else billsInfo,
+                        billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1) else billsInfo,
                         //creditsInfo = if (creditsInfo.size > 2) creditsInfo.slice(0..1) else creditsInfo
                     )
                 }
@@ -84,7 +78,6 @@ class HomeViewModel(
             try {
                 withContext(Dispatchers.IO) {
                     sharedPreferencesRepositoryImpl.swipeUserTheme()
-                    _theme.update { sharedPreferencesRepositoryImpl.getUserTheme() }
                 }
 
             } catch (e: Throwable) {

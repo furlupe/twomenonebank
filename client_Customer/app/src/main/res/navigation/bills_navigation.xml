@@ -20,6 +20,30 @@
         android:name="com.example.customerclient.ui.bill.info.BillInfoFragment"
         android:label="@string/title_bill_info"
         tools:layout="@layout/fragment_bill_info">
+        <action
+            android:id="@+id/action_navigationBillInfo_to_navigationTransactionP2P"
+            app:destination="@id/navigationTransactionP2P" />
+        <action
+            android:id="@+id/action_navigationBillInfo_to_navigationTransactionMe2Me"
+            app:destination="@id/navigationTransactionMe2Me" />
+        <argument
+            android:name="billId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigationTransactionP2P"
+        android:name="com.example.customerclient.ui.transaction.P2PTransactionFragment"
+        tools:layout="@layout/fragment_transaction_p2p">
+        <argument
+            android:name="billId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigationTransactionMe2Me"
+        android:name="com.example.customerclient.ui.transaction.Me2MeTransactionFragment"
+        tools:layout="@layout/fragment_transaction_me2me">
         <argument
             android:name="billId"
             app:argType="string" />

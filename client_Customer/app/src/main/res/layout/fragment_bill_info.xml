@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/light_gradient_background"
+    android:background="?attr/app_background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageButton
@@ -64,6 +64,7 @@
         android:focusable="true"
 
         app:cardCornerRadius="16dp"
+        android:backgroundTint="?colorSurface"
 
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,7 +78,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:text="@string/top_up"
-            android:textColor="@color/black" />
+            android:textColor="?colorOnBackground" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -85,7 +86,8 @@
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="16dp"
             android:contentDescription="top up description"
-            android:src="@drawable/ic_round_add_32dp" />
+            android:src="@drawable/ic_round_add_32dp"
+            app:tint="?colorSecondary" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -93,6 +95,8 @@
 
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
+        android:backgroundTint="?colorSurface"
 
         android:clickable="true"
         android:focusable="true"
@@ -116,7 +120,7 @@
             android:layout_marginBottom="16dp"
 
             android:text="@string/withdraw"
-            android:textColor="@color/black" />
+            android:textColor="?colorOnBackground" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -124,7 +128,48 @@
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="16dp"
             android:contentDescription="withdraw description"
-            android:src="@drawable/ic_outline_remove_32dp" />
+            android:src="@drawable/ic_outline_remove_32dp"
+            app:tint="?colorOnBackground" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/transferBillButton"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+
+        android:clickable="true"
+        android:focusable="true"
+
+        app:cardCornerRadius="16dp"
+        android:backgroundTint="?colorSurface"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topUpButton">
+
+        <TextView
+            android:id="@+id/transferBillTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Перевести"
+            android:textColor="?colorOnBackground" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="16dp"
+            android:contentDescription=""
+            android:src="@drawable/baseline_attach_money_24" />
+
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -141,10 +186,11 @@
         android:focusable="true"
 
         app:cardCornerRadius="16dp"
+        android:backgroundTint="?colorSurface"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topUpButton">
+        app:layout_constraintTop_toBottomOf="@+id/transferBillButton">
 
         <TextView
             android:id="@+id/closeBillTitle"
@@ -154,7 +200,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:text="Закрыть счёт"
-            android:textColor="@color/black" />
+            android:textColor="?colorOnBackground" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -176,6 +222,7 @@
         android:layout_marginEnd="16dp"
 
         android:background="@drawable/history_card_background"
+        android:backgroundTint="?colorSurface"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -189,7 +236,7 @@
             android:layout_height="wrap_content"
 
             android:text="@string/title_history"
-            android:textColor="@color/black"
+            android:textColor="?colorOnBackground"
             android:textSize="20sp"
             android:textStyle="bold"
 
