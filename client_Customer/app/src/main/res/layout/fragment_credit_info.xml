@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/light_gradient_background"
+    android:background="?attr/app_background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageButton
@@ -66,6 +66,7 @@
         android:focusable="true"
 
         app:cardCornerRadius="16dp"
+        android:backgroundTint="?colorSurface"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,6 +88,7 @@
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="16dp"
             android:contentDescription=""
+            android:tint="?colorSecondary"
             android:src="@drawable/round_credit_card_24" />
 
     </androidx.cardview.widget.CardView>
@@ -101,6 +103,7 @@
         android:layout_marginEnd="16dp"
 
         android:background="@drawable/history_card_background"
+        android:backgroundTint="?colorSurface"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,7 +117,7 @@
             android:layout_height="wrap_content"
 
             android:text="@string/title_history"
-            android:textColor="@color/black"
+            android:textColor="?colorOnBackground"
             android:textSize="20sp"
             android:textStyle="bold"
 

@@ -1,10 +1,10 @@
 package com.example.customerclient.domain.usecases.bill
 
-import com.example.customerclient.domain.repositories.BillRepository
+import com.example.customerclient.domain.repositories.TransactionRepository
 
 class WithdrawUseCase(
-    private val billRepository: BillRepository
+    private val transactionRepository: TransactionRepository
 ) {
     suspend operator fun invoke(billId: String, amount: Int) =
-        billRepository.withdraw(billId, amount)
+        transactionRepository.withdraw(billId, amount)
 }

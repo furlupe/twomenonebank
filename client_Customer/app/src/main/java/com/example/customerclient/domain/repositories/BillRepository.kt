@@ -21,8 +21,4 @@ interface BillRepository {
     suspend fun openBill(name: String)
 
     suspend fun closeBill(billId: String)
-
-    suspend fun deposit(billId: String, amount: Int)
-
-    suspend fun withdraw(billId: String, amount: Int)
 }

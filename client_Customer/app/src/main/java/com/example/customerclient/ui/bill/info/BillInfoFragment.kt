@@ -15,6 +15,7 @@ import com.example.customerclient.databinding.FragmentBillInfoBinding
 import com.example.customerclient.ui.bill.BillsListener
 import com.example.customerclient.ui.bill.info.components.BillsHistoryRecyclerAdapter
 import com.example.customerclient.ui.common.AlertDialogWithEditTextField
+import com.example.customerclient.ui.common.AlertDialogWithTwoButtons
 import com.example.customerclient.ui.home.components.AlertDialogWithConfirmAndDismissButtons
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -110,8 +111,33 @@ class BillInfoFragment : Fragment() {
             )
         }
 
+        // Кнопка "Перевести"
+        binding.transferBillButton.setOnClickListener {
+            showAlertDialogForChoosingTypeOfTransaction(
+                title = "Выберите какой перевод хотите совершить",
+                onPositiveButtonClick = { navigateToTransactionMe2MeFragment() },
+                onNegativeButtonClick = { navigateToTransactionP2PFragment() }
+            )
+        }
+
         // Кнопка "Закрыть счёт"
         binding.closeBillButton.setOnClickListener { showConfirmToCloseBillDialog { onConfirmToCloseBillClick() } }
+    }
+
+    private fun navigateToTransactionMe2MeFragment() {
+        val action = callback?.getBillId()
+            ?.let {
+                BillInfoFragmentDirections.actionNavigationBillInfoToNavigationTransactionMe2Me(
+                    it
+                )
+            }
+        action?.let { findNavController().navigate(action) }
+    }
+
+    private fun navigateToTransactionP2PFragment() {
+        val action = callback?.getBillId()
+            ?.let { BillInfoFragmentDirections.actionNavigationBillInfoToNavigationTransactionP2P(it) }
+        action?.let { findNavController().navigate(action) }
     }
 
     private fun showConfirmToCloseBillDialog(
@@ -139,6 +165,20 @@ class BillInfoFragment : Fragment() {
         val dialogWithEditText = AlertDialogWithEditTextField(
             title = title,
             description = getString(editTextTitleResId),
+            onPositiveButtonClick = onPositiveButtonClick
+        )
+        val manager = parentFragmentManager
+        dialogWithEditText.show(manager, tag)
+    }
+
+    private fun showAlertDialogForChoosingTypeOfTransaction(
+        title: String,
+        onPositiveButtonClick: () -> Unit,
+        onNegativeButtonClick: () -> Unit,
+    ) {
+        val dialogWithEditText = AlertDialogWithTwoButtons(
+            title = title,
+            onNegativeButtonClick = onNegativeButtonClick,
             onPositiveButtonClick = onPositiveButtonClick
         )
         val manager = parentFragmentManager

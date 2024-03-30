@@ -5,10 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.customerclient.common.Constants
 import com.example.customerclient.data.api.core.AccountsApi
-import com.example.customerclient.data.api.core.TransactionsApi
 import com.example.customerclient.data.api.dto.AccountCreateDto
-import com.example.customerclient.data.api.dto.DepositDto
-import com.example.customerclient.data.api.dto.WithdrawDto
 import com.example.customerclient.data.api.dto.toBillInfo
 import com.example.customerclient.data.paging.bill.BillsHistoryPagingSource
 import com.example.customerclient.data.paging.bill.BillsPagingSource
@@ -21,7 +18,6 @@ import kotlinx.coroutines.flow.Flow
 
 class BillRepositoryImpl(
     private val accountsApi: AccountsApi,
-    private val transactionsApi: TransactionsApi,
     private val billDao: BillDao
 ) : BillRepository {
     override suspend fun saveUserBillsToDatabase(bills: List<BillInfo>) {
@@ -73,14 +69,4 @@ class BillRepositoryImpl(
     override suspend fun closeBill(billId: String) {
         accountsApi.closeBill(billId)
     }
-
-    override suspend fun deposit(billId: String, amount: Int) {
-        transactionsApi.deposit(billId, DepositDto(amount))
-    }
-
-    override suspend fun withdraw(billId: String, amount: Int) {
-        transactionsApi.withdraw(billId, WithdrawDto(amount))
-    }
-
-
 }
