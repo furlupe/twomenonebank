@@ -22,13 +22,25 @@ namespace Bank.Core.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("AccountAccountEvent", b =>
+                {
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("EventsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AccountId", "EventsId");
+
+                    b.HasIndex("EventsId");
+
+                    b.ToTable("AccountAccountEvent");
+                });
+
             modelBuilder.Entity("Bank.Core.Domain.Events.AccountEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("AccountId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
@@ -45,8 +57,6 @@ namespace Bank.Core.Persistence.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
 
                     b.ToTable("AccountEvent");
                 });
@@ -118,12 +128,23 @@ namespace Bank.Core.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Bank.Core.Domain.Events.AccountEvent", b =>
+            modelBuilder.Entity("AccountAccountEvent", b =>
                 {
                     b.HasOne("Bank.Core.Domain.Account", null)
-                        .WithMany("Events")
-                        .HasForeignKey("AccountId");
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
+                    b.HasOne("Bank.Core.Domain.Events.AccountEvent", null)
+                        .WithMany()
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Bank.Core.Domain.Events.AccountEvent", b =>
+                {
                     b.OwnsOne("Bank.Core.Domain.Events.BalanceChange", "BalanceChange", b1 =>
                         {
                             b1.Property<Guid>("AccountEventId")
@@ -220,13 +241,7 @@ namespace Bank.Core.Persistence.Migrations
                             b1.Property<Guid>("AccountEventId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uuid");
-
-                            b1.Property<DateTime>("ResolvedAt")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<int>("State")
+                            b1.Property<int>("Type")
                                 .HasColumnType("integer");
 
                             b1.HasKey("AccountEventId");
@@ -467,11 +482,6 @@ namespace Bank.Core.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Bank.Core.Domain.Account", b =>
-                {
-                    b.Navigation("Events");
                 });
 
             modelBuilder.Entity("Bank.Core.Domain.User", b =>

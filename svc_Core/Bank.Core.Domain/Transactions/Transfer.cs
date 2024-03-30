@@ -29,7 +29,7 @@ public class Transfer(
     {
         ValidateCircuit();
         var withdrawal = await new Withdrawal(Value, Now, Source, converter).PerformTransient()!;
-        var deposit = await new Deposit(Value, Now, Source, converter).PerformTransient()!;
+        var deposit = await new Deposit(Value, Now, Target, converter).PerformTransient()!;
         ValidateEquality(
             withdrawal.BalanceChange!.ForeignValue,
             deposit.BalanceChange!.ForeignValue

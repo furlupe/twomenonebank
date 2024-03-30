@@ -20,7 +20,7 @@ public class Transaction
 
 public class Transfer
 {
-    public Guid TargetAccountId { get; set; }
+    public Guid TargetUserId { get; set; }
     public TransferType Type { get; set; }
 
     public enum TransferType

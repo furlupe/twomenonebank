@@ -7,7 +7,7 @@ public class FailedRequestException : ProblemDetailsException
 {
     private const string _msg = "An error occured while communicating to a service.";
 
-    public FailedRequestException(string message)
+    public FailedRequestException(string? message = null)
         : base(
             ErrorTypes.InternalServerError,
             StatusCodes.Status500InternalServerError,

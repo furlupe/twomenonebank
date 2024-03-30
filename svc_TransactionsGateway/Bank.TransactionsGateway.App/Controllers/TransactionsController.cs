@@ -16,9 +16,9 @@ namespace Bank.TransactionsGateway.App.Controllers;
 public class TransactionsController(ITransactionService transactionService, AuthClient authClient)
     : ControllerBase
 {
-    [HttpPost("{id}/transfer/p2p/{transfereeIdentifier}")]
+    [HttpPost("{sourceId}/transfer/p2p/{transfereeIdentifier}")]
     public async Task TransferP2P(
-        [FromRoute] Guid id,
+        [FromRoute] Guid sourceId,
         string transfereeIdentifier,
         [FromBody] TransferDto transaction
     )
@@ -28,9 +28,13 @@ public class TransactionsController(ITransactionService transactionService, Auth
             {
                 Value = transaction.Value,
                 InitiatorId = User.GetId(),
-                SourceAccountId = await authClient.GetUserIdByPhone(transfereeIdentifier),
+                SourceAccountId = sourceId,
                 Type = Transaction.TransactionType.Transfer,
-                Transfer = new() { TargetAccountId = id, Type = TransferType.p2p }
+                Transfer = new()
+                {
+                    TargetUserId = await authClient.GetUserIdByPhone(transfereeIdentifier),
+                    Type = TransferType.p2p
+                }
             }
         );
     }
@@ -49,7 +53,7 @@ public class TransactionsController(ITransactionService transactionService, Auth
                 InitiatorId = User.GetId(),
                 SourceAccountId = sourceId,
                 Type = Transaction.TransactionType.Transfer,
-                Transfer = new() { TargetAccountId = targetId, Type = TransferType.me2me }
+                Transfer = new() { TargetUserId = targetId, Type = TransferType.me2me }
             }
         );
     }

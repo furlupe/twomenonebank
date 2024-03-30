@@ -15,6 +15,8 @@ public class TransactionService(IRequestClient<Transaction> requestClient) : ITr
         {
             if (message.Details is not null && message.Details.Status != 500)
                 throw new FailedRequestException(message.Details);
+
+            throw new FailedRequestException(message.Message);
         }
     }
 }

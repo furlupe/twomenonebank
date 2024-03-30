@@ -33,6 +33,7 @@ public partial class CoreDbContext : DbContext
         {
             a.HasOne(x => x.User).WithMany(x => x.Accounts).HasForeignKey(x => x.UserId);
             a.HasIndex(x => new { x.Name, x.UserId }).IsUnique();
+            a.HasMany(x => x.Events).WithMany();
         });
 
         modelBuilder.Entity<AccountEvent>(a =>
