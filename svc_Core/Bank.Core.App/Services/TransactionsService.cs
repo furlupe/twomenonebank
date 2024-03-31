@@ -1,15 +1,21 @@
 ﻿using Bank.Common.Pagination;
+using Bank.Core.App.Hubs;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.App.Utils;
 using Bank.Core.Domain.Events;
+using Bank.Core.Http.Dto.Events;
 using Bank.Core.Http.Dto.Pagination;
 using Bank.Core.Persistence;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Core.App.Services;
 
-public class TransactionService(CoreDbContext db, ITransactionFactory transactionFactory)
-    : ITransactionService
+public class TransactionsService(
+    CoreDbContext db,
+    ITransactionsFactory transactionFactory,
+    IHubContext<TransactionsHub, ITransactionsClient> transactionsHub
+) : ITransactionsService
 {
     public async Task<PageDto<AccountEvent>> GetAccountTransactions(
         Guid id,
@@ -41,7 +47,22 @@ public class TransactionService(CoreDbContext db, ITransactionFactory transactio
     public async Task Perform(Common.Transaction model)
     {
         var transaction = await transactionFactory.Create(model);
-        await transaction.Perform();
+        var @event = await transaction.Perform();
         await db.SaveChangesAsync();
+
+        await transactionsHub
+            .Clients.Groups(GetAffectedAccountIds(@event))
+            .ReceiveTransactions([AccountEventDto.From(@event)]);
+    }
+
+    private static List<string> GetAffectedAccountIds(AccountEvent @event)
+    {
+        List<Guid?> accountIds =
+        [
+            @event.Transfer?.Target.AccountId,
+            @event.Transfer?.Source.AccountId,
+            @event.BalanceChange?.AccountId
+        ];
+        return accountIds.Where(x => x is not null).Cast<Guid>().Select(x => x.ToString()).ToList();
     }
 }

@@ -15,7 +15,7 @@ namespace Bank.Core.App.Controllers;
 [Authorize]
 public class AccountsEmployeeController(
     IAccountService accountService,
-    ITransactionService transactionService
+    ITransactionsService transactionService
 ) : ControllerBase
 {
     [HttpGet("{id}")]

@@ -4,6 +4,7 @@ using Bank.Auth.Common.Policies.Handlers;
 using Bank.Common.Constants;
 using Bank.Common.Extensions;
 using Bank.Common.Middlewares;
+using Bank.Core.App.Hubs;
 using Bank.Core.App.Services;
 
 namespace Bank.Core.App.Setup;
@@ -18,6 +19,18 @@ public static class FrontlineServicesSetup
         services.AddHealthChecks();
         services.AddScoped<IUserService, UserService>();
         services.AddControllers().AddJsonOptions(JsonConfigurationDefaults.JsonOptions);
+        services.AddSignalR();
+        services.AddCors(x =>
+        {
+            x.AddDefaultPolicy(policy =>
+            {
+                policy
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .SetIsOriginAllowed(_ => true);
+            });
+        });
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(o => o.AddAuth().UseXmlComments(Assembly.GetExecutingAssembly()));
 
@@ -34,8 +47,10 @@ public static class FrontlineServicesSetup
         app.MapHealthChecks("/health");
 
         app.UseHttpsRedirection();
+        app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+        app.MapHub<TransactionsHub>("accounts");
     }
 }

@@ -4,7 +4,7 @@ using Bank.Core.Http.Dto.Pagination;
 
 namespace Bank.Core.App.Services.Contracts;
 
-public interface ITransactionService
+public interface ITransactionsService
 {
     Task<PageDto<AccountEvent>> GetAccountTransactions(
         Guid id,
