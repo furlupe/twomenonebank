@@ -4,7 +4,7 @@ namespace Bank.Credit.Domain
 {
     public class User : Entity
     {
-        public List<CreditEntity> Credits { get; set; }
+        public List<CreditEntity> Credits { get; set; } = [];
         public int CreditRating { get; private set; } = 100;
 
         public void SetRating(int rating)
@@ -15,6 +15,11 @@ namespace Bank.Credit.Domain
             }
 
             CreditRating = rating;
+        }
+
+        public void AddCredit(CreditEntity credit)
+        {
+            Credits.Add(credit);
         }
 
         private User() { }

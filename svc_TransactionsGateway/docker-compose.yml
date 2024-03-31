@@ -1,6 +1,7 @@
 services:
   transactions-gateway-app:
     container_name: twomenonebank-transactions-gateway-app
+    hostname: twomenonebank-transactions-host
     image: happypiece/twomenonebank:transactions-gateway
     depends_on:
       - db

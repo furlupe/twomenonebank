@@ -46,7 +46,6 @@ public static class FrontlineServicesSetup
 
         app.MapHealthChecks("/health");
 
-        app.UseHttpsRedirection();
         app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
