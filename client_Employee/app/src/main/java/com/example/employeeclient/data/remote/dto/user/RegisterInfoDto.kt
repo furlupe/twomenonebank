@@ -4,5 +4,6 @@ data class RegisterInfoDto(
     val username: String,
     val email: String,
     val password: String,
-    val role: Int
+    val phone: String,
+    val roles: List<Int>
 )

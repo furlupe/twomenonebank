@@ -45,6 +45,12 @@ class Interceptor(
         if (response.code == 404) {
             throw IOException("HTTP 404")
         }
+        if (response.code == 302) {
+            val location = response.header("Location")
+            if (location != null) {
+                throw RedirectException(location)
+            }
+        }
         return response
     }
 
@@ -59,3 +65,5 @@ class Interceptor(
             .build()
     }
 }
+
+class RedirectException(val redirectUrl: String) : IOException()

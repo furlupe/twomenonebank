@@ -57,7 +57,12 @@ class AccountAdapter(
             ITEM -> {
                 val userViewHolder = holder as AccountViewHolder
                 userViewHolder.name.text = account.name
-                userViewHolder.balance.text = account.balance.toString()
+                userViewHolder.balance.text = buildString {
+                    append("Balance: ")
+                    append(account.balance.amount.toString())
+                    append(" ")
+                    append(account.balance.currency.symbol)
+                }
 
                 userViewHolder.item.setOnClickListener {
                     onClick(account.id)

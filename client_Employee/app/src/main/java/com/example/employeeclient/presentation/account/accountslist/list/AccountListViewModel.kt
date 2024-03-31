@@ -67,7 +67,8 @@ class AccountListViewModel(
 
             _state.update { prevState ->
                 prevState.copy(
-                    isBanned = true
+                    isBanned = true,
+                    items = emptyList(),
                 )
             }
         } catch(ex: Exception) {
@@ -81,7 +82,8 @@ class AccountListViewModel(
 
             _state.update { prevState ->
                 prevState.copy(
-                    isBanned = false
+                    isBanned = false,
+                    items = emptyList(),
                 )
             }
         } catch(ex: Exception) {

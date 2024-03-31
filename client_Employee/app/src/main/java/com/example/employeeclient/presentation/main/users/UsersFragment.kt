@@ -1,9 +1,13 @@
 package com.example.employeeclient.presentation.main.users
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat.recreate
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
@@ -11,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.employeeclient.R
+import com.example.employeeclient.common.Constants
 import com.example.employeeclient.databinding.FragmentUsersBinding
 import com.example.employeeclient.presentation.main.users.util.UsersAdapter
 import kotlinx.coroutines.launch
@@ -21,6 +26,11 @@ class UsersFragment : Fragment() {
 
     private lateinit var binding: FragmentUsersBinding
     private val viewModel: UsersViewModel by viewModel()
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.reInit()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,15 +43,50 @@ class UsersFragment : Fragment() {
         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rvUsers.setLayoutManager(linearLayoutManager)
 
+        binding.btSettings.setOnClickListener {
+            val currentNightMode =
+                resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+
+            when (currentNightMode) {
+                Configuration.UI_MODE_NIGHT_NO -> {
+                    AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_YES
+                    )
+
+                    prefs
+                        .edit()
+                        .putInt(Constants.SHARED_PREFS_THEME, 1)
+                        .apply()
+                }
+
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_NO
+                    )
+
+                    prefs
+                        .edit()
+                        .putInt(Constants.SHARED_PREFS_THEME, 0)
+                        .apply()
+                }
+            }
+
+            recreate(requireActivity())
+        }
+
         val adapter = UsersAdapter(
             context = context,
             onLoadNextClick = { viewModel.loadNextPage() },
             onAccountsClick = { id: String, username: String ->
-                val action = UsersFragmentDirections.actionNavigationUsersToAccountListActivity(id, username)
+                val action =
+                    UsersFragmentDirections.actionNavigationUsersToAccountListActivity(id, username)
                 findNavController().navigate(action)
             },
             onCreditsClick = { id: String, username: String ->
-                val action = UsersFragmentDirections.actionNavigationUsersToCreditsListActivity(id, username)
+                val action =
+                    UsersFragmentDirections.actionNavigationUsersToCreditsListActivity(id, username)
                 findNavController().navigate(action)
             }
         )
@@ -67,7 +112,12 @@ class UsersFragment : Fragment() {
 
                 if (it.currentPage != 1) adapter.removeLoadingFooter()
 
-                adapter.addAll(it.users)
+                if (it.users.isNotEmpty() && it.currentPage == 1) {
+                    adapter.setUsers(it.users.toMutableList())
+                } else {
+                    adapter.addAll(it.users)
+                }
+
                 if (!it.isLastPage && it.users.isNotEmpty()) adapter.addLoadingFooter()
             }
         }

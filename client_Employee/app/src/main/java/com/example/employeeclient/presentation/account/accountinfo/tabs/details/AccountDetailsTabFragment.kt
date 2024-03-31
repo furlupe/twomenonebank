@@ -42,7 +42,12 @@ class AccountDetailsTabFragment : Fragment() {
                 }
 
                 binding.tvAccountName.text = state.name
-                binding.tvAmount.text = state.balance.toString()
+                binding.tvAmount.text = buildString {
+                    append("Amount: ")
+                    append(state.balance.amount.toString())
+                    append(" ")
+                    append(state.balance.currency.symbol)
+                }
             }
         }
 

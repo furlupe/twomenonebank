@@ -1,6 +1,7 @@
 package com.example.employeeclient.data.repository.remote
 
 import com.example.employeeclient.data.remote.api.AccountApi
+import com.example.employeeclient.data.remote.dto.account.event.RequestAccountHistoryBodyDto
 import com.example.employeeclient.data.remote.dto.account.toDomain
 import com.example.employeeclient.domain.model.account.AccountDomain
 import com.example.employeeclient.domain.model.account.AccountsPageDomain
@@ -18,8 +19,16 @@ class AccountRepositoryImpl(
         return api.getAllUserAccountsById(id = userId, pageNumber = page).toDomain()
     }
 
-    override suspend fun getAccountOperations(id: String, page: Int): AccountEventsPageDomain {
-        return api.getAccountOperations(id, page).toDomain()
+    override suspend fun getAccountOperations(id: String, info: RequestAccountHistoryBodyDto): AccountEventsPageDomain {
+        return api.getAccountOperations(
+            id,
+            info.name,
+            info.pageNumber,
+            info.pageSize,
+            info.sortingType,
+            info.from,
+            info.to
+        ).toDomain()
     }
 
 }

@@ -22,10 +22,11 @@ class AddUserViewModel(
         username: String,
         email: String,
         password: String,
-        role: Int
+        phone: String,
+        roles: List<Int>
     ) = viewModelScope.launch {
         val body = RegisterInfoDomain(
-            username, email, password, role
+            username, email, password, phone, roles
         )
 
         _state.update {
