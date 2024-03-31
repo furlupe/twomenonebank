@@ -20,15 +20,18 @@ interface AccountApi {
         @Query("Name") name: String? = null,
         @Query("PageNumber") pageNumber: Int = 1,
         @Query("PageSize") pageSize: Int? = 20,
-        @Query("SortingType") sortingType: Int? = null,
+        @Query("SortingType") sortingType: String? = null,
     ): AccountsPageDto
 
     @GET("manage/accounts/{id}/history")
     suspend fun getAccountOperations(
         @Path("id") id: String,
+        @Query("Name") name: String? = null,
         @Query("PageNumber") pageNumber: Int = 1,
         @Query("PageSize") pageSize: Int? = 20,
-        @Query("SortingType") sortingType: Int? = null,
+        @Query("SortingType") sortingType: String? = null,
+        @Query("From") from: String? = null,
+        @Query("To") to: String? = null,
     ): AccountEventsPageDto
 
 }

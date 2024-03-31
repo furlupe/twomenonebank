@@ -6,6 +6,6 @@ enum class Role(val value: Int) {
     User(2);
 
     companion object {
-        fun fromInt(value: Int) = entries.firstOrNull() { it.value == value } ?: User
+        fun fromInt(value: Int) = entries.firstOrNull { it.value == value } ?: User
     }
 }

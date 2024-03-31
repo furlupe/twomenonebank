@@ -23,7 +23,8 @@ interface CreditApi {
     @GET("api/manage/credits/{creditId}/operations")
     suspend fun getAllCreditOperations(
         @Path("creditId") creditId: String,
-        @Query("page") page: Int = 1
+        @Query("page") page: Int = 1,
+        @Query("types") types: List<Int>? = null
     ): CreditOperationsPageDto
 
 }

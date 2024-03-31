@@ -1,5 +1,6 @@
 package com.example.employeeclient.di
 
+import com.example.employeeclient.domain.usecase.auth.AuthorizeUseCase
 import com.example.employeeclient.domain.usecase.auth.ConnectRefreshUseCase
 import com.example.employeeclient.domain.usecase.auth.ConnectUseCase
 import com.example.employeeclient.domain.usecase.db.SyncAllDataUseCase
@@ -30,6 +31,7 @@ val useCaseModule = module {
     factory { DeleteTokenFromLocalStorageUseCase(get()) }
 
     // - Auth
+    factory { AuthorizeUseCase(get()) }
     factory { ConnectUseCase(get(), get()) }
     factory { ConnectRefreshUseCase(get(), get(), get(), get()) }
 

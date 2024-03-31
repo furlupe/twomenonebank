@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_onPrimary"
     android:fillViewport="true"
     tools:context=".presentation.main.users.UsersFragment">
 
@@ -43,38 +42,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <EditText
-        android:id="@+id/etSearch"
-        style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="Поиск"
-        android:textColorHint="@color/md_theme_onPrimary"
-        android:background="@drawable/bg_edit_text"
-        android:inputType="text"
-        android:singleLine="true"
-        android:textColor="@color/md_theme_onPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintEnd_toStartOf="@+id/btSettings"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
+        <ImageButton
+            android:id="@+id/btSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="16dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/md_theme_primary"
+            android:scaleType="centerInside"
+            android:src="@drawable/baseline_contrast_24"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/md_theme_onPrimary" />
 
-    <ImageButton
-        android:id="@+id/btSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@null"
-        android:src="@drawable/ic_parameter_24"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
-        app:tint="@color/md_theme_background" />
+    </androidx.appcompat.widget.Toolbar>
 
     <TextView
         android:id="@+id/tvError"
@@ -89,5 +74,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Users"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/md_theme_onPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/rvUsers"
+        app:layout_constraintEnd_toStartOf="@+id/btSettings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,6 @@ data class UserDomain(
     val id: String,
     val name: String = "",
     val email: String = "",
-    val role: Role = Role.User,
+    val roles: List<Role> = listOf(Role.User),
     val isBanned: Boolean = false
 )

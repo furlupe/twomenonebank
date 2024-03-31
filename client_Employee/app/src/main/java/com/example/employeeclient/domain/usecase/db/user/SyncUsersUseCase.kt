@@ -20,7 +20,8 @@ class SyncUsersUseCase(
                     username = user.username,
                     email = user.email,
                     password = user.password,
-                    role = user.role
+                    phone = user.phone,
+                    roles = user.roles
                 )
                 repository.register(body)
 

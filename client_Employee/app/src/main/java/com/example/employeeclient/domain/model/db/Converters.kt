@@ -29,12 +29,14 @@ fun RegisterInfoDomain.toEntity() = UserEntity(
     username = username,
     email = email,
     password = password,
-    role = role
+    phone = phone,
+    roles = roles
 )
 
 fun UserEntity.toDomain() = RegisterInfoDomain(
     username = username,
     email = email,
     password = password,
-    role = role
+    phone = phone,
+    roles = roles
 )

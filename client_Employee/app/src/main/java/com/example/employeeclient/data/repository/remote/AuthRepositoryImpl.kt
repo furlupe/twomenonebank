@@ -7,11 +7,16 @@ import com.example.employeeclient.domain.repository.remote.AuthRepository
 class AuthRepositoryImpl(
     private val api: AuthApi
 ): AuthRepository {
-    override suspend fun connect(username: String, password: String): TokenDto {
-        return api.connect(username = username, password = password)
+
+    override suspend fun authorize() {
+        api.authorize()
     }
 
-    override suspend fun connect(refreshToken: String): TokenDto {
-        return api.connect(refreshToken = refreshToken)
+    override suspend fun connect(code: String): TokenDto {
+        return api.connect(code = code)
+    }
+
+    override suspend fun connectRefresh(refreshToken: String): TokenDto {
+        return api.connectRefresh(refreshToken = refreshToken)
     }
 }

@@ -1,5 +1,6 @@
 package com.example.employeeclient.data.remote.api
 
+import com.example.employeeclient.common.Constants.DEEP_LINK
 import com.example.employeeclient.data.remote.dto.TokenDto
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -10,19 +11,28 @@ interface AuthApi {
 
     @FormUrlEncoded
     @Headers("Content-Type:application/x-www-form-urlencoded")
-    @POST("connect/token")
-    suspend fun connect(
-        @Field("grant_type") grantType: String = "password",
-        @Field("username") username: String,
-        @Field("password") password: String,
+    @POST("connect/authorize")
+    suspend fun authorize(
         @Field("client_id") clientId: String = "amogus",
+        @Field("response_type") responseType: String = "code",
+        @Field("redirect_uri") redirectUri: String = DEEP_LINK,
         @Field("scope") scope: String = "offline_access",
-    ): TokenDto
+    )
 
     @FormUrlEncoded
     @Headers("Content-Type:application/x-www-form-urlencoded")
     @POST("connect/token")
     suspend fun connect(
+        @Field("grant_type") grantType: String = "authorization_code",
+        @Field("code") code: String,
+        @Field("client_id") clientId: String = "amogus",
+        @Field("redirect_uri") redirectUri: String = DEEP_LINK,
+    ): TokenDto
+
+    @FormUrlEncoded
+    @Headers("Content-Type:application/x-www-form-urlencoded")
+    @POST("connect/token")
+    suspend fun connectRefresh(
         @Field("grant_type") grantType: String = "refresh_token",
         @Field("refresh_token") refreshToken: String,
         @Field("client_id") clientId: String = "amogus",

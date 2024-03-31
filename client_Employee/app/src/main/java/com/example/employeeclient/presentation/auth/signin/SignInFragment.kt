@@ -1,5 +1,7 @@
 package com.example.employeeclient.presentation.auth.signin
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import com.example.employeeclient.databinding.FragmentSignInBinding
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+
 class SignInFragment : Fragment() {
 
     private lateinit var binding: FragmentSignInBinding
@@ -24,14 +27,27 @@ class SignInFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_sign_in, container, false)
         binding = FragmentSignInBinding.bind(view)
 
+        val appLinkIntent = requireActivity().intent
+        val appLinkData = appLinkIntent.data
+        val code = appLinkData?.getQueryParameter("code")
+        if (code != null) {
+            viewModel.connect(code)
+        }
+
         setOnButtonClickListeners()
 
         lifecycleScope.launch {
             viewModel.state.collect {
+                if (it.redirectLink != null) {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(it.redirectLink))
+                    requireContext().startActivity(browserIntent)
+                }
+
                 if (it.isLoading) {
                     showLoading()
                     return@collect
                 }
+
 
                 if (it.navigateToMain) {
                     navigateToMainScreen()
@@ -50,9 +66,7 @@ class SignInFragment : Fragment() {
 
     private fun setOnSignInButtonClickListener() = binding.btSignIn.setOnClickListener {
 //        navigateToMainScreen()
-        viewModel.connect(
-            login = binding.etLogin.text.toString(), password = binding.etPassword.text.toString()
-        )
+        viewModel.authorize()
     }
 
     private fun navigateToMainScreen() {
