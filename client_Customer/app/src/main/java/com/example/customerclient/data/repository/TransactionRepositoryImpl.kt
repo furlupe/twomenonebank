@@ -1,6 +1,5 @@
 package com.example.customerclient.data.repository
 
-import android.util.Log
 import com.example.customerclient.data.api.dto.DepositDto
 import com.example.customerclient.data.api.dto.MoneyDto
 import com.example.customerclient.data.api.dto.TransferBodyDto
@@ -18,8 +17,7 @@ class TransactionRepositoryImpl(
         currency: String,
         message: String?
     ) {
-        Log.d("p2pTransaction", "We in p2p")
-        val money = MoneyDto(amount, "AFN")
+        val money = MoneyDto(amount, currency)
         transactionsApi.p2pTransaction(
             sourceId,
             transfereeIdentifier,
@@ -34,7 +32,7 @@ class TransactionRepositoryImpl(
         currency: String,
         message: String?
     ) {
-        val money = MoneyDto(amount, "AFN")
+        val money = MoneyDto(amount, currency)
         transactionsApi.me2meTransaction(
             sourceId,
             targetId,

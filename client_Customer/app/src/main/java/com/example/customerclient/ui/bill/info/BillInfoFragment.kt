@@ -66,6 +66,7 @@ class BillInfoFragment : Fragment() {
                     billInfoFragmentContent(
                         moneyOnBill = billInfoState.info.balance,
                         billId = billInfoState.info.id,
+                        currency = billInfoState.info.currency,
 
                         onTopUpBill = { amount -> viewModel.topUpBill(amount) },
                         onChargeBill = { amount -> viewModel.chargeBill(amount) },
@@ -83,6 +84,7 @@ class BillInfoFragment : Fragment() {
     private fun billInfoFragmentContent(
         moneyOnBill: String,
         billId: String,
+        currency: String,
 
         onTopUpBill: (String) -> Unit,
         onChargeBill: (String) -> Unit,
@@ -122,8 +124,8 @@ class BillInfoFragment : Fragment() {
         binding.transferBillButton.setOnClickListener {
             showAlertDialogForChoosingTypeOfTransaction(
                 title = "Выберите какой перевод хотите совершить",
-                onPositiveButtonClick = { navigateToTransactionMe2MeFragment(billId) },
-                onNegativeButtonClick = { navigateToTransactionP2PFragment(billId) }
+                onPositiveButtonClick = { navigateToTransactionMe2MeFragment(billId, currency) },
+                onNegativeButtonClick = { navigateToTransactionP2PFragment(billId, currency) }
             )
         }
 
@@ -136,21 +138,21 @@ class BillInfoFragment : Fragment() {
         super.onPause()
     }
 
-    private fun navigateToTransactionMe2MeFragment(billId: String) {
+    private fun navigateToTransactionMe2MeFragment(billId: String, currency: String) {
         val action = callback?.getBillId()
             ?.let {
                 BillInfoFragmentDirections.actionNavigationBillInfoToNavigationTransactionMe2Me(
-                    billId
+                    billId, currency
                 )
             }
         action?.let { findNavController().navigate(action) }
     }
 
-    private fun navigateToTransactionP2PFragment(billId: String) {
+    private fun navigateToTransactionP2PFragment(billId: String, currency: String) {
         val action = callback?.getBillId()
             ?.let {
                 BillInfoFragmentDirections.actionNavigationBillInfoToNavigationTransactionP2P(
-                    billId
+                    billId, currency
                 )
             }
         action?.let { findNavController().navigate(action) }

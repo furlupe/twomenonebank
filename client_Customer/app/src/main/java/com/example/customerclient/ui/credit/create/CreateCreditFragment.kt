@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.customerclient.databinding.FragmentCreateCreditBinding
+import com.example.customerclient.ui.common.BillsInfoPagingRecyclerAdapter
 import com.example.customerclient.ui.credit.CreditsListener
 import com.example.customerclient.ui.credit.create.components.TariffsPagingRecyclerAdapter
 import kotlinx.coroutines.flow.collectLatest
@@ -41,24 +42,47 @@ class CreateCreditFragment : Fragment() {
         tariffRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        val adapter = TariffsPagingRecyclerAdapter { viewModel.onTariffClick(it) }
-        context?.let { tariffRecyclerView.adapter = adapter }
+        val tariffAdapter =
+            TariffsPagingRecyclerAdapter { viewModel.onTariffClick(it) }
+        context?.let { tariffRecyclerView.adapter = tariffAdapter }
 
         lifecycleScope.launch {
             viewModel.tariffsState.collectLatest {
-                adapter.submitData(it)
+                tariffAdapter.submitData(it)
+            }
+        }
+
+        val accountRecyclerView = binding.allBillsRecyclerView
+        accountRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        val billsAdapter =
+            BillsInfoPagingRecyclerAdapter { viewModel.onAccountClick(it) }
+        context?.let { accountRecyclerView.adapter = billsAdapter }
+
+        lifecycleScope.launch {
+            viewModel.billsState.collectLatest {
+                billsAdapter.submitData(it)
             }
         }
 
         lifecycleScope.launch {
             viewModel.uiState.collect { createCreditState ->
                 when (createCreditState) {
-                    is CreateCreditState.Content -> tariffFragmentContent(createCreditState.currentTariffId) { tariffId, amount, days ->
-                        viewModel.createCredit(
-                            tariffId,
-                            amount.toInt(),
-                            days.toInt()
-                        )
+                    is CreateCreditState.Content -> {
+                        tariffFragmentContent(
+                            createCreditState.currentTariffId,
+                            createCreditState.withdrawalAccountId,
+                            createCreditState.destinationAccountId
+                        ) { tariffId, withdrawalAccountId, destinationAccountId, amount, days ->
+                            viewModel.createCredit(
+                                tariffId,
+                                withdrawalAccountId,
+                                destinationAccountId,
+                                amount.toInt(),
+                                days.toInt()
+                            )
+                        }
                     }
 
                     is CreateCreditState.NavigateToMainScreen -> callback?.backToMainFragment()
@@ -73,33 +97,71 @@ class CreateCreditFragment : Fragment() {
 
     private fun tariffFragmentContent(
         currentTariffId: String?,
-        onCreateCredit: (String, String, String) -> Unit
+        withdrawalAccountId: String?,
+        destinationAccountId: String?,
+        onCreateCredit: (String, String, String, String, String) -> Unit
     ) {
-        if (currentTariffId == null) {
-            binding.allTariffRecyclerView.visibility = View.VISIBLE
-            binding.chooseTariffTitle.visibility = View.VISIBLE
+        when {
+            currentTariffId == null -> {
+                binding.allTariffRecyclerView.visibility = View.VISIBLE
+                binding.chooseTariffTitle.visibility = View.VISIBLE
 
-            binding.amountOfCreditTitle.visibility = View.GONE
-            binding.editTextText.visibility = View.GONE
-            binding.textView.visibility = View.GONE
-            binding.button.visibility = View.GONE
-            binding.countOfDays.visibility = View.GONE
-        } else {
-            binding.amountOfCreditTitle.visibility = View.VISIBLE
-            binding.editTextText.visibility = View.VISIBLE
-            binding.textView.visibility = View.VISIBLE
-            binding.button.visibility = View.VISIBLE
-            binding.countOfDays.visibility = View.VISIBLE
+                binding.allBillsRecyclerView.visibility = View.GONE
+                binding.amountOfCreditTitle.visibility = View.GONE
+                binding.editTextText.visibility = View.GONE
+                binding.textView.visibility = View.GONE
+                binding.button.visibility = View.GONE
+                binding.countOfDays.visibility = View.GONE
+            }
 
-            binding.allTariffRecyclerView.visibility = View.GONE
-            binding.chooseTariffTitle.visibility = View.GONE
+            withdrawalAccountId == null -> {
+                binding.allBillsRecyclerView.visibility = View.VISIBLE
+                binding.chooseTariffTitle.visibility = View.VISIBLE
+                binding.chooseTariffTitle.text =
+                    "Выберите аккаунт, с которого будут происходить списания"
 
-            binding.button.setOnClickListener {
-                onCreateCredit(
-                    currentTariffId,
-                    binding.editTextText.text.toString(),
-                    binding.countOfDays.text.toString()
-                )
+                binding.allTariffRecyclerView.visibility = View.GONE
+                binding.amountOfCreditTitle.visibility = View.GONE
+                binding.editTextText.visibility = View.GONE
+                binding.textView.visibility = View.GONE
+                binding.button.visibility = View.GONE
+                binding.countOfDays.visibility = View.GONE
+            }
+
+            destinationAccountId == null -> {
+                binding.allBillsRecyclerView.visibility = View.VISIBLE
+                binding.chooseTariffTitle.visibility = View.VISIBLE
+                binding.chooseTariffTitle.text =
+                    "Выберите аккаунт, на который необходимо перевести деньги"
+
+                binding.allTariffRecyclerView.visibility = View.GONE
+                binding.amountOfCreditTitle.visibility = View.GONE
+                binding.editTextText.visibility = View.GONE
+                binding.textView.visibility = View.GONE
+                binding.button.visibility = View.GONE
+                binding.countOfDays.visibility = View.GONE
+            }
+
+            else -> {
+                binding.amountOfCreditTitle.visibility = View.VISIBLE
+                binding.editTextText.visibility = View.VISIBLE
+                binding.textView.visibility = View.VISIBLE
+                binding.button.visibility = View.VISIBLE
+                binding.countOfDays.visibility = View.VISIBLE
+
+                binding.allTariffRecyclerView.visibility = View.GONE
+                binding.allBillsRecyclerView.visibility = View.GONE
+                binding.chooseTariffTitle.visibility = View.GONE
+
+                binding.button.setOnClickListener {
+                    onCreateCredit(
+                        currentTariffId,
+                        withdrawalAccountId,
+                        destinationAccountId,
+                        binding.editTextText.text.toString(),
+                        binding.countOfDays.text.toString(),
+                    )
+                }
             }
         }
     }

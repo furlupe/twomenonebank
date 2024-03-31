@@ -157,6 +157,7 @@ sealed class HomeState {
 
 data class BillInfo(
     val id: String = "",
+    val currency: String = "RUB",
     val name: String = "",
     val balance: String = "",
     val type: String = "",

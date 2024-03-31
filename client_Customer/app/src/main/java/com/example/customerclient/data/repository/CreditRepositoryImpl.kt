@@ -83,8 +83,22 @@ class CreditRepositoryImpl(
         ).flow
     }
 
-    override suspend fun createCredit(tariffId: String, amount: Int, days: Int) {
-        return creditsApi.createCredit(CreateCreditDto(tariffId, amount, days))
+    override suspend fun createCredit(
+        tariffId: String,
+        withdrawalAccountId: String,
+        destinationAccountId: String,
+        amount: Int,
+        days: Int
+    ) {
+        return creditsApi.createCredit(
+            CreateCreditDto(
+                tariffId,
+                withdrawalAccountId,
+                destinationAccountId,
+                amount,
+                days
+            )
+        )
     }
 
     override suspend fun getCreditsTariffs(): Flow<PagingData<Tariff>> {
@@ -101,6 +115,6 @@ class CreditRepositoryImpl(
     }
 
     override suspend fun getUserCreditRate(): String {
-        return creditsApi.getUserCreditInfo().creditRating.toString()
+        return creditsApi.getUserCreditInfo().creditRating?.toString() ?: "Пока неизвестен"
     }
 }
