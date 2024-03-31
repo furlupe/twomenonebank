@@ -77,7 +77,8 @@ val viewModelModule = module {
     viewModel {
         CreateCreditViewModel(
             createCreditUseCase = get(),
-            getCreditTariffsUseCase = get()
+            getCreditTariffsUseCase = get(),
+            getUserBillsPagedInfoUseCase = get()
         )
     }
 
