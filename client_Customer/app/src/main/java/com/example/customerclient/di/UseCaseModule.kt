@@ -16,6 +16,7 @@ import com.example.customerclient.domain.usecases.credit.CreateCreditUseCase
 import com.example.customerclient.domain.usecases.credit.GetCreditHistoryUseCase
 import com.example.customerclient.domain.usecases.credit.GetCreditInfoUseCase
 import com.example.customerclient.domain.usecases.credit.GetCreditTariffsUseCase
+import com.example.customerclient.domain.usecases.credit.GetUserCreditRateUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoPagingUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoUseCase
@@ -24,6 +25,7 @@ import com.example.customerclient.domain.usecases.credit.SaveUserCreditInfoToDat
 import com.example.customerclient.domain.usecases.transaction.Me2MeTransactionUseCase
 import com.example.customerclient.domain.usecases.transaction.P2PTransactionUseCase
 import com.example.customerclient.domain.usecases.user.GetUserInfoUseCase
+import com.example.customerclient.domain.usecases.user.GetUserThemeUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -65,9 +67,11 @@ val useCaseModule = module {
             creditRepository = get()
         )
     }
+    single<GetUserCreditRateUseCase> { GetUserCreditRateUseCase(creditRepository = get()) }
 
     // - User
     single<GetUserInfoUseCase> { GetUserInfoUseCase(userRepository = get()) }
+    single<GetUserThemeUseCase> { GetUserThemeUseCase(sharedPreferencesRepositoryImpl = get()) }
 
     // - Transaction
     single<P2PTransactionUseCase> { P2PTransactionUseCase(transactionRepository = get()) }

@@ -17,7 +17,7 @@ interface TransactionRepository {
         message: String?
     )
 
-    suspend fun deposit(billId: String, amount: Int)
+    suspend fun deposit(billId: String, amount: Double)
 
-    suspend fun withdraw(billId: String, amount: Int)
+    suspend fun withdraw(billId: String, amount: Double)
 }

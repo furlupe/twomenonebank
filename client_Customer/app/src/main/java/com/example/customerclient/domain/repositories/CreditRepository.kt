@@ -24,4 +24,6 @@ interface CreditRepository {
     suspend fun getCreditsTariffs(): Flow<PagingData<Tariff>>
 
     suspend fun payCredit(creditId: String)
+
+    suspend fun getUserCreditRate(): String
 }

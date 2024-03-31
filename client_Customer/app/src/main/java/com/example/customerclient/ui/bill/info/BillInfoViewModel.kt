@@ -78,7 +78,7 @@ class BillInfoViewModel(
         viewModelScope.launch {
             billId?.let {
                 try {
-                    depositUseCase(billId, amount.toInt())
+                    depositUseCase(billId, amount.toDouble())
                     getBillInfo()
                     getBillsHistory()
                 } catch (e: Exception) {
@@ -92,7 +92,7 @@ class BillInfoViewModel(
         viewModelScope.launch {
             billId?.let {
                 try {
-                    withdrawUseCase(billId, amount.toInt())
+                    withdrawUseCase(billId, amount.toDouble())
                     getBillInfo()
                     getBillsHistory()
                 } catch (e: Exception) {
@@ -126,7 +126,8 @@ sealed class BillInfoState {
 
 data class BillHistory(
     val id: String = "",
-    val type: HistoryOperationType = HistoryOperationType.WITHDRAW,
+    val type: OperationType = OperationType.BALANCE_CHANGE,
+    val eventType: HistoryOperationType = HistoryOperationType.WITHDRAW,
     val date: String = "",
     val amount: String = "",
     val billId: String = ""
@@ -134,4 +135,8 @@ data class BillHistory(
 
 enum class HistoryOperationType {
     WITHDRAW, TOP_UP
+}
+
+enum class OperationType {
+    BALANCE_CHANGE, TRANSFER
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.example.customerclient.R
 import com.example.customerclient.common.Constants.WEB_SITE_URL
+import com.example.customerclient.data.storage.UserTheme
 import com.example.customerclient.databinding.ActivityMainBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -35,6 +36,13 @@ class MainActivity : AppCompatActivity(), MainListener {
         val navController = navHostFragment.navController
         if (code != null && savedInstanceState == null) {
             code?.let { viewModel.signIn(it) }
+        }
+
+        if (savedInstanceState == null) {
+            when (viewModel.getUserTheme()) {
+                UserTheme.LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                UserTheme.DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
         }
 
         lifecycleScope.launch {

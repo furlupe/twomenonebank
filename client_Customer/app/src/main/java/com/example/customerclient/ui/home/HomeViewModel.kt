@@ -7,6 +7,7 @@ import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoFromDatab
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
 import com.example.customerclient.domain.usecases.bill.OpenBillUseCase
 import com.example.customerclient.domain.usecases.bill.SaveUserBillInfoToDatabaseUseCase
+import com.example.customerclient.domain.usecases.credit.GetUserCreditRateUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoUseCase
 import com.example.customerclient.domain.usecases.credit.SaveUserCreditInfoToDatabaseUseCase
@@ -28,6 +29,7 @@ class HomeViewModel(
     private val saveUserBillInfoToDatabaseUseCase: SaveUserBillInfoToDatabaseUseCase,
     private val getUserCreditsInfoFromDatabaseUseCase: GetUserCreditsInfoFromDatabaseUseCase,
     private val saveUserCreditInfoToDatabaseUseCase: SaveUserCreditInfoToDatabaseUseCase,
+    private val getUserCreditRateUseCase: GetUserCreditRateUseCase,
     private val sharedPreferencesRepositoryImpl: SharedPreferencesRepositoryImpl,
 ) : ViewModel() {
 
@@ -39,6 +41,7 @@ class HomeViewModel(
             try {
                 val userInfo = getUserInfoUseCase()
                 val billsInfo = getUserBillsInfoUseCase()
+                val creditRate = getUserCreditRateUseCase()
                 //val creditsInfo = getUserCreditsInfoUseCase().filter { !it.isClosed }
 
                 withContext(Dispatchers.IO) {
@@ -49,6 +52,7 @@ class HomeViewModel(
                 _uiState.update {
                     HomeState.Content(
                         userName = userInfo.name,
+                        userCreditRate = "Ваш кредитный рейтинг: $creditRate",
                         billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1) else billsInfo,
                         //creditsInfo = if (creditsInfo.size > 2) creditsInfo.slice(0..1) else creditsInfo
                     )
@@ -61,7 +65,6 @@ class HomeViewModel(
                     withContext(Dispatchers.Main) {
                         _uiState.update {
                             HomeState.Content(
-                                userName = "",
                                 billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1) else billsInfo,
                                 creditsInfo = if (creditsInfo.size > 2) creditsInfo.slice(0..1) else creditsInfo
                             )
@@ -100,6 +103,7 @@ class HomeViewModel(
 sealed class HomeState {
     data class Content(
         val userName: String = "",
+        val userCreditRate: String = "",
         val billsInfo: List<BillInfo> = listOf(),
         val creditsInfo: List<CreditShortInfo> = listOf(),
         val fromDatabase: Boolean = false,

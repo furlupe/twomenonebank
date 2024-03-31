@@ -99,4 +99,8 @@ class CreditRepositoryImpl(
     override suspend fun payCredit(creditId: String) {
         return creditsApi.payCredit(creditId)
     }
+
+    override suspend fun getUserCreditRate(): String {
+        return creditsApi.getUserCreditInfo().creditRating.toString()
+    }
 }
