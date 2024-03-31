@@ -13,12 +13,12 @@ namespace Bank.Credit.App.Services
             _bankCreditDbContext = bankCreditDbContext;
         }
 
-        public async Task<UserDto> GetUser(Guid id)
+        public async Task<UserDto?> GetUser(Guid id)
         {
-            var user = await _bankCreditDbContext.Users.SingleAsync(x =>
+            var user = await _bankCreditDbContext.Users.SingleOrDefaultAsync(x =>
                 x.Id == id && !x.IsDeleted
             );
-            return new() { Id = user.Id, CreditRating = user.CreditRating };
+            return user == null ? null : new() { Id = user.Id, CreditRating = user.CreditRating };
         }
     }
 }
