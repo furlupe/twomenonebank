@@ -64,6 +64,10 @@ class CreditsListFragment : Fragment() {
 
                 val text = if (state.isBanned) "Unban" else "Ban"
                 binding.btBan.text = text
+                binding.tvCreditRating.text = buildString {
+                    append("Credit rating: ")
+                    append(state.userCreditRating)
+                }
             }
         }
 

@@ -10,7 +10,8 @@ fun UserDto.toDomain() = UserDomain(
     name = name ?: "Unnamed",
     email = email,
     roles = roles.map { Role.fromInt(it) },
-    isBanned = isBanned
+    isBanned = isBanned,
+    creditRating = creditRating
 )
 
 fun UsersPageDto.toDomain() = UsersPageDomain(

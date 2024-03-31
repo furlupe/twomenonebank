@@ -1,5 +1,6 @@
 package com.example.employeeclient.presentation.account.accountslist.list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.employeeclient.domain.model.db.BanDomain
@@ -33,6 +34,8 @@ class AccountListViewModel(
         try {
             val credits = accountRepository.getAllUserAccounts(userId, page)
 
+            Log.d("MY", "${credits}")
+
             _state.update { prevState ->
                 prevState.copy(
                     currentPage = credits.currentPage,
@@ -42,6 +45,7 @@ class AccountListViewModel(
                 )
             }
         } catch (exception: Exception) {
+            Log.d("MY", exception.message.toString())
             if (exception.message == "HTTP 404 Not Found") {
                 _state.update { prevState ->
                     prevState.copy(

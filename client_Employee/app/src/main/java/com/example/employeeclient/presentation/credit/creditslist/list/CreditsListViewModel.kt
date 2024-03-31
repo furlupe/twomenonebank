@@ -97,7 +97,8 @@ class CreditsListViewModel(
             it.copy(
                 userId = userId,
                 userName = user.name,
-                isBanned = user.isBanned
+                isBanned = user.isBanned,
+                userCreditRating = user.creditRating
             )
         }
     }

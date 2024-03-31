@@ -59,6 +59,8 @@ class UsersFragment : Fragment() {
                         .edit()
                         .putInt(Constants.SHARED_PREFS_THEME, 1)
                         .apply()
+
+                    viewModel.updateTheme(true)
                 }
 
                 Configuration.UI_MODE_NIGHT_YES -> {
@@ -70,6 +72,8 @@ class UsersFragment : Fragment() {
                         .edit()
                         .putInt(Constants.SHARED_PREFS_THEME, 0)
                         .apply()
+
+                    viewModel.updateTheme(false)
                 }
             }
 
@@ -94,6 +98,18 @@ class UsersFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.state.collect {
+                if (it.isDarkTheme) {
+                    AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_YES
+                    )
+
+                    val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                    prefs
+                        .edit()
+                        .putInt(Constants.SHARED_PREFS_THEME, 1)
+                        .apply()
+                }
+
                 if (it.isLoading) {
                     showLoading()
 

@@ -9,6 +9,8 @@ object Constants {
     const val BASE_URL_CORE = "http://185.177.219.207:27000/"
     const val BASE_URL_CREDIT = "http://185.177.219.207:29000/"
 
+    const val BASE_BFF_URL = "http://10.0.2.2:5055/"
+
     const val CONNECT_TIMEOUT = 15L
     const val READ_TIMEOUT = 60L
     const val WRITE_TIMEOUT = 60L

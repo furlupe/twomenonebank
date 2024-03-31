@@ -67,6 +67,14 @@ class AccountAdapter(
                 userViewHolder.item.setOnClickListener {
                     onClick(account.id)
                 }
+
+                if (account.isDefault) {
+                    userViewHolder.item.background = context?.getDrawable(R.drawable.bg_default_account)
+                }
+
+                if (account.isClosed) {
+                    userViewHolder.item.background = context?.getDrawable(R.drawable.bg_closed_account)
+                }
             }
 
             LOADING -> {

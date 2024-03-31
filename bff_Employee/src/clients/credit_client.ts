@@ -9,7 +9,7 @@ export class CreditClient {
     private readonly _axios: AxiosInstance;
 
     constructor(@inject(TYPES.AxiosProvider) axiosProvider: AxiosProvider) {
-        this._axios = axiosProvider.core;
+        this._axios = axiosProvider.credit;
     }
 
     //#region Credit
@@ -26,11 +26,16 @@ export class CreditClient {
     }
 
     async getCreditOperations(creditId: string, page: string, types: string[]) {
+        const params = types == null || types.length == 0 ? 
+        new URLSearchParams({
+            page: page,
+        }): new URLSearchParams({
+            page: page,
+            types: types.map(it => `${it}`)
+        })
+
         return await this._axios.get(`/api/manage/credits/${creditId}/operations`, {
-            params: new URLSearchParams({
-                page: page,
-                types: types.map(it => `${it}`)
-            })
+            params: params
         });
     }
     //#endregion
@@ -45,9 +50,7 @@ export class CreditClient {
     }
 
     async createTariff(body: TariffDto) {
-        return await this._axios.post(`/api/manage/Tariff`, {
-            body: body
-        });
+        return await this._axios.post(`/api/manage/Tariff`, body);
     }
     //#endregion
 

@@ -1,9 +1,7 @@
 package com.example.employeeclient.di
 
 import androidx.room.Room
-import com.example.employeeclient.common.Constants.BASE_URL_AUTH
-import com.example.employeeclient.common.Constants.BASE_URL_CORE
-import com.example.employeeclient.common.Constants.BASE_URL_CREDIT
+import com.example.employeeclient.common.Constants.BASE_BFF_URL
 import com.example.employeeclient.common.Constants.DATABASE_NAME
 import com.example.employeeclient.data.db.SyncDatabase
 import com.example.employeeclient.data.remote.api.AccountApi
@@ -68,7 +66,7 @@ val appModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl(BASE_URL_AUTH)
+            .baseUrl(BASE_BFF_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(OkHttpProvider.provideClient(get()))
             .build()
@@ -80,7 +78,7 @@ val appModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl(BASE_URL_AUTH)
+            .baseUrl(BASE_BFF_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(OkHttpProvider.provideClient(get(), get(), get()))
             .build()
@@ -92,7 +90,7 @@ val appModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl(BASE_URL_CREDIT)
+            .baseUrl(BASE_BFF_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(OkHttpProvider.provideClient(get(), get(), get()))
             .build()
@@ -104,7 +102,7 @@ val appModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl(BASE_URL_CREDIT)
+            .baseUrl(BASE_BFF_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(OkHttpProvider.provideClient(get(), get(), get()))
             .build()
@@ -116,7 +114,7 @@ val appModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl(BASE_URL_CORE)
+            .baseUrl(BASE_BFF_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(OkHttpProvider.provideClient(get(), get(), get()))
             .build()

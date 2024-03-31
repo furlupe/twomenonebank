@@ -2,6 +2,7 @@ package com.example.employeeclient.presentation.main.users
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.employeeclient.domain.repository.remote.AuthRepository
 import com.example.employeeclient.domain.usecase.users.GetUsersPageUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class UsersViewModel(
+    private val auth: AuthRepository,
     private val getUsersPageUseCase: GetUsersPageUseCase
 ) : ViewModel() {
 
@@ -17,6 +19,7 @@ class UsersViewModel(
 
     init {
         loadPage(1)
+        getUserTheme()
     }
 
     fun loadNextPage() {
@@ -25,8 +28,22 @@ class UsersViewModel(
     }
 
     fun reInit() {
-        _state.update { UsersState() }
+        _state.update { UsersState(isLoading = true) }
         loadPage(1)
+    }
+
+    fun updateTheme(isDark: Boolean) = viewModelScope.launch {
+        auth.updateUserTheme(isDark)
+    }
+
+    private fun getUserTheme() = viewModelScope.launch {
+        val isDark = auth.getIsDarkTheme().isDark
+
+        _state.update { prevState ->
+            prevState.copy(
+                isDarkTheme = isDark
+            )
+        }
     }
 
     private fun loadPage(page: Int) = viewModelScope.launch {

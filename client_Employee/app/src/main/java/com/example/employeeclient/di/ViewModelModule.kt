@@ -19,7 +19,7 @@ val viewModelModule = module {
     includes(useCaseModule)
 
     viewModel { SignInViewModel(get(), get()) }
-    viewModel { UsersViewModel(get()) }
+    viewModel { UsersViewModel(get(), get()) }
     viewModel { (userId: String) -> CreditsListViewModel(userId, get(), get(), get(), get(), get()) }
     viewModel { (creditId: String) -> CreditDetailsTabViewModel(creditId, get()) }
     viewModel { (userId: String) -> CreditOperationsTabViewModel(userId, get()) }

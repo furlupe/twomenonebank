@@ -7,5 +7,6 @@ data class UserDomain(
     val name: String = "",
     val email: String = "",
     val roles: List<Role> = listOf(Role.User),
-    val isBanned: Boolean = false
+    val isBanned: Boolean = false,
+    val creditRating: Int = 0
 )

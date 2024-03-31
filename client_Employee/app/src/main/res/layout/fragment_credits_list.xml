@@ -65,7 +65,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:layout_constraintTop_toBottomOf="@+id/tvCreditRating"
         tools:listitem="@layout/item_credit_operation_with_amount" />
+
+    <TextView
+        android:id="@+id/tvCreditRating"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Credit rating: 12"
+        android:background="@color/md_theme_primary"
+        android:paddingHorizontal="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/md_theme_onPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,8 @@
 <network-security-config>
     <base-config cleartextTrafficPermitted="true" />
     <domain-config>
-        <domain includeSubdomains="true">185.177.219.207</domain>
+<!--        <domain includeSubdomains="true">185.177.219.207</domain>-->
+        <domain includeSubdomains="true">10.0.2.2:5055</domain>
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>

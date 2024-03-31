@@ -1,4 +1,5 @@
 import express from "express";
+import 'express-async-errors'
 import 'reflect-metadata';
 import { Container } from "inversify";
 import { AxiosProvider } from "./network/axios_provider";
@@ -13,6 +14,7 @@ import { CreditClient } from "./clients/credit_client";
 import { CreditRouter } from "./routers/impl/credit_router";
 import { CoreClient } from "./clients/core_client";
 import { CoreRouter } from "./routers/impl/core_router";
+import { IsDarkThemeDto } from "./dto/is_dark_theme_dto";
 
 const diContainer = new Container();
 
@@ -60,6 +62,36 @@ app.use((request, _response, next) => {
 app.use('/', diContainer.get<BaseRouter>(TYPES.AuthRouter).create());
 app.use('/', diContainer.get<BaseRouter>(TYPES.CreditRouter).create());
 app.use('/', diContainer.get<BaseRouter>(TYPES.CoreRouter).create());
+
+// App theme 
+app.post('/theme/:theme', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1];
+    const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+
+    const id = decoded['sub'];
+    const isDark = req.params.theme;
+
+    console.log(isDark, typeof isDark);
+
+    const repo = diContainer.get<UserRepository>(TYPES.UserRepository);
+    await repo.update(new User(id, Boolean(isDark)));
+});
+app.get('/theme', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1];
+    const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+
+    const id = decoded['sub'];
+
+    const repo = diContainer.get<UserRepository>(TYPES.UserRepository);
+    const result = await repo.get(id);
+    const isDark = new IsDarkThemeDto(result.DarkThemeEnabled);
+
+    console.log(result, typeof result.DarkThemeEnabled);
+
+    return res.json(isDark);
+});
 
 // - Start
 diContainer.get<UserRepository>(TYPES.UserRepository)

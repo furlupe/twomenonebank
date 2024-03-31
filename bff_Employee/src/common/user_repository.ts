@@ -67,7 +67,9 @@ export class UserRepository {
         const operation = async (client: Client) =>
             await client.query('SELECT * FROM Users WHERE Id = $1', [id]);
 
-        return (await this.performOperation(operation)).rows;
+            const result = (await this.performOperation(operation)).rows;
+            console.log(result);
+        return result[0];
     }
 
     public async update(user: User) {

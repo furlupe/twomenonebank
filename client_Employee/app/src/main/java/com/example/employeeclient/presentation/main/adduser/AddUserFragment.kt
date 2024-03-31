@@ -27,11 +27,11 @@ class AddUserFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_add_user, container, false)
         binding = FragmentAddUserBinding.bind(view)
 
-        val userRoles = mutableListOf<Int>()
-        if (binding.cbUser.isActivated) userRoles.add(2)
-        if (binding.cbEmployee.isActivated) userRoles.add(1)
-
         binding.btRegister.setOnClickListener {
+            val userRoles = mutableListOf<Int>()
+            if (binding.cbUser.isChecked) userRoles.add(2)
+            if (binding.cbEmployee.isChecked) userRoles.add(1)
+
             viewModel.register(
                 binding.etUsername.text.toString(),
                 binding.etEmail.text.toString(),
@@ -65,8 +65,8 @@ class AddUserFragment : Fragment() {
                     binding.etEmail.setText("", TextView.BufferType.EDITABLE)
                     binding.etPassword.setText("", TextView.BufferType.EDITABLE)
                     binding.etPhone.setText("", TextView.BufferType.EDITABLE)
-                    binding.cbUser.isActivated = true
-                    binding.cbEmployee.isActivated = false
+                    binding.cbUser.isChecked = true
+                    binding.cbEmployee.isChecked = false
                 }
             }
         }

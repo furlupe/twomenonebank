@@ -10,9 +10,9 @@ export class CoreRouter extends BaseRouter {
     
     protected mapRouterEndpoints(router: Router): void {
         router.get('/manage/accounts/:accountId', async (req, res) => {
-            const accountid = req.params.accountId;
+            const accountId = req.params.accountId;
 
-            const response = await this._client.getAccountInfo(accountid);
+            const response = await this._client.getAccountInfo(accountId);
 
             return res.json(response.data);
         });
@@ -38,12 +38,12 @@ export class CoreRouter extends BaseRouter {
         
             const response = await this._client.getAccountHistory(
                 accountId,
-                name as string,
+                name as string ?? '',
                 pageNumber as string,
                 pageSize as string,
                 sortingType as string,
-                from as string,
-                to as string
+                from as string ?? '',
+                to as string ?? ''
             );
 
             return res.json(response.data);

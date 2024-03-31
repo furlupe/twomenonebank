@@ -6,5 +6,6 @@ data class UserDto(
     val name: String?,
     val roles: List<Int>,
     val phone: String,
-    val isBanned: Boolean
+    val isBanned: Boolean,
+    val creditRating: Int
 )

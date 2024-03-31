@@ -67,6 +67,10 @@ class CreditTabAdapter(
                 val operationViewHolder = holder as EventViewHolder
                 operationViewHolder.event.text = operation.type.descr
                 operationViewHolder.date.text = operation.happenedAt
+
+                if (operation.type == CreditOperationType.PaymentMissed) {
+                    operationViewHolder.itemView.background = context?.getDrawable(R.drawable.bg_banned_card)
+                }
             }
 
             EVENT_WITH_AMOUNT -> {

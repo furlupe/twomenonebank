@@ -3,6 +3,7 @@ import { BaseRouter } from "../base_router";
 import { Router } from "express";
 import TYPES from "../../types";
 import { CreditClient as CreditClient } from "../../clients/credit_client";
+import { TariffDto } from "src/dto/tariff_dto";
 
 @injectable()
 export class CreditRouter extends BaseRouter {
@@ -46,10 +47,10 @@ export class CreditRouter extends BaseRouter {
             return res.json(response.data);
         });
 
-        router.post('/apimanage/Tariff', async (req, res) => {
-            const { body } = req.body;
+        router.post('/api/manage/Tariff', async (req, res) => {
+            const body = req.body;
 
-            const response = await this._client.createTariff(body);
+            const response = await this._client.createTariff(body as TariffDto);
 
             return res.send(response.status)
         });

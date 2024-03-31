@@ -52,9 +52,7 @@ export class AuthClient {
 
     //#region User
     async registerUser(body: RegisterInfoDto) {
-        return await this._axios.post('/api/User/register', {
-            body: body
-        });
+        return await this._axios.post('/api/User/register', body);
     }
 
     async getUsers(page: string = '1') {

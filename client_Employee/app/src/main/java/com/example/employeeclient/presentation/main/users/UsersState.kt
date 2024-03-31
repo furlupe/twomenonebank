@@ -8,5 +8,6 @@ data class UsersState(
     val isPageLoading: Boolean = false,
     val isLastPage: Boolean = false,
     val error: String = "",
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val isDarkTheme: Boolean = false,
 )

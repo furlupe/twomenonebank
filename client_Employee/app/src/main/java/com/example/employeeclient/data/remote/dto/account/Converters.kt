@@ -26,6 +26,8 @@ fun AccountDto.toDomain() = AccountDomain(
     id = id,
     balance = balance.toDomain(),
     name = name ?: "Unnamed",
+    isDefault = isDefault,
+    isClosed = isClosed
 )
 
 fun AccountsPageDto.toDomain() = AccountsPageDomain(
