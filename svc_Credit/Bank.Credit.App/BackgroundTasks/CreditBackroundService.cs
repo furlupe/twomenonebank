@@ -1,4 +1,5 @@
-﻿using Bank.Credit.App.Utils;
+﻿using Bank.Common.DateTimeProvider;
+using Bank.Credit.App.Utils;
 using Bank.Credit.Persistance;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,11 +8,16 @@ namespace Bank.Credit.App.Services
     public class CreditBackroundService
     {
         private readonly BankCreditDbContext _dbContext;
+        private readonly IDateTimeProvider _dateTimeProvider;
         private const int Gap = 100;
 
-        public CreditBackroundService(BankCreditDbContext dbContext)
+        public CreditBackroundService(
+            BankCreditDbContext dbContext,
+            IDateTimeProvider dateTimeProvider
+        )
         {
             _dbContext = dbContext;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task ProcessOpenCredits()
@@ -31,12 +37,14 @@ namespace Bank.Credit.App.Services
 
                 foreach (var credit in credits)
                 {
+                    var now = _dateTimeProvider.UtcNow;
+
                     await _dbContext.ExecuteInTransaction(
                         () =>
                         {
-                            credit.MoveNextPaymentDate();
-                            credit.ApplyRate();
-                            credit.AddPenalty();
+                            credit.MoveNextPaymentDate(now);
+                            credit.ApplyRate(now);
+                            credit.AddPenalty(now);
                         },
                         ex =>
                             Console.WriteLine(

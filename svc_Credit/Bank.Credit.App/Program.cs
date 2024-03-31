@@ -2,6 +2,7 @@ using System.Reflection;
 using Bank.Auth.Common.Extensions;
 using Bank.Auth.Common.Policies.Handlers;
 using Bank.Auth.Http.AuthClient;
+using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
 using Bank.Credit.App.Services;
 using Bank.Credit.App.Setup;
@@ -24,7 +25,8 @@ builder
     .Services.AddTransient<TariffService>()
     .AddScoped<IUserService, AuthHandlerUserService>()
     .AddTransient<CreditService>()
-    .AddTransient<CreditUserService>();
+    .AddTransient<CreditUserService>()
+    .AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 builder.AddPersistance();
 builder.ConfigureAuth().AddUserCreationPolicy();

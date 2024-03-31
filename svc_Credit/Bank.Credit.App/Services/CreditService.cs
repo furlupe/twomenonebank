@@ -1,4 +1,5 @@
-﻿using Bank.Common.Pagination;
+﻿using Bank.Common.DateTimeProvider;
+using Bank.Common.Pagination;
 using Bank.Credit.App.Dto;
 using Bank.Credit.Domain.Credit.Events;
 using Bank.Credit.Persistance;
@@ -10,10 +11,15 @@ namespace Bank.Credit.App.Services
     public class CreditService
     {
         private readonly BankCreditDbContext _dbContext;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-        public CreditService(BankCreditDbContext dbContext)
+        public CreditService(
+            BankCreditDbContext dbContext,
+            IDateTimeProvider dateTimeProvider
+        )
         {
             _dbContext = dbContext;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task Create(Guid userId, CreateCreditDto dto)
@@ -21,9 +27,10 @@ namespace Bank.Credit.App.Services
             var user = await _dbContext.Users.SingleAsync(x => x.Id == userId);
             var tariff = await _dbContext.Tariffs.SingleAsync(x => x.Id == dto.TariffId);
 
-            await _dbContext.Credits.AddAsync(
-                new Credits.Credit(user, tariff, dto.Amount, dto.Days)
+            user.AddCredit(
+                new Credits.Credit(user, tariff, dto.Amount, dto.Days, _dateTimeProvider.UtcNow)
             );
+
             await _dbContext.SaveChangesAsync();
         }
 
@@ -32,7 +39,7 @@ namespace Bank.Credit.App.Services
             var credit = await _dbContext
                 .Credits.Include(x => x.Tariff)
                 .SingleAsync(x => x.User.Id == userId && x.Id == creditId);
-            credit.Pay();
+            credit.Pay(_dateTimeProvider.UtcNow);
 
             await _dbContext.SaveChangesAsync();
         }
@@ -42,7 +49,7 @@ namespace Bank.Credit.App.Services
             var credit = await _dbContext
                 .Credits.Include(x => x.Tariff)
                 .SingleAsync(x => x.User.Id == userId && x.Id == creditId);
-            credit.PayPenalty();
+            credit.PayPenalty(_dateTimeProvider.UtcNow);
 
             await _dbContext.SaveChangesAsync();
         }

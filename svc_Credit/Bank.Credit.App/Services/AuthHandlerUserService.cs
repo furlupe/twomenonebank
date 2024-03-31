@@ -8,7 +8,9 @@ namespace Bank.Credit.App.Services
     {
         private readonly BankCreditDbContext _dbContext;
 
-        public AuthHandlerUserService(BankCreditDbContext dbContext)
+        public AuthHandlerUserService(
+            BankCreditDbContext dbContext
+        )
         {
             _dbContext = dbContext;
         }

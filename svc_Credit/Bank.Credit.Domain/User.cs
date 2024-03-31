@@ -17,6 +17,11 @@ namespace Bank.Credit.Domain
             CreditRating = rating;
         }
 
+        public void AddCredit(CreditEntity credit)
+        {
+            Credits.Add(credit);
+        }
+
         private User() { }
 
         public User(Guid id)

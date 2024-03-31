@@ -13,7 +13,7 @@ namespace Bank.Credit.Domain.Credit
         public int Penalty { get; set; } = 0;
         public int Days { get; set; }
         public DateTime NextPaymentDate { get; set; }
-        public DateTime LastPaymentDate { get; set; } = DateTime.UtcNow;
+        public DateTime LastPaymentDate { get; set; }
         public DateTime RateLastApplied { get; set; }
         public int MissedPaymentPeriods { get; set; } = 0;
         public int PeriodicPayment { get; set; }
@@ -21,7 +21,13 @@ namespace Bank.Credit.Domain.Credit
 
         private Credit() { }
 
-        public Credit(User user, Tariff tariff, int amount, int days)
+        public Credit(
+            User user, 
+            Tariff tariff, 
+            int amount, 
+            int days,
+            DateTime now
+        )
         {
             User = user;
             Tariff = tariff;
@@ -40,66 +46,64 @@ namespace Bank.Credit.Domain.Credit
                         / (Math.Pow(1 + dailyRate, days) - 1)
                 );
 
-            var now = DateTime.UtcNow;
+            LastPaymentDate = now;
             NextPaymentDate = now + Tariff.Period;
         }
 
         [NotMapped]
         public bool IsActive => !IsClosed && !IsDeleted;
 
-        public void AddPenalty()
+        public void AddPenalty(DateTime happendAt)
         {
-            var now = DateTime.UtcNow;
             var amount =
-                (int)Math.Floor(Amount * Tariff.PenaltyRate * (now - LastPaymentDate).Days / 100.0)
+                (int)Math.Floor(Amount * Tariff.PenaltyRate * (happendAt - LastPaymentDate).Days / 100.0)
                 - Penalty;
 
             if (amount < 1)
                 return;
 
-            ApplyAndRecord(new CreditPenaltyAddedEvent(Id, amount, now));
+            ApplyAndRecord(new CreditPenaltyAddedEvent(Id, amount, happendAt), happendAt);
         }
 
         // supposed to be called each period
-        public void MoveNextPaymentDate()
+        public void MoveNextPaymentDate(DateTime happendAt)
         {
-            var now = DateTime.UtcNow;
-
             ApplyAndRecord(
-                new CreditPaymentDateMovedEvent(Id, NextPaymentDate.Add(Tariff.Period), now)
+                new CreditPaymentDateMovedEvent(Id, NextPaymentDate.Add(Tariff.Period), happendAt),
+                happendAt
             );
 
-            if (now.Date - LastPaymentDate.Date > Tariff.Period)
+            if (happendAt.Date - LastPaymentDate.Date > Tariff.Period)
             {
-                ApplyAndRecord(new CreditPaymentMissedEvent(Id, now));
+                ApplyAndRecord(new CreditPaymentMissedEvent(Id, happendAt), happendAt);
             }
         }
 
-        public void Pay()
+        public void Pay(DateTime happendAt)
         {
-            var @event = new CreditPaymentMadeEvent(Id, PeriodicPayment, DateTime.UtcNow);
-            ApplyAndRecord(@event);
+            var @event = new CreditPaymentMadeEvent(Id, PeriodicPayment, happendAt);
+            ApplyAndRecord(@event, happendAt);
         }
 
-        public void PayPenalty()
+        public void PayPenalty(DateTime happendAt)
         {
-            var @event = new CreditPenaltyPaidEvent(Id, Penalty, DateTime.UtcNow);
-            ApplyAndRecord(@event);
+            var @event = new CreditPenaltyPaidEvent(Id, Penalty, happendAt);
+            ApplyAndRecord(@event, happendAt);
         }
 
-        public void ApplyRate()
+        public void ApplyRate(DateTime happendAt)
         {
-            var @event = new CreditRateAppliedEvent(Id, DateTime.UtcNow);
-            ApplyAndRecord(@event);
+            var @event = new CreditRateAppliedEvent(Id, happendAt);
+            ApplyAndRecord(@event, happendAt);
         }
 
-        public void Close()
+        public void Close(DateTime happendAt)
         {
-            var @event = new CreditClosedEvent(Id, DateTime.UtcNow);
-            ApplyAndRecord(@event);
+            var @event = new CreditClosedEvent(Id, happendAt);
+            ApplyAndRecord(@event, happendAt);
         }
 
-        private void ApplyAndRecord(CreditEvent @event)
+        private void ApplyAndRecord(CreditEvent @event, DateTime happendAt)
         {
             if (IsClosed)
             {
@@ -109,16 +113,16 @@ namespace Bank.Credit.Domain.Credit
             switch (@event)
             {
                 case CreditPaymentMadeEvent creditPaymentMadeEvent:
-                    Apply(creditPaymentMadeEvent);
+                    Apply(creditPaymentMadeEvent, happendAt);
                     break;
                 case CreditRateAppliedEvent creditRateAppliedEvent:
-                    Apply(creditRateAppliedEvent);
+                    Apply(creditRateAppliedEvent, happendAt);
                     break;
                 case CreditClosedEvent creditClosedEvent:
                     Apply(creditClosedEvent);
                     break;
                 case CreditPaymentDateMovedEvent creditPaymentDateMovedEvent:
-                    Apply(creditPaymentDateMovedEvent);
+                    Apply(creditPaymentDateMovedEvent, happendAt);
                     break;
                 case CreditPaymentMissedEvent creditPaymentMissedEvent:
                     Apply(creditPaymentMissedEvent);
@@ -138,7 +142,7 @@ namespace Bank.Credit.Domain.Credit
             Events.Add(@event);
         }
 
-        private void Apply(CreditPaymentMadeEvent @event)
+        private void Apply(CreditPaymentMadeEvent @event, DateTime happendAt)
         {
             var amountToPay = PeriodicPayment * (MissedPaymentPeriods + 1);
 
@@ -161,13 +165,13 @@ namespace Bank.Credit.Domain.Credit
 
             if (Amount == 0)
             {
-                Close();
+                Close(happendAt);
             }
         }
 
-        private void Apply(CreditRateAppliedEvent @event)
+        private void Apply(CreditRateAppliedEvent @event, DateTime happendAt)
         {
-            var diff = DateTime.UtcNow.Date - RateLastApplied.Date;
+            var diff = happendAt.Date - RateLastApplied.Date;
             if (!Tariff.CanApplyRate(diff))
             {
                 throw new InvalidDataException("Can't apply rate since it's too early to do so");
@@ -179,9 +183,9 @@ namespace Bank.Credit.Domain.Credit
             RateLastApplied = @event.CreatedAt;
         }
 
-        private void Apply(CreditPaymentDateMovedEvent @event)
+        private void Apply(CreditPaymentDateMovedEvent @event, DateTime happendAt)
         {
-            if (DateTime.UtcNow.Date - NextPaymentDate.Date < Tariff.Period)
+            if (happendAt.Date - NextPaymentDate.Date < Tariff.Period)
             {
                 throw new InvalidOperationException("Can't move since period hasn't passed yet");
             }
