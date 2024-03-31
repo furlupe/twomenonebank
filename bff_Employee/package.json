@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && cross-env BFF_PORT=5055 AUTH_HOST=http://185.177.219.207:28000 CREDIT_HOST=http://185.177.219.207:29000 CORE_HOST=http://185.177.219.207:27000 TRANSACTIONS_HOST=http://185.177.219.207:30000 node ."
+    "start": "tsc && cross-env BFF_PORT=5055 AUTH_HOST=http://185.177.219.207:28000 CREDIT_HOST=http://185.177.219.207:29000 CORE_HOST=http://185.177.219.207:27000 node ."
   },
   "keywords": [],
   "author": "",

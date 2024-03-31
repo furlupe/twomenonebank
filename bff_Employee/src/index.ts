@@ -10,6 +10,8 @@ import { BaseRouter } from "./routers/base_router";
 import { AuthRouter } from "./routers/impl/auth_router";
 import { CreditClient } from "./clients/credit_client";
 import { CreditRouter } from "./routers/impl/credit_router";
+import { CoreClient } from "./clients/core_client";
+import { CoreRouter } from "./routers/impl/core_router";
 
 const diContainer = new Container();
 
@@ -21,10 +23,12 @@ diContainer.bind<AppOptions>(TYPES.AppOptions).to(AppOptions);
 // Clients
 diContainer.bind<AuthClient>(TYPES.AuthClient).to(AuthClient);
 diContainer.bind<CreditClient>(TYPES.CreditClient).to(CreditClient);
+diContainer.bind<CoreClient>(TYPES.CoreClient).to(CoreClient);
 
 // Routers
 diContainer.bind<BaseRouter>(TYPES.AuthRouter).to(AuthRouter);
 diContainer.bind<BaseRouter>(TYPES.CreditRouter).to(CreditRouter);
+diContainer.bind<BaseRouter>(TYPES.CoreRouter).to(CoreRouter);
 
 // - Application
 const app = express();

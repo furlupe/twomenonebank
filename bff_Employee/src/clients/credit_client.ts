@@ -2,14 +2,14 @@ import { AxiosInstance } from "axios";
 import { inject, injectable } from "inversify";
 import { AxiosProvider } from "../network/axios_provider";
 import TYPES from "../types";
-import { TariffDto } from "src/dto/tariff_dto";
+import { TariffDto } from "../dto/tariff_dto";
 
 @injectable()
 export class CreditClient {
     private readonly _axios: AxiosInstance;
 
     constructor(@inject(TYPES.AxiosProvider) axiosProvider: AxiosProvider) {
-        this._axios = axiosProvider.core
+        this._axios = axiosProvider.core;
     }
 
     //#region Credit

@@ -10,7 +10,6 @@ export class AxiosProvider {
     private _axiosAuth: AxiosInstance | null = null;
     private _axiosCore: AxiosInstance | null = null;
     private _axiosCredit: AxiosInstance | null = null;
-    private _axiosTransactions: AxiosInstance | null = null;
 
     private readonly _options: AppOptions;
     private readonly _store: AsyncLocalStorage<Store>;
@@ -45,14 +44,6 @@ export class AxiosProvider {
         }
 
         return this._axiosCredit
-    }
-
-    public get transactions(): AxiosInstance {
-        if (this._axiosTransactions == null) {
-            this._axiosTransactions = this._createAxiosInstance(this._options.transactionsHost)
-        }
-
-        return this._axiosTransactions
     }
 
     // Creating axios with interceptor for auth header
