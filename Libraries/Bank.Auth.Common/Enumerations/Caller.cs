@@ -1,8 +1,9 @@
 ﻿namespace Bank.Auth.Common.Enumerations
 {
+    [Flags]
     public enum Caller
     {
-        Human,
-        Service
+        Human = 1,
+        Service = 2
     }
 }

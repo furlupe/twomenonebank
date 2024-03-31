@@ -11,12 +11,12 @@ namespace Bank.Auth.Common.Attributes
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class CalledByAttribute : Attribute, IAuthorizationFilter
     {
-        readonly Claim _callerClaim;
+        readonly Caller _caller;
         readonly List<Claim> _roleClaims = [];
 
         public CalledByAttribute(Caller caller)
         {
-            _callerClaim = new Claim(BankClaims.Caller, caller.ToString());
+            _caller = caller;
         }
 
         public CalledByAttribute(Caller caller, params Role[] roles)
@@ -30,13 +30,25 @@ namespace Bank.Auth.Common.Attributes
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            bool hasClaims = context.HttpContext.User.HasClaim(c =>
-                c.Type == _callerClaim.Type && c.Value == _callerClaim.Value
+            Claim? roleClaim = context.HttpContext.User.FindFirst(c =>
+                c.Type == BankClaims.Caller
             );
 
-            hasClaims &= _roleClaims.IsNullOrEmpty() || _roleClaims.Any(role =>
-                context.HttpContext.User.HasClaim(c => c.Type == role.Type && c.Value == role.Value)
-            );
+            if (roleClaim == null)
+            {
+                context.Result = new StatusCodeResult(StatusCodes.Status403Forbidden);
+                return;
+            }
+
+            var parseResult = Enum.TryParse(roleClaim.Value, out Caller caller);
+            bool hasClaims = parseResult && _caller.HasFlag(caller);
+
+            if (caller != Caller.Service)
+            {
+                hasClaims &= _roleClaims.IsNullOrEmpty() || _roleClaims.Any(role =>
+                    context.HttpContext.User.HasClaim(c => c.Type == role.Type && c.Value == role.Value)
+                );
+            }
 
             if (!hasClaims)
             {
