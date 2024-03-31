@@ -1,6 +1,5 @@
 package com.example.customerclient.data.websocket
 
-import android.util.Log
 import com.example.customerclient.common.Constants.BASE_CORE_URL
 import com.example.customerclient.data.api.dto.AccountEventDto
 import com.microsoft.signalr.HubConnection
@@ -23,7 +22,6 @@ class BillHistoryWebSocket {
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
             while (true) {
-                Log.d("QWERTY", "We in connection on, its data:${connection.connectionState}")
                 delay(5000L)
             }
         }
@@ -31,8 +29,8 @@ class BillHistoryWebSocket {
         connection.on(
             "ReceiveTransactions",
             { data ->
-                Log.d("QWERTY", "We in connection on, its data:$data")
-                //connectionOn(data.toList())
+
+            //connectionOn(data.toList())
             },
             Object::class.java,
         )

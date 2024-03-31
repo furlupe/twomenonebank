@@ -11,6 +11,7 @@ class P2PTransactionViewModel(
     private val p2pTransactionUseCase: P2PTransactionUseCase,
 ) : ViewModel() {
     private val billId = handle.get<String>("billId")
+    private val currency = handle.get<String>("currency")
 
     fun p2pTransaction(
         phone: String,
@@ -20,13 +21,15 @@ class P2PTransactionViewModel(
         viewModelScope.launch {
             try {
                 billId?.let {
-                    p2pTransactionUseCase(
-                        billId,
-                        phone,
-                        amount.toDouble(),
-                        "",
-                        message
-                    )
+                    if (currency != null) {
+                        p2pTransactionUseCase(
+                            billId,
+                            phone,
+                            amount.toDouble(),
+                            currency,
+                            message
+                        )
+                    }
                 }
             } catch (e: Throwable) {
             }

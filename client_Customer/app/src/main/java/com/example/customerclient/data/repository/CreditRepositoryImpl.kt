@@ -115,6 +115,6 @@ class CreditRepositoryImpl(
     }
 
     override suspend fun getUserCreditRate(): String {
-        return creditsApi.getUserCreditInfo().creditRating.toString()
+        return creditsApi.getUserCreditInfo().creditRating?.toString() ?: "Пока неизвестен"
     }
 }

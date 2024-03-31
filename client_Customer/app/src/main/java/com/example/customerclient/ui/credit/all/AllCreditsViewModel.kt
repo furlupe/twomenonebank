@@ -1,5 +1,6 @@
 package com.example.customerclient.ui.credit.all
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -30,6 +31,7 @@ class AllCreditsViewModel(
                     .distinctUntilChanged()
                     .cachedIn(viewModelScope)
                     .collect { credits ->
+                        Log.d("CREDITS", "$credits")
                         _creditShortInfoState.value = credits.filter { !it.isClosed }
                     }
             } catch (e: Exception) {
