@@ -21,17 +21,50 @@ public class Account : StoredModel
     public string Name { get; protected set; }
     public List<AccountEvent> Events { get; protected set; } = [];
     public bool IsMaster { get; set; } = false;
+    public DateTime? ClosedAt { get; protected set; } = null;
+    public bool IsClosed => ClosedAt != null;
+    public bool IsDefault => User.DefaultTransferAccountId == Id;
 
     public void AddEvent(AccountEvent @event)
     {
         Events.Add(@event);
     }
 
-    public void ValidateClose() =>
+    public void Close(DateTime now)
+    {
+        ValidateEmpty();
+        ValidateNotClosed();
+        ValidateNotDefault();
+        ValidateNotMaster();
+        ClosedAt = now;
+    }
+
+    public void ValidateEmpty() =>
         Validation.Check(
             ExceptionConstants.MsgInvalidAction,
             Balance.Amount == 0,
-            "Cannot close a non-empty account"
+            "Cannot close a non-empty account."
+        );
+
+    public void ValidateNotDefault() =>
+        Validation.Check(
+            ExceptionConstants.MsgInvalidAction,
+            !IsDefault,
+            "Cannot close a default account."
+        );
+
+    public void ValidateNotClosed() =>
+        Validation.Check(
+            ExceptionConstants.MsgInvalidAction,
+            !IsClosed,
+            "Account is already closed."
+        );
+
+    public void ValidateNotMaster() =>
+        Validation.Check(
+            ExceptionConstants.MsgInvalidAction,
+            !IsMaster,
+            "Cannot close master account."
         );
 
     protected Account() { }

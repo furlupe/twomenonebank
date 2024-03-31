@@ -2,10 +2,10 @@
 using Bank.Auth.Common.Extensions;
 using Bank.Auth.Common.Policies;
 using Bank.Common.Pagination;
-using Bank.Core.App.Dto;
-using Bank.Core.App.Dto.Events;
-using Bank.Core.App.Dto.Pagination;
 using Bank.Core.App.Services.Contracts;
+using Bank.Core.Http.Dto;
+using Bank.Core.Http.Dto.Events;
+using Bank.Core.Http.Dto.Pagination;
 using Bank.Exceptions.WebApiException;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +20,10 @@ public class AccountsController(
     ITransactionService transactionService
 ) : ControllerBase
 {
+    [HttpGet("{id}")]
+    public async Task<AccountDto> GetAccount([FromRoute] Guid id) =>
+        AccountDto.From(await accountService.GetAccountIfOwnedBy(id, User.GetId()));
+
     [HttpGet("my")]
     public async Task<PageDto<AccountDto>> GetMyAccounts(
         [FromQuery] AccountQueryParameters queryParameters
@@ -29,25 +33,13 @@ public class AccountsController(
         return accounts.Cast(AccountDto.From);
     }
 
-    [HttpGet("{id}")]
-    public async Task<AccountDto> GetAccount([FromRoute] Guid id)
-    {
-        var account = await accountService.GetAccount(id);
-
-        if (account.UserId != User.GetId())
-            throw new NotFoundException();
-
-        return AccountDto.From(account);
-    }
-
     [HttpGet("{id}/history")]
     public async Task<PageDto<AccountEventDto>> GetAccountOperations(
         [FromRoute] Guid id,
         [FromQuery] TransactionQueryParameters queryParameters
     )
     {
-        if (!await accountService.IsAccountOwnedBy(id, User.GetId()))
-            throw new NotFoundException();
+        await accountService.CheckAccountOwnedBy(id, User.GetId());
         var transactions = await transactionService.GetAccountTransactions(id, queryParameters);
 
         return transactions.Cast((x) => AccountEventDto.From(x));
@@ -57,6 +49,12 @@ public class AccountsController(
     public async Task<Guid> CreateAccount([FromBody] AccountCreateDto dto)
     {
         return await accountService.CreateAccountFor(User.GetId(), dto);
+    }
+
+    [HttpPost("{id}/set-default")]
+    public async Task SetDefault([FromRoute] Guid id)
+    {
+        await accountService.SetDefaultAccount(User.GetId(), id);
     }
 
     [HttpDelete("close/{id}")]

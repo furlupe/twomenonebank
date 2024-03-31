@@ -1,4 +1,4 @@
-﻿namespace Bank.Core.App.Dto;
+﻿namespace Bank.Core.Http.Dto;
 
 public class UserShortDto
 {

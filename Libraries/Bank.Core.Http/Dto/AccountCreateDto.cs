@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Bank.Common.Money;
 
-namespace Bank.Core.App.Dto;
+namespace Bank.Core.Http.Dto;
 
 public class AccountCreateDto
 {

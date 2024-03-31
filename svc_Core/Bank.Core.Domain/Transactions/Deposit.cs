@@ -9,6 +9,7 @@ public class Deposit(Money value, DateTime now, Account target, ICurrencyConvert
 {
     internal override async Task<AccountEvent> PerformTransient()
     {
+        ValidateTargetOpen();
         ValidateValue();
         var nativeValue = await GetNativeValue(Value);
         Target.Balance += nativeValue;

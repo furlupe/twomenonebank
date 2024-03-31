@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
-using Bank.Core.App.Dto.Pagination;
 using Bank.Core.Domain.Events;
+using Bank.Core.Http.Dto.Pagination;
 using Bank.Exceptions.WebApiException;
 using Microsoft.EntityFrameworkCore;
 

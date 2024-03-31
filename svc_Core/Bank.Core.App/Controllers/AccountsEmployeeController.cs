@@ -1,9 +1,10 @@
 ﻿using Bank.Auth.Common.Attributes;
+using Bank.Auth.Common.Enumerations;
 using Bank.Common.Pagination;
-using Bank.Core.App.Dto;
-using Bank.Core.App.Dto.Events;
-using Bank.Core.App.Dto.Pagination;
 using Bank.Core.App.Services.Contracts;
+using Bank.Core.Http.Dto;
+using Bank.Core.Http.Dto.Events;
+using Bank.Core.Http.Dto.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,13 +12,14 @@ namespace Bank.Core.App.Controllers;
 
 [Route("manage/accounts")]
 [ApiController]
-[Authorize,] //TODO: enable CalledByStaff
+[Authorize]
 public class AccountsEmployeeController(
     IAccountService accountService,
     ITransactionService transactionService
 ) : ControllerBase
 {
     [HttpGet("{id}")]
+    [CalledByStaff]
     public async Task<AccountDto> GetAccount([FromRoute] Guid id)
     {
         var account = await accountService.GetAccount(id);
@@ -25,6 +27,7 @@ public class AccountsEmployeeController(
     }
 
     [HttpGet("of/{id}")]
+    [CalledByStaff]
     public async Task<PageDto<AccountDto>> GetUserAccounts(
         [FromRoute] Guid id,
         [FromQuery] AccountQueryParameters queryParameters
@@ -35,6 +38,7 @@ public class AccountsEmployeeController(
     }
 
     [HttpGet("{id}/history")]
+    [CalledByStaff]
     public async Task<PageDto<AccountEventDto>> GetAccountOperations(
         [FromRoute] Guid id,
         [FromQuery] TransactionQueryParameters queryParameters
@@ -46,6 +50,7 @@ public class AccountsEmployeeController(
     }
 
     [HttpGet("master")]
+    [CalledBy(Caller.Human | Caller.Service, Role.Employee)]
     public async Task<AccountDto> GetMasterAccount()
     {
         var account = await accountService.GetMasterAccount();
@@ -53,6 +58,7 @@ public class AccountsEmployeeController(
     }
 
     [HttpGet("master/history")]
+    [CalledBy(Caller.Human | Caller.Service, Role.Employee)]
     public async Task<PageDto<AccountEventDto>> GetMasterAccountOperations(
         [FromQuery] TransactionQueryParameters queryParameters
     )

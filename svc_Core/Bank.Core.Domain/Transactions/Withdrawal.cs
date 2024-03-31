@@ -10,6 +10,7 @@ public class Withdrawal(Money value, DateTime now, Account target, ICurrencyConv
 {
     internal override async Task<AccountEvent> PerformTransient()
     {
+        ValidateTargetOpen();
         ValidateValue();
         var nativeValue = await GetNativeValue(Value);
         ValidateWithdrawal(nativeValue);
