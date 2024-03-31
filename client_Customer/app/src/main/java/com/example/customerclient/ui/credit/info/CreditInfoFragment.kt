@@ -85,9 +85,7 @@ class CreditInfoFragment : Fragment() {
         // Кнопка "Внести платёж"
         if (penalty == 0) {
             binding.closeCreditTitle.text = "Внести платёж"
-            binding.payOfCreditButton.setOnClickListener {
-                showConfirmToLoanPaymentDialog(onLoanPayment)
-            }
+            binding.payOfCreditButton.visibility = View.GONE
         }
         // Кнопка "Погасить пени"
         else {
@@ -96,21 +94,6 @@ class CreditInfoFragment : Fragment() {
                 showConfirmToPenyPaymentDialog(onPenyPayment)
             }
         }
-    }
-
-    private fun showConfirmToLoanPaymentDialog(
-        onConfirmClick: () -> Unit,
-    ) {
-        val dialogWithEditText = AlertDialogWithConfirmAndDismissButtons(
-            title = "Вы хотите внести ежедневный платёж?",
-            description = "",
-            positiveButtonText = "Да",
-            negativeButtonText = "Нет",
-
-            onPositiveButtonClick = onConfirmClick,
-        )
-        val manager = parentFragmentManager
-        dialogWithEditText.show(manager, "confirmToCloseBillAlertDialog")
     }
 
     private fun showConfirmToPenyPaymentDialog(

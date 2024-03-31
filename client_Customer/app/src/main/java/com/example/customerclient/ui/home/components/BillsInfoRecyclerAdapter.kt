@@ -10,7 +10,8 @@ import com.example.customerclient.ui.home.BillInfo
 
 class BillsInfoRecyclerAdapter(
     private val items: List<BillInfo>,
-    private val onBillClick: (String) -> Unit
+    private val onBillClick: (String) -> Unit,
+    private val onLongClick: (String) -> Unit = {}
 ) :
     RecyclerView.Adapter<BillsInfoRecyclerAdapter.BillInfoViewHolder>() {
 
@@ -42,6 +43,10 @@ class BillsInfoRecyclerAdapter(
     ) {
         holder.billItem.setOnClickListener {
             onBillClick(items[position].id)
+        }
+        holder.billItem.setOnLongClickListener {
+            onLongClick(items[position].id)
+            true
         }
         holder.number.text = items[position].name
         holder.balance.text = items[position].balance

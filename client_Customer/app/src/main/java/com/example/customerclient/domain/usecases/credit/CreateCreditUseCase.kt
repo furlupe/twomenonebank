@@ -7,9 +7,17 @@ class CreateCreditUseCase(
 ) {
     suspend operator fun invoke(
         tariffId: String,
+        withdrawalAccountId: String,
+        destinationAccountId: String,
         amount: Int,
         days: Int
     ) {
-        creditRepository.createCredit(tariffId, amount, days)
+        creditRepository.createCredit(
+            tariffId,
+            withdrawalAccountId,
+            destinationAccountId,
+            amount,
+            days
+        )
     }
 }

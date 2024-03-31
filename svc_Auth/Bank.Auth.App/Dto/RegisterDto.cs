@@ -13,7 +13,7 @@ namespace Bank.Auth.App.Dto
         [MinLength(5)]
         public string Password { get; set; }
 
-        [Required]
+        [Required, MinLength(1)]
         public List<Role> Roles { get; set; }
 
         [Required]

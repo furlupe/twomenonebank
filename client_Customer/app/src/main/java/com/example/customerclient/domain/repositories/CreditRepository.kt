@@ -19,7 +19,13 @@ interface CreditRepository {
 
     suspend fun getCreditHistory(creditId: String): Flow<PagingData<CreditHistory>>
 
-    suspend fun createCredit(tariffId: String, amount: Int, days: Int)
+    suspend fun createCredit(
+        tariffId: String,
+        withdrawalAccountId: String,
+        destinationAccountId: String,
+        amount: Int,
+        days: Int
+    )
 
     suspend fun getCreditsTariffs(): Flow<PagingData<Tariff>>
 

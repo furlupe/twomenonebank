@@ -11,6 +11,7 @@ data class AccountDto(
 fun AccountDto.toBillInfo() = BillInfo(
     id = this.id,
     name = this.name ?: "",
+    currency = this.balance.currency,
     balance = "${this.balance.amount} ${this.balance.currency}",
     type = "Сберегательный счёт",
     duration = "бессрочный"

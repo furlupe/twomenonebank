@@ -32,6 +32,11 @@ class BillInfoFragment : Fragment() {
         super.onAttach(context)
     }
 
+    override fun onStart() {
+        viewModel.openWebSocket()
+        super.onStart()
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +65,8 @@ class BillInfoFragment : Fragment() {
                 if (billInfoState is BillInfoState.Content) {
                     billInfoFragmentContent(
                         moneyOnBill = billInfoState.info.balance,
+                        billId = billInfoState.info.id,
+                        currency = billInfoState.info.currency,
 
                         onTopUpBill = { amount -> viewModel.topUpBill(amount) },
                         onChargeBill = { amount -> viewModel.chargeBill(amount) },
@@ -76,6 +83,8 @@ class BillInfoFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun billInfoFragmentContent(
         moneyOnBill: String,
+        billId: String,
+        currency: String,
 
         onTopUpBill: (String) -> Unit,
         onChargeBill: (String) -> Unit,
@@ -115,8 +124,8 @@ class BillInfoFragment : Fragment() {
         binding.transferBillButton.setOnClickListener {
             showAlertDialogForChoosingTypeOfTransaction(
                 title = "Выберите какой перевод хотите совершить",
-                onPositiveButtonClick = { navigateToTransactionMe2MeFragment() },
-                onNegativeButtonClick = { navigateToTransactionP2PFragment() }
+                onPositiveButtonClick = { navigateToTransactionMe2MeFragment(billId, currency) },
+                onNegativeButtonClick = { navigateToTransactionP2PFragment(billId, currency) }
             )
         }
 
@@ -124,19 +133,28 @@ class BillInfoFragment : Fragment() {
         binding.closeBillButton.setOnClickListener { showConfirmToCloseBillDialog { onConfirmToCloseBillClick() } }
     }
 
-    private fun navigateToTransactionMe2MeFragment() {
+    override fun onPause() {
+        viewModel.closeWebSocket()
+        super.onPause()
+    }
+
+    private fun navigateToTransactionMe2MeFragment(billId: String, currency: String) {
         val action = callback?.getBillId()
             ?.let {
                 BillInfoFragmentDirections.actionNavigationBillInfoToNavigationTransactionMe2Me(
-                    it
+                    billId, currency
                 )
             }
         action?.let { findNavController().navigate(action) }
     }
 
-    private fun navigateToTransactionP2PFragment() {
+    private fun navigateToTransactionP2PFragment(billId: String, currency: String) {
         val action = callback?.getBillId()
-            ?.let { BillInfoFragmentDirections.actionNavigationBillInfoToNavigationTransactionP2P(it) }
+            ?.let {
+                BillInfoFragmentDirections.actionNavigationBillInfoToNavigationTransactionP2P(
+                    billId, currency
+                )
+            }
         action?.let { findNavController().navigate(action) }
     }
 

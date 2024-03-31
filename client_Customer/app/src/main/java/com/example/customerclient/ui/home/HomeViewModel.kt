@@ -3,6 +3,8 @@ package com.example.customerclient.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.customerclient.data.repository.SharedPreferencesRepositoryImpl
+import com.example.customerclient.domain.usecases.bill.AddHideBillUseCase
+import com.example.customerclient.domain.usecases.bill.GetHideBillsUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
 import com.example.customerclient.domain.usecases.bill.OpenBillUseCase
@@ -21,6 +23,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeViewModel(
+    private val getHideBillsUseCase: GetHideBillsUseCase,
+    private val addHideBillUseCase: AddHideBillUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getUserBillsInfoUseCase: GetUserBillsInfoUseCase,
     private val getUserCreditsInfoUseCase: GetUserCreditsInfoUseCase,
@@ -40,38 +44,73 @@ class HomeViewModel(
         viewModelScope.launch {
             try {
                 val userInfo = getUserInfoUseCase()
-                val billsInfo = getUserBillsInfoUseCase()
-                val creditRate = getUserCreditRateUseCase()
-                //val creditsInfo = getUserCreditsInfoUseCase().filter { !it.isClosed }
+                _uiState.update { (_uiState.value as HomeState.Content).copy(userName = userInfo.name) }
+            } catch (e: Throwable) {
+            }
+        }
 
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val billsIdsInHide = getHideBillsUseCase()
+                val billsInfo = getUserBillsInfoUseCase().filter { it.id !in billsIdsInHide }
+                saveUserBillInfoToDatabaseUseCase(billsInfo)
                 withContext(Dispatchers.IO) {
-                    saveUserBillInfoToDatabaseUseCase(billsInfo)
-                    //saveUserCreditInfoToDatabaseUseCase(creditsInfo)
+                    _uiState.update {
+                        (_uiState.value as HomeState.Content).copy(
+                            billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1)
+                            else billsInfo
+                        )
+                    }
                 }
+            } catch (e: Throwable) {
+                withContext(Dispatchers.IO) {
+                    val billsInfo = getUserBillsInfoFromDatabaseUseCase()
+                    withContext(Dispatchers.Main) {
+                        _uiState.update {
+                            (_uiState.value as HomeState.Content).copy(
+                                billsInfo = if (billsInfo.size > 2) billsInfo.slice(
+                                    0..1
+                                ) else billsInfo
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            try {
+                val creditsInfo = getUserCreditsInfoUseCase().filter { !it.isClosed }
+                withContext(Dispatchers.IO) { saveUserCreditInfoToDatabaseUseCase(creditsInfo) }
 
                 _uiState.update {
-                    HomeState.Content(
-                        userName = userInfo.name,
-                        userCreditRate = "Ваш кредитный рейтинг: $creditRate",
-                        billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1) else billsInfo,
-                        //creditsInfo = if (creditsInfo.size > 2) creditsInfo.slice(0..1) else creditsInfo
+                    (_uiState.value as HomeState.Content).copy(
+                        creditsInfo = if (creditsInfo.size > 2) creditsInfo.slice(0..1) else creditsInfo
                     )
                 }
 
             } catch (e: Throwable) {
                 withContext(Dispatchers.IO) {
-                    val billsInfo = getUserBillsInfoFromDatabaseUseCase()
                     val creditsInfo = getUserCreditsInfoFromDatabaseUseCase()
                     withContext(Dispatchers.Main) {
                         _uiState.update {
-                            HomeState.Content(
-                                billsInfo = if (billsInfo.size > 2) billsInfo.slice(0..1) else billsInfo,
+                            (_uiState.value as HomeState.Content).copy(
                                 creditsInfo = if (creditsInfo.size > 2) creditsInfo.slice(0..1) else creditsInfo
                             )
                         }
                     }
                 }
 
+            }
+        }
+
+        viewModelScope.launch {
+            try {
+                val creditRate = getUserCreditRateUseCase()
+                _uiState.update {
+                    (_uiState.value as HomeState.Content).copy(userCreditRate = "Ваш кредитный рейтинг: $creditRate")
+                }
+            } catch (e: Throwable) {
             }
         }
     }
@@ -88,10 +127,10 @@ class HomeViewModel(
         }
     }
 
-    fun createBill(name: String) {
+    fun createBill(name: String, currency: String) {
         viewModelScope.launch {
             try {
-                openBillUseCase(name)
+                openBillUseCase(name, currency)
                 getUserBillsAndCreditsInfo()
             } catch (e: Exception) {
 
@@ -118,6 +157,7 @@ sealed class HomeState {
 
 data class BillInfo(
     val id: String = "",
+    val currency: String = "RUB",
     val name: String = "",
     val balance: String = "",
     val type: String = "",

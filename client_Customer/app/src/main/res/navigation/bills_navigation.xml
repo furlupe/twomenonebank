@@ -38,6 +38,9 @@
         <argument
             android:name="billId"
             app:argType="string" />
+        <argument
+            android:name="currency"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -46,6 +49,9 @@
         tools:layout="@layout/fragment_transaction_me2me">
         <argument
             android:name="billId"
+            app:argType="string" />
+        <argument
+            android:name="currency"
             app:argType="string" />
     </fragment>
 

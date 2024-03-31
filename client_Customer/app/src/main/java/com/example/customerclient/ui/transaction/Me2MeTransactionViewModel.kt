@@ -1,6 +1,5 @@
 package com.example.customerclient.ui.transaction
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +21,8 @@ class Me2MeTransactionViewModel(
     private val getUserBillsPagedInfoUseCase: GetUserBillsPagedInfoUseCase,
 ) : ViewModel() {
     private var billId = handle.get<String>("billId")
+    private var currency = handle.get<String>("currency")
+
     private lateinit var targetId: String
 
     private val _uiState: MutableStateFlow<Me2MeTransactionState> =
@@ -40,15 +41,16 @@ class Me2MeTransactionViewModel(
     fun me2MeTransaction(amount: String, message: String) {
         viewModelScope.launch {
             try {
-                Log.d("ME2ME", "$billId")
                 billId?.let {
-                    me2MeTransactionUseCase(
-                        it,
-                        targetId,
-                        amount.toDouble(),
-                        "",
-                        message
-                    )
+                    currency?.let { currency ->
+                        me2MeTransactionUseCase(
+                            it,
+                            targetId,
+                            amount.toDouble(),
+                            currency,
+                            message
+                        )
+                    }
                 }
             } catch (e: Throwable) {}
         }
