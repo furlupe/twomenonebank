@@ -1,6 +1,4 @@
-﻿using Bank.Common.DateTimeProvider;
-using Bank.Common.Money.Converter;
-using Bank.Common.Pagination;
+﻿using Bank.Common.Pagination;
 using Bank.Core.App.Dto.Pagination;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.App.Utils;
@@ -24,7 +22,20 @@ public class TransactionService(CoreDbContext db, ITransactionFactory transactio
             .SelectMany(x => x.Events)
             .WhereResolvedAt(queryParameters);
 
-        return await query.GetPage(queryParameters, x => x);
+        return await query.GetPage(queryParameters, x => x, x => x.ResolvedAt);
+    }
+
+    public async Task<PageDto<AccountEvent>> GetMasterAccountTransactions(
+        TransactionQueryParameters queryParameters
+    )
+    {
+        var query = db
+            .Accounts.AsNoTrackingWithIdentityResolution()
+            .Where(x => x.IsMaster)
+            .SelectMany(x => x.Events)
+            .WhereResolvedAt(queryParameters);
+
+        return await query.GetPage(queryParameters, x => x, x => x.ResolvedAt);
     }
 
     public async Task Perform(Common.Transaction model)

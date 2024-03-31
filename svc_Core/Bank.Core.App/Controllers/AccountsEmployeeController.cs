@@ -11,7 +11,7 @@ namespace Bank.Core.App.Controllers;
 
 [Route("manage/accounts")]
 [ApiController]
-[Authorize, CalledByStaff]
+[Authorize,] //TODO: enable CalledByStaff
 public class AccountsEmployeeController(
     IAccountService accountService,
     ITransactionService transactionService
@@ -37,10 +37,27 @@ public class AccountsEmployeeController(
     [HttpGet("{id}/history")]
     public async Task<PageDto<AccountEventDto>> GetAccountOperations(
         [FromRoute] Guid id,
-        TransactionQueryParameters queryParameters
+        [FromQuery] TransactionQueryParameters queryParameters
     )
     {
         var transactions = await transactionService.GetAccountTransactions(id, queryParameters);
+
+        return transactions.Cast(AccountEventDto.From);
+    }
+
+    [HttpGet("master")]
+    public async Task<AccountDto> GetMasterAccount()
+    {
+        var account = await accountService.GetMasterAccount();
+        return AccountDto.From(account);
+    }
+
+    [HttpGet("master/history")]
+    public async Task<PageDto<AccountEventDto>> GetMasterAccountOperations(
+        [FromQuery] TransactionQueryParameters queryParameters
+    )
+    {
+        var transactions = await transactionService.GetMasterAccountTransactions(queryParameters);
 
         return transactions.Cast(AccountEventDto.From);
     }

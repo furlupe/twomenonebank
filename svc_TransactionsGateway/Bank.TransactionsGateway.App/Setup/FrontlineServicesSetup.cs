@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Bank.Amqp;
 using Bank.Auth.Common.Extensions;
 using Bank.Common.Constants;
 using Bank.Common.Extensions;

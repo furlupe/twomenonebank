@@ -10,7 +10,6 @@ public class BalanceChangeDto
     public Guid AccountId { get; protected set; }
 
     public BalanceChangeType EventType { get; protected set; }
-    public CreditPaymentDto? CreditPayment { get; protected set; }
 
     public static BalanceChangeDto? From(BalanceChange? model) =>
         model == null
@@ -21,6 +20,5 @@ public class BalanceChangeDto
                 NativeValue = model.NativeValue,
                 ForeignValue = model.ForeignValue,
                 EventType = model.EventType,
-                CreditPayment = CreditPaymentDto.From(model.CreditPayment),
             };
 }

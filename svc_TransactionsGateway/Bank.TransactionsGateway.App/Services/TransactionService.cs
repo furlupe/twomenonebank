@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Bank.Core.Common;
+﻿using Bank.Core.Common;
 using Bank.Exceptions.WebApiException;
 using MassTransit;
 

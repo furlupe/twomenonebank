@@ -1,8 +1,9 @@
 ﻿using Bank.Common.Money;
-using Bank.Common.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Core.Domain.Events;
 
+[Owned]
 public class BalanceChange
 {
     public Money NativeValue { get; protected set; }
@@ -11,19 +12,6 @@ public class BalanceChange
     public Guid AccountId { get; protected set; }
 
     public BalanceChangeType EventType { get; protected set; }
-    public CreditPayment? CreditPayment { get; protected set; }
-
-    public BalanceChange(
-        Account account,
-        Money nativeValue,
-        Money foreignValue,
-        CreditPayment creditPayment
-    )
-        : this(account, nativeValue, foreignValue, BalanceChangeType.CreditPayment)
-    {
-        CreditPayment = creditPayment;
-        ValidateType();
-    }
 
     public BalanceChange(
         Account account,
@@ -38,13 +26,6 @@ public class BalanceChange
         EventType = type;
     }
 
-    protected void ValidateType() =>
-        Validation.Check(
-            ExceptionConstants.MsgInvalidAction,
-            (EventType == BalanceChangeType.CreditPayment) == (CreditPayment != null),
-            "Balance change that is credit payment must have corresponding data."
-        );
-
     protected BalanceChange() { }
 }
 
@@ -52,5 +33,4 @@ public enum BalanceChangeType
 {
     Withdrawal,
     Deposit,
-    CreditPayment
 }

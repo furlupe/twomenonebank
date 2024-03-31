@@ -1,5 +1,4 @@
-﻿using System.Security.Principal;
-using Bank.Common.Pagination;
+﻿using Bank.Common.Pagination;
 using Bank.Common.Utils;
 using Bank.Core.App.Dto;
 using Bank.Core.App.Dto.Pagination;
@@ -67,4 +66,6 @@ public class AccountService(CoreDbContext db, IUserService userService) : IAccou
             account != null,
             "Could not transfer: transferee does not have an account set for incoming transfers."
         );
+
+    public Task<Account> GetMasterAccount() => db.Accounts.SingleOrThrowAsync(x => x.IsMaster);
 }

@@ -12,10 +12,18 @@ public abstract class DomainEvent
 
     public void Cancel() => State = EventState.Canceled;
 
+    public DomainEvent(DateTime now, EventState state = EventState.Completed)
+    {
+        ResolvedAt = now;
+        State = state;
+    }
+
     public enum EventState
     {
         Completed,
         Canceled,
         Failed
     }
+
+    protected DomainEvent() { }
 }

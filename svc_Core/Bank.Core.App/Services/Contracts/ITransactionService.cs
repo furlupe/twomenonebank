@@ -10,5 +10,9 @@ public interface ITransactionService
         Guid id,
         TransactionQueryParameters queryParameters
     );
+
+    Task<PageDto<AccountEvent>> GetMasterAccountTransactions(
+        TransactionQueryParameters queryParameters
+    );
     Task Perform(Common.Transaction model);
 }

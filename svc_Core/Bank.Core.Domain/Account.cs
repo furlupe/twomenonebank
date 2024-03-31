@@ -20,6 +20,7 @@ public class Account : StoredModel
     public User User { get; protected set; }
     public string Name { get; protected set; }
     public List<AccountEvent> Events { get; protected set; } = [];
+    public bool IsMaster { get; set; } = false;
 
     public void AddEvent(AccountEvent @event)
     {

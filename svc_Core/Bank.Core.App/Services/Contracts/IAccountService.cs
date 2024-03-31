@@ -8,6 +8,7 @@ namespace Bank.Core.App.Services.Contracts;
 public interface IAccountService
 {
     Task<Account> GetAccount(Guid id);
+    Task<Account> GetMasterAccount();
     Task<Account> GetUserDefaultAccount(Guid userId);
     Task<PageDto<Account>> GetAccountsFor(Guid id, AccountQueryParameters queryParameters);
     Task<Guid> CreateAccountFor(Guid id, AccountCreateDto dto);
