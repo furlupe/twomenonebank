@@ -24,4 +24,7 @@ data class BillEntity(
     @ColumnInfo(name = "duration")
     val duration: String,
 
+    @ColumnInfo(name = "is_hide")
+    val isHide: Boolean
+
 ) : Parcelable

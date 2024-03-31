@@ -30,14 +30,16 @@ class BillRepositoryImpl(
                     it.name,
                     it.balance,
                     it.type,
-                    it.duration
+                    it.duration,
+                    false
                 )
             )
         }
     }
 
+
     override suspend fun getUserBillsInfo(): List<BillInfo> {
-        return accountsApi.getUserBills(1, 30).items?.map { it.toBillInfo() } ?: listOf()
+        return accountsApi.getUserBills(1, 50).items?.map { it.toBillInfo() } ?: listOf()
     }
 
     override suspend fun getUserBillsInfoFromDatabase(): List<BillInfo> {
@@ -55,6 +57,14 @@ class BillRepositoryImpl(
         return accountsApi.getBillInfo(billId).toBillInfo()
     }
 
+    override suspend fun getHideBillsIds(): List<String> {
+        return billDao.getHideBills().map { it.id }
+    }
+
+    override suspend fun addHideBill(billId: String) {
+        billDao.addHideBill(billId)
+    }
+
     override suspend fun getBillHistory(billId: String): Flow<PagingData<BillHistory>> {
         return Pager(
             config = PagingConfig(pageSize = Constants.PAGE_BILL_LIMIT),
@@ -62,8 +72,8 @@ class BillRepositoryImpl(
         ).flow
     }
 
-    override suspend fun openBill(name: String) {
-        accountsApi.openBill(AccountCreateDto(name))
+    override suspend fun openBill(name: String, currency: String) {
+        accountsApi.openBill(AccountCreateDto(name, currency))
     }
 
     override suspend fun closeBill(billId: String) {

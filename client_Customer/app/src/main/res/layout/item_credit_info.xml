@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:tint="?colorSecondary"
-        app:srcCompat="@drawable/ic_credit_purple_32dp" />
+        app:srcCompat="@drawable/ic_credit_purple_32dp"
+        app:tint="?colorSecondary" />
 
     <TextView
         android:id="@+id/balanceCreditTitle"

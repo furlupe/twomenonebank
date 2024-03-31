@@ -29,6 +29,11 @@ class HomeFragment : Fragment() {
         super.onAttach(context)
     }
 
+    override fun onStart() {
+        viewModel.getUserBillsAndCreditsInfo()
+        super.onStart()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,7 +57,12 @@ class HomeFragment : Fragment() {
                         creditsInfo = homeState.creditsInfo,
 
                         isFromDatabase = homeState.fromDatabase,
-                        onCreateBillClick = { name -> viewModel.createBill(name) },
+                        onCreateBillClick = { name, currency ->
+                            viewModel.createBill(
+                                name,
+                                currency
+                            )
+                        },
                     )
 
                     else -> {}
@@ -76,7 +86,7 @@ class HomeFragment : Fragment() {
         creditsInfo: List<CreditShortInfo>,
 
         isFromDatabase: Boolean,
-        onCreateBillClick: (String) -> Unit,
+        onCreateBillClick: (String, String) -> Unit,
     ) {
         binding.userWelcome.text = if (name == "") "Здравствуйте" else "Здравствуйте,\n$name"
         binding.creditRate.text = creditRate
@@ -87,14 +97,14 @@ class HomeFragment : Fragment() {
 
     private fun billsCardInfoContent(
         billsInfo: List<BillInfo>,
-        onCreateBillClick: (String) -> Unit,
+        onCreateBillClick: (String, String) -> Unit,
         isFromDatabase: Boolean,
     ) {
         binding.addBillButton.setOnClickListener {
             if (!isFromDatabase) {
-                showCreateBillDialog { name ->
+                showCreateBillDialog { name, currency ->
                     onCreateBillClick(
-                        name
+                        name, currency
                     )
                 }
             }
@@ -108,9 +118,9 @@ class HomeFragment : Fragment() {
 
                 binding.createNewBillCard.setOnClickListener {
                     if (!isFromDatabase) {
-                        showCreateBillDialog { name ->
+                        showCreateBillDialog { name, currency ->
                             onCreateBillClick(
-                                name
+                                name, currency
                             )
                         }
                     }
@@ -205,18 +215,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun showCreateBillDialog(
-        onCreateClick: (String) -> Unit,
+        onCreateClick: (String, String) -> Unit,
     ) {
-        val dialog = AlertDialogWithEditTextConfirmAndDismissButtons(
-            title = "Сберегательный счёт",
-            description = "Валюта: Российский рубль\nНачисление процентов: На ежедневный остаток\nВаша ставка: 12%",
-            onPositiveButtonClick = onCreateClick,
-            positiveButtonText = "Создать",
-            negativeButtonText = "Отменить"
-        )
+        val dialog = context?.let {
+            AlertDialogWithEditTextConfirmAndDismissButtons(
+                context = it,
+                title = "Сберегательный счёт",
+                description = "Валюта: Российский рубль\nНачисление процентов: На ежедневный остаток\nВаша ставка: 12%",
+                onPositiveButtonClick = onCreateClick,
+                positiveButtonText = "Создать",
+                negativeButtonText = "Отменить"
+            )
+        }
 
         val manager = parentFragmentManager
-        dialog.show(manager, "addBillAlertDialog")
+        dialog?.show(manager, "addBillAlertDialog")
     }
 
     private fun navigateToCreditsActivity(creditId: String, screenCreditType: String) {

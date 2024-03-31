@@ -3,10 +3,12 @@ package com.example.customerclient.di
 import com.example.customerclient.domain.usecases.auth.AuthorizeUseCase
 import com.example.customerclient.domain.usecases.auth.GetTokenUseCase
 import com.example.customerclient.domain.usecases.auth.SignInUseCase
+import com.example.customerclient.domain.usecases.bill.AddHideBillUseCase
 import com.example.customerclient.domain.usecases.bill.CloseBillUseCase
 import com.example.customerclient.domain.usecases.bill.DepositUseCase
 import com.example.customerclient.domain.usecases.bill.GetBillHistoryUseCase
 import com.example.customerclient.domain.usecases.bill.GetBillInfoUseCase
+import com.example.customerclient.domain.usecases.bill.GetHideBillsUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoFromDatabaseUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsInfoUseCase
 import com.example.customerclient.domain.usecases.bill.GetUserBillsPagedInfoUseCase
@@ -48,6 +50,8 @@ val useCaseModule = module {
     single<CloseBillUseCase> { CloseBillUseCase(billRepository = get()) }
     single<DepositUseCase> { DepositUseCase(transactionRepository = get()) }
     single<WithdrawUseCase> { WithdrawUseCase(transactionRepository = get()) }
+    single<GetHideBillsUseCase> { GetHideBillsUseCase(billRepository = get()) }
+    single<AddHideBillUseCase> { AddHideBillUseCase(billRepository = get()) }
 
     single<GetUserBillsInfoFromDatabaseUseCase> { GetUserBillsInfoFromDatabaseUseCase(billRepository = get()) }
     single<SaveUserBillInfoToDatabaseUseCase> { SaveUserBillInfoToDatabaseUseCase(billRepository = get()) }

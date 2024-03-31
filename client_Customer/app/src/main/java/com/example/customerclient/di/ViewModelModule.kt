@@ -24,6 +24,8 @@ val viewModelModule = module {
 
     viewModel {
         HomeViewModel(
+            addHideBillUseCase = get(),
+            getHideBillsUseCase = get(),
             getUserInfoUseCase = get(),
             getUserBillsInfoUseCase = get(),
             getUserCreditsInfoUseCase = get(),
@@ -39,7 +41,9 @@ val viewModelModule = module {
 
     viewModel {
         AllBillsViewModel(
-            getUserBillsPagedInfoUseCase = get(),
+            addHideBillUseCase = get(),
+            getHideBillsUseCase = get(),
+            getUserBillsInfoUseCase = get(),
             getUserBillsInfoFromDatabaseUseCase = get()
         )
     }
