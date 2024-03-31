@@ -1,7 +1,11 @@
-﻿using Bank.Common.Pagination;
+﻿using Bank.Common.DateTimeProvider;
+using Bank.Common.Money;
+using Bank.Common.Pagination;
+using Bank.Core.Http.Client;
 using Bank.Credit.App.Dto;
 using Bank.Credit.Domain.Credit.Events;
 using Bank.Credit.Persistance;
+using Bank.TransactionsGateway.Http.Client;
 using Microsoft.EntityFrameworkCore;
 using Credits = Bank.Credit.Domain.Credit;
 
@@ -10,29 +14,39 @@ namespace Bank.Credit.App.Services
     public class CreditService
     {
         private readonly BankCreditDbContext _dbContext;
+        private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly CoreClient _coreClient;
+        private readonly TransactionsClient _transactionsClient;
 
-        public CreditService(BankCreditDbContext dbContext)
+        public CreditService(
+            BankCreditDbContext dbContext,
+            CoreClient coreClient,
+            IDateTimeProvider dateTimeProvider,
+            TransactionsClient transactionsClient
+        )
         {
             _dbContext = dbContext;
+            _dateTimeProvider = dateTimeProvider;
+            _coreClient = coreClient;
+            _transactionsClient = transactionsClient;
         }
 
         public async Task Create(Guid userId, CreateCreditDto dto)
         {
+            var money = new Money(dto.Amount, Currency.USD);
+            var masterAccount = await _coreClient.GetMasterAccountInfo();
+            if (masterAccount.Balance < money)
+            {
+                throw new InvalidOperationException("Bank is broke: master account has less money, then requested");
+            }
+
             var user = await _dbContext.Users.SingleAsync(x => x.Id == userId);
             var tariff = await _dbContext.Tariffs.SingleAsync(x => x.Id == dto.TariffId);
 
-            await _dbContext.Credits.AddAsync(
-                new Credits.Credit(user, tariff, dto.Amount, dto.Days)
-            );
-            await _dbContext.SaveChangesAsync();
-        }
+            var credit = new Credits.Credit(user, tariff, dto.Amount, dto.Days, dto.WithdrawalAccountId , _dateTimeProvider.UtcNow);
+            user.AddCredit(credit);
 
-        public async Task Pay(Guid userId, Guid creditId)
-        {
-            var credit = await _dbContext
-                .Credits.Include(x => x.Tariff)
-                .SingleAsync(x => x.User.Id == userId && x.Id == creditId);
-            credit.Pay();
+            await _transactionsClient.WithdrawFromMasterAccount(dto.DestinationAccountId, credit.Id, money);
 
             await _dbContext.SaveChangesAsync();
         }
@@ -42,7 +56,7 @@ namespace Bank.Credit.App.Services
             var credit = await _dbContext
                 .Credits.Include(x => x.Tariff)
                 .SingleAsync(x => x.User.Id == userId && x.Id == creditId);
-            credit.PayPenalty();
+            credit.PayPenalty(_dateTimeProvider.UtcNow);
 
             await _dbContext.SaveChangesAsync();
         }

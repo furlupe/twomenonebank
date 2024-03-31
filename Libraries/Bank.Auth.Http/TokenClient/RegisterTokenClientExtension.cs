@@ -9,6 +9,7 @@ namespace Bank.Auth.Http.TokenClient
         {
             var services = builder.Services;
 
+            services.AddSingleton<TokenCache>();
             services.AddScoped<AuthorizationHandler>();
             services.AddHttpClient<AuthTokenClient>();
 

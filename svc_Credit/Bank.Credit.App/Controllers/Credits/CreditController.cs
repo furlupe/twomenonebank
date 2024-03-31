@@ -31,13 +31,6 @@ namespace Bank.Credit.App.Controllers.Credits
             return Ok();
         }
 
-        [HttpPost("{creditId}/pay")]
-        public async Task<IActionResult> Pay(Guid creditId)
-        {
-            await _creditService.Pay(User.GetId(), creditId);
-            return Ok();
-        }
-
         [HttpPost("{creditId}/pay-penalty")]
         public async Task<IActionResult> PayPenalty(Guid creditId)
         {

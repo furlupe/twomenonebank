@@ -1,4 +1,5 @@
 ﻿using Bank.Auth.Common.Options;
+using Bank.Common.DateTimeProvider;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 
@@ -7,19 +8,35 @@ namespace Bank.Auth.Http.TokenClient
     public class AuthTokenClient
     {
         private readonly HttpClient _httpClient;
+        private readonly TokenCache _cache;
+        private readonly IDateTimeProvider _dateTimeProvider;
+
         private readonly string _rootUrl;
         private readonly string _secret;
+
+        private readonly string _cacheKey = "token";
+
         public AuthTokenClient(
             HttpClient httpClient,
-            IOptions<AuthOptions> options
+            IOptions<AuthOptions> options,
+            TokenCache cache,
+            IDateTimeProvider dateTimeProvider
         )
         {
             _httpClient = httpClient;
             _rootUrl = options.Value.Host;
             _secret = options.Value.Secret;
+            _cache = cache;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<string> GetToken()
+        {
+            var cacheValueExists = _cache.TryGet(_cacheKey, _dateTimeProvider.UtcNow, out var tokenValue);
+            return cacheValueExists && tokenValue != null ? tokenValue : await RequestToken();
+        }
+
+        private async Task<string> RequestToken()
         {
             string edp = $"{_rootUrl}/connect/token";
 
@@ -38,7 +55,11 @@ namespace Bank.Auth.Http.TokenClient
                 throw new HttpRequestException(content);
             }
 
-            return JsonSerializer.Deserialize<AccessTokenDto>(content).Token;
+            var tokenDto = JsonSerializer.Deserialize<AccessTokenDto>(content) ?? throw new HttpRequestException(content);
+
+            _cache.AddOrUpdate(_cacheKey, tokenDto.Token, _dateTimeProvider.UtcNow + TimeSpan.FromSeconds(tokenDto.ExpiresIn));
+
+            return tokenDto.Token;
         }
     }
 }

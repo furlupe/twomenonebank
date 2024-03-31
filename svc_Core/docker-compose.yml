@@ -1,6 +1,7 @@
 services:
   core-app:
     container_name: twomenonebank-core-app
+    hostname: twomenonebank-core-host
     image: happypiece/twomenonebank:core
     depends_on:
       - db

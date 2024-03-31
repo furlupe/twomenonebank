@@ -1,6 +1,7 @@
 ﻿using Bank.Credit.App.Utils;
 using Bank.Credit.Domain.Credit;
 using Bank.Credit.Persistance;
+using Bank.TransactionsGateway.Http.Client;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Credit.App.BackgroundTasks
@@ -10,7 +11,9 @@ namespace Bank.Credit.App.BackgroundTasks
         private readonly BankCreditDbContext _bankCreditDbContext;
         private readonly int Gap = 100;
 
-        public CreditRatingBackgroundService(BankCreditDbContext bankCreditDbContext)
+        public CreditRatingBackgroundService(
+            BankCreditDbContext bankCreditDbContext
+        )
         {
             _bankCreditDbContext = bankCreditDbContext;
         }
