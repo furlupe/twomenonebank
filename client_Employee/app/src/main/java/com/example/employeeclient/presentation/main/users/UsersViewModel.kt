@@ -24,6 +24,11 @@ class UsersViewModel(
         loadPage(nextPage)
     }
 
+    fun reInit() {
+        _state.update { UsersState() }
+        loadPage(1)
+    }
+
     private fun loadPage(page: Int) = viewModelScope.launch {
         val pageData = getUsersPageUseCase(page)
 

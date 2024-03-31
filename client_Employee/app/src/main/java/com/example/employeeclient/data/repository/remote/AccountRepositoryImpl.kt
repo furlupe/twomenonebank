@@ -20,7 +20,15 @@ class AccountRepositoryImpl(
     }
 
     override suspend fun getAccountOperations(id: String, info: RequestAccountHistoryBodyDto): AccountEventsPageDomain {
-        return api.getAccountOperations(id, info).toDomain()
+        return api.getAccountOperations(
+            id,
+            info.name,
+            info.pageNumber,
+            info.pageSize,
+            info.sortingType,
+            info.from,
+            info.to
+        ).toDomain()
     }
 
 }

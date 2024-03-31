@@ -27,6 +27,11 @@ class UsersFragment : Fragment() {
     private lateinit var binding: FragmentUsersBinding
     private val viewModel: UsersViewModel by viewModel()
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.reInit()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -107,7 +112,12 @@ class UsersFragment : Fragment() {
 
                 if (it.currentPage != 1) adapter.removeLoadingFooter()
 
-                adapter.addAll(it.users)
+                if (it.users.isNotEmpty() && it.currentPage == 1) {
+                    adapter.setUsers(it.users.toMutableList())
+                } else {
+                    adapter.addAll(it.users)
+                }
+
                 if (!it.isLastPage && it.users.isNotEmpty()) adapter.addLoadingFooter()
             }
         }

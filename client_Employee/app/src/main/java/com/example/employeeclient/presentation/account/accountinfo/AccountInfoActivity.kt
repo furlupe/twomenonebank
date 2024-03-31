@@ -1,10 +1,8 @@
 package com.example.employeeclient.presentation.account.accountinfo
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import androidx.viewpager2.widget.ViewPager2
-import com.example.employeeclient.R
 import com.example.employeeclient.common.ThemeChangeActivity
 import com.example.employeeclient.databinding.ActivityAccountInfoBinding
 import com.example.employeeclient.presentation.account.accountinfo.util.AccountInfoListener

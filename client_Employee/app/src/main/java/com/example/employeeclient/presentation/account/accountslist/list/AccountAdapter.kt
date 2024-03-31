@@ -59,7 +59,7 @@ class AccountAdapter(
                 userViewHolder.name.text = account.name
                 userViewHolder.balance.text = buildString {
                     append("Balance: ")
-                    append(account.balance.toString())
+                    append(account.balance.amount.toString())
                     append(" ")
                     append(account.balance.currency.symbol)
                 }

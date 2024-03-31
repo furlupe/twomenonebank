@@ -1,6 +1,7 @@
 package com.example.employeeclient.presentation.main
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.employeeclient.R
@@ -22,5 +23,10 @@ class MainActivity : ThemeChangeActivity() {
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         navView.setupWithNavController(navController)
+    }
+
+    fun recreateFragment(fragment : Fragment){
+        supportFragmentManager.beginTransaction().detach(fragment).commitNow()
+        supportFragmentManager.beginTransaction().attach(fragment).commitNow()
     }
 }

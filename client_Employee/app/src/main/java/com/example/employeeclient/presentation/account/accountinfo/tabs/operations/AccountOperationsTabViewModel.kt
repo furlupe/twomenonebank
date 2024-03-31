@@ -61,6 +61,7 @@ class AccountOperationsTabViewModel(
                 )
             }
         } catch (exception: Exception) {
+            Log.d("MY", exception.message.toString())
             if (exception.message == "HTTP 404 Not Found") {
                 _state.update { prevState ->
                     prevState.copy(

@@ -74,17 +74,19 @@ class AccountOperationTabAdapter(
 
             TRANSFER -> {
                 val operationViewHolder = holder as TransferViewHolder
+                val transfer = operation.transfer
+
                 operationViewHolder.event.text = operation.eventType.descr
                 operationViewHolder.sourceAmount.text = buildString {
-                    append(operation.balanceChange?.nativeValue?.amount)
-                    append(operation.balanceChange?.nativeValue?.currency)
+                    append(transfer?.source?.nativeValue?.amount)
+                    append(operation.transfer?.source?.nativeValue?.currency?.symbol)
                 }
-                operationViewHolder.sourceAmount.text = buildString {
-                    append(operation.balanceChange?.foreignValue?.amount)
-                    append(operation.balanceChange?.foreignValue?.currency)
+                operationViewHolder.targetAmount.text = buildString {
+                    append(transfer?.target?.nativeValue?.amount)
+                    append(transfer?.target?.nativeValue?.currency?.symbol)
                 }
-                operationViewHolder.source.text = operation.transfer?.source?.accountId
-                operationViewHolder.target.text = operation.transfer?.target?.accountId
+//                operationViewHolder.source.text = operation.transfer?.source?.accountId
+//                operationViewHolder.target.text = operation.transfer?.target?.accountId
                 operationViewHolder.date.text = operation.resolvedAt
             }
 

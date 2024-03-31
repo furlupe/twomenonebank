@@ -6,6 +6,5 @@ data class BalanceChangeDto(
     val nativeValue: BalanceDto,
     val foreignValue: BalanceDto,
     val accountId: String,
-    val eventType: String,
-    val creditPayment: CreditPaymentDto?
+    val eventType: String?
 )

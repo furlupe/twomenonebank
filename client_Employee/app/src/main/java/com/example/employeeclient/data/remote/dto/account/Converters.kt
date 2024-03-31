@@ -38,8 +38,7 @@ fun BalanceChangeDto.toDomain() = BalanceChangeDomain(
     nativeValue = nativeValue.toDomain(),
     foreignValue = foreignValue.toDomain(),
     accountId = accountId,
-    eventType = BalanceChangeType.valueOf(eventType),
-    creditId = creditPayment?.creditId
+    eventType = eventType?.let { BalanceChangeType.valueOf(it) } ?: BalanceChangeType.Deposit,
 )
 
 fun TransferDto.toDomain() = TransferDomain(
