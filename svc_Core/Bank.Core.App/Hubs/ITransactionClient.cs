@@ -1,4 +1,4 @@
-﻿using Bank.Core.App.Dto.Events;
+﻿using Bank.Core.Http.Dto.Events;
 
 namespace Bank.Core.App.Hubs;
 

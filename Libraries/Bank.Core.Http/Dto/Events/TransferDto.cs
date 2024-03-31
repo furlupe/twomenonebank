@@ -1,6 +1,6 @@
 ﻿using Bank.Core.Domain.Events;
 
-namespace Bank.Core.App.Dto.Events;
+namespace Bank.Core.Http.Dto.Events;
 
 public class TransferDto
 {

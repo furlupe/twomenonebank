@@ -14,7 +14,7 @@ namespace Bank.TransactionsGateway.App.Controllers;
 public class CreditTransactionsController(ITransactionService transactionService) : ControllerBase
 {
     [HttpPost("credit/reclaim/{targetId}")]
-    //[CalledByService]
+    [CalledByService]
     public async Task Reclaim([FromRoute] Guid targetId, [FromBody] CreditTransferDto transaction)
     {
         await transactionService.Dispatch(
@@ -36,7 +36,7 @@ public class CreditTransactionsController(ITransactionService transactionService
     }
 
     [HttpPost("credit/give/{targetId}")]
-    //[CalledByService]
+    [CalledByService]
     public async Task Give([FromRoute] Guid targetId, [FromBody] CreditTransferDto transaction)
     {
         await transactionService.Dispatch(

@@ -32,8 +32,17 @@ public partial class CoreDbContext : DbContext
         modelBuilder.Entity<Account>(a =>
         {
             a.HasOne(x => x.User).WithMany(x => x.Accounts).HasForeignKey(x => x.UserId);
+            a.Navigation(x => x.User).AutoInclude();
             a.HasIndex(x => new { x.Name, x.UserId }).IsUnique();
             a.HasMany(x => x.Events).WithMany();
+            a.Property(x => x.ClosedAt).IsRequired(false);
+        });
+
+        modelBuilder.Entity<User>(u =>
+        {
+            u.HasOne(x => x.DefaultTransferAccount)
+                .WithOne()
+                .HasForeignKey<User>(x => x.DefaultTransferAccountId);
         });
 
         modelBuilder.Entity<AccountEvent>(a =>

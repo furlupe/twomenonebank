@@ -1,6 +1,6 @@
 ﻿using Bank.Common.Pagination;
-using Bank.Core.App.Dto.Pagination;
 using Bank.Core.Domain.Events;
+using Bank.Core.Http.Dto.Pagination;
 
 namespace Bank.Core.App.Services.Contracts;
 

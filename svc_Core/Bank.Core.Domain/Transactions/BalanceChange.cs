@@ -1,5 +1,7 @@
 ﻿using Bank.Common.Money;
 using Bank.Common.Money.Converter;
+using Bank.Common.Utils;
+using Bank.Core.Domain.Events;
 
 namespace Bank.Core.Domain.Transactions;
 
@@ -25,4 +27,11 @@ public abstract class BalanceChange(
 
     protected static string FormatValues(Money nativeValue, Money foreignValue) =>
         nativeValue == foreignValue ? $"{foreignValue}" : $"{foreignValue} ({nativeValue})";
+
+    protected void ValidateTargetOpen() =>
+        Validation.Check(
+            ExceptionConstants.MsgInvalidAction,
+            !Target.IsClosed,
+            "Target account is closed."
+        );
 }

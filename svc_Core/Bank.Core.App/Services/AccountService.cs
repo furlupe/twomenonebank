@@ -1,17 +1,22 @@
-﻿using Bank.Common.Pagination;
+﻿using Bank.Common.DateTimeProvider;
+using Bank.Common.Pagination;
 using Bank.Common.Utils;
-using Bank.Core.App.Dto;
-using Bank.Core.App.Dto.Pagination;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.App.Utils;
 using Bank.Core.Domain;
+using Bank.Core.Http.Dto;
+using Bank.Core.Http.Dto.Pagination;
 using Bank.Core.Persistence;
 using Bank.Exceptions.WebApiException;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Core.App.Services;
 
-public class AccountService(CoreDbContext db, IUserService userService) : IAccountService
+public class AccountService(
+    CoreDbContext db,
+    IUserService userService,
+    IDateTimeProvider timeProvider
+) : IAccountService
 {
     public Task<Account> GetAccount(Guid id) => db.Accounts.SingleOrThrowAsync(x => x.Id == id);
 
@@ -44,18 +49,40 @@ public class AccountService(CoreDbContext db, IUserService userService) : IAccou
     public async Task CloseAccount(Guid id)
     {
         var account = await db.Accounts.SingleOrThrowAsync(x => x.Id == id);
-        account.ValidateClose();
+        account.Close(timeProvider.UtcNow);
+        await db.SaveChangesAsync();
+    }
 
-        db.Remove(account);
+    public async Task SetDefaultAccount(Guid userId, Guid accountId)
+    {
+        var user = await userService.GetUser(userId);
+        var account = await GetAccountIfOwnedBy(accountId, userId);
+        user.SetDefaultTransferAccount(account);
         await db.SaveChangesAsync();
     }
 
     public async Task<bool> IsAccountOwnedBy(Guid accountId, Guid userId) =>
         await db.Accounts.AnyAsync(x => x.Id == accountId && x.UserId == userId);
 
+    public async Task<Account> GetAccountIfOwnedBy(Guid accountId, Guid userId)
+    {
+        var account = await GetAccount(accountId);
+        if (account.UserId != userId)
+            throw NotFoundException.ForModel<Account>();
+        return account;
+    }
+
+    public async Task CheckAccountOwnedBy(Guid accountId, Guid userId)
+    {
+        if (!await db.Accounts.AnyAsync(x => x.Id == accountId && x.UserId == userId))
+            throw NotFoundException.ForModel<Account>();
+    }
+
     public async Task<Account> GetUserDefaultAccount(Guid userId)
     {
-        var account = await db.Accounts.FirstOrDefaultAsync(x => x.UserId == userId);
+        var account = await db.Accounts.SingleOrDefaultAsync(x =>
+            x.UserId == userId && x.User.DefaultTransferAccountId == x.Id
+        );
         CheckDefaultAccount(account);
         return account!;
     }

@@ -1,6 +1,6 @@
 ﻿using Bank.Common.Pagination;
 
-namespace Bank.Core.App.Dto.Pagination;
+namespace Bank.Core.Http.Dto.Pagination;
 
 public class TransactionQueryParameters : QueryParameters
 {

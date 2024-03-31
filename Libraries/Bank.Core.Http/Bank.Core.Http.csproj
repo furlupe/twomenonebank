@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\svc_Core\Bank.Core.Domain\Bank.Core.Domain.csproj" />
+    <ProjectReference Include="..\Bank.Attributes\Bank.Attributes.csproj" />
+    <ProjectReference Include="..\Bank.Common\Bank.Common.csproj" />
+    <ProjectReference Include="..\Bank.Core.Common\Bank.Core.Common.csproj" />
+    <ProjectReference Include="..\Bank.Exceptions\Bank.Exceptions.csproj" />
+  </ItemGroup>
+
+</Project>

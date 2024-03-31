@@ -1,8 +1,8 @@
 ﻿using Bank.Common.Pagination;
-using Bank.Core.App.Dto.Pagination;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.App.Utils;
 using Bank.Core.Domain.Events;
+using Bank.Core.Http.Dto.Pagination;
 using Bank.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 

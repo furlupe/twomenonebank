@@ -22,7 +22,7 @@ public static class PaginationUtils
             throw new NotFoundException(MsgPageNotFound);
 
         if (sortingAttributeAccessor != null)
-            query.SortBy(sortingAttributeAccessor, queryParameters.SortingType);
+            query = query.SortBy(sortingAttributeAccessor, queryParameters.SortingType);
 
         var queryResult = await query.TakePage(queryParameters).ToListAsync();
         return queryResult.ToPage(mapper, queryParameters, totalCount);
