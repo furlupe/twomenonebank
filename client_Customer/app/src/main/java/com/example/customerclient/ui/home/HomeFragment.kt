@@ -46,10 +46,12 @@ class HomeFragment : Fragment() {
                 when (homeState) {
                     is HomeState.Content -> homeFragmentContent(
                         name = homeState.userName,
+                        creditRate = homeState.userCreditRate,
+
                         billsInfo = homeState.billsInfo,
                         creditsInfo = homeState.creditsInfo,
-                        isFromDatabase = homeState.fromDatabase,
 
+                        isFromDatabase = homeState.fromDatabase,
                         onCreateBillClick = { name -> viewModel.createBill(name) },
                     )
 
@@ -68,12 +70,16 @@ class HomeFragment : Fragment() {
 
     private fun homeFragmentContent(
         name: String,
+        creditRate: String,
+
         billsInfo: List<BillInfo>,
         creditsInfo: List<CreditShortInfo>,
+
         isFromDatabase: Boolean,
         onCreateBillClick: (String) -> Unit,
     ) {
         binding.userWelcome.text = if (name == "") "Здравствуйте" else "Здравствуйте,\n$name"
+        binding.creditRate.text = creditRate
 
         billsCardInfoContent(billsInfo, onCreateBillClick, isFromDatabase)
         creditsCardInfoContent(creditsInfo, isFromDatabase)

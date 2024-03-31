@@ -10,6 +10,7 @@ import com.example.customerclient.R
 import com.example.customerclient.databinding.ItemHistoryBillInfoBinding
 import com.example.customerclient.ui.bill.info.BillHistory
 import com.example.customerclient.ui.bill.info.HistoryOperationType
+import com.example.customerclient.ui.bill.info.OperationType
 
 class BillsHistoryRecyclerAdapter :
     PagingDataAdapter<BillHistory, BillsHistoryRecyclerAdapter.BillsHistoryViewHolder>(
@@ -36,7 +37,7 @@ class BillsHistoryRecyclerAdapter :
 
         if (item != null) {
             holder.historyIcon.setImageResource(
-                when (item.type) {
+                when (item.eventType) {
                     HistoryOperationType.WITHDRAW -> R.drawable.ic_outline_remove_32dp
                     HistoryOperationType.TOP_UP -> R.drawable.ic_round_add_32dp
                 }
@@ -44,14 +45,14 @@ class BillsHistoryRecyclerAdapter :
             holder.moneyHistoryTitle.text = item.amount
 
             holder.moneyHistoryTitle.text =
-                when (item.type) {
-                    HistoryOperationType.WITHDRAW -> "- ${item.amount} ₽"
-                    HistoryOperationType.TOP_UP -> "+ ${item.amount} ₽"
+                when (item.eventType) {
+                    HistoryOperationType.WITHDRAW -> "- ${item.amount}"
+                    HistoryOperationType.TOP_UP -> "+ ${item.amount}"
                 }
 
 
             holder.moneyHistoryTitle.setTextColor(
-                when (item.type) {
+                when (item.eventType) {
                     HistoryOperationType.WITHDRAW -> ContextCompat.getColor(
                         holder.itemView.context,
                         R.color.red
@@ -64,8 +65,20 @@ class BillsHistoryRecyclerAdapter :
                 }
             )
             holder.transferHistoryTitle.text = when (item.type) {
-                HistoryOperationType.WITHDRAW -> "Снятие со счёта"
-                HistoryOperationType.TOP_UP -> "Перевод на счёт"
+                OperationType.TRANSFER -> {
+                    when (item.eventType) {
+                        HistoryOperationType.WITHDRAW -> "Перевод на другой счет"
+                        HistoryOperationType.TOP_UP -> "Пополнение счёта с другого"
+                    }
+                }
+
+                OperationType.BALANCE_CHANGE -> {
+                    when (item.eventType) {
+                        HistoryOperationType.WITHDRAW -> "Снятие со счёта"
+                        HistoryOperationType.TOP_UP -> "Пополнение счёта"
+                    }
+                }
+
             }
 
             holder.date.text = item.date

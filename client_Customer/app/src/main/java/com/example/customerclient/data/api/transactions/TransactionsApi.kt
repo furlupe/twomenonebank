@@ -12,7 +12,7 @@ interface TransactionsApi {
 
     @POST("accounts/{sourceId}/transfer/p2p/{transfereeIdentifier}")
     suspend fun p2pTransaction(
-        @Path("sourceId ") sourceId: String,
+        @Path("sourceId") sourceId: String,
         @Path("transfereeIdentifier") transfereeIdentifier: String,
         @Body transferBody: TransferBodyDto
     )

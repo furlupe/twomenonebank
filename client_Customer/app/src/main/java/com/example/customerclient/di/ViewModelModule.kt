@@ -18,7 +18,7 @@ val viewModelModule = module {
     includes(appModule)
     includes(useCaseModule)
 
-    viewModel { MainViewModel(signInUseCase = get()) }
+    viewModel { MainViewModel(signInUseCase = get(), getUserThemeUseCase = get()) }
 
     viewModel { SignInViewModel(authorizeUseCase = get()) }
 
@@ -28,6 +28,7 @@ val viewModelModule = module {
             getUserBillsInfoUseCase = get(),
             getUserCreditsInfoUseCase = get(),
             openBillUseCase = get(),
+            getUserCreditRateUseCase = get(),
             saveUserBillInfoToDatabaseUseCase = get(),
             getUserBillsInfoFromDatabaseUseCase = get(),
             getUserCreditsInfoFromDatabaseUseCase = get(),

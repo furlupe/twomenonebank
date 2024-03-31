@@ -5,6 +5,7 @@ import com.example.customerclient.data.api.dto.CreditDto
 import com.example.customerclient.data.api.dto.CreditOperationPageDto
 import com.example.customerclient.data.api.dto.CreditsPageDto
 import com.example.customerclient.data.api.dto.TariffsPageDto
+import com.example.customerclient.data.api.dto.UserCreditDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -12,6 +13,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CreditsApi {
+
+    // - Credit
     @POST("api/Credit")
     suspend fun createCredit(@Body createCreditBody: CreateCreditDto)
 
@@ -35,6 +38,11 @@ interface CreditsApi {
     ): CreditOperationPageDto
 
 
+    // - Tariff
     @GET("api/manage/Tariff")
     suspend fun getCreditsTariffs(@Query("page") page: Int): TariffsPageDto
+
+    // - User
+    @GET("api/User/me")
+    suspend fun getUserCreditInfo(): UserCreditDto
 }

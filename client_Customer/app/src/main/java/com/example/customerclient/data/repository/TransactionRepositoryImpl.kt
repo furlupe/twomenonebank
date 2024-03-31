@@ -1,5 +1,6 @@
 package com.example.customerclient.data.repository
 
+import android.util.Log
 import com.example.customerclient.data.api.dto.DepositDto
 import com.example.customerclient.data.api.dto.MoneyDto
 import com.example.customerclient.data.api.dto.TransferBodyDto
@@ -17,6 +18,7 @@ class TransactionRepositoryImpl(
         currency: String,
         message: String?
     ) {
+        Log.d("p2pTransaction", "We in p2p")
         val money = MoneyDto(amount, "AFN")
         transactionsApi.p2pTransaction(
             sourceId,
@@ -40,11 +42,11 @@ class TransactionRepositoryImpl(
         )
     }
 
-    override suspend fun deposit(billId: String, amount: Int) {
-        transactionsApi.deposit(billId, DepositDto(amount))
+    override suspend fun deposit(billId: String, amount: Double) {
+        transactionsApi.deposit(billId, DepositDto(MoneyDto(amount, "AFN")))
     }
 
-    override suspend fun withdraw(billId: String, amount: Int) {
-        transactionsApi.withdraw(billId, WithdrawDto(amount))
+    override suspend fun withdraw(billId: String, amount: Double) {
+        transactionsApi.withdraw(billId, WithdrawDto(MoneyDto(amount, "AFN")))
     }
 }

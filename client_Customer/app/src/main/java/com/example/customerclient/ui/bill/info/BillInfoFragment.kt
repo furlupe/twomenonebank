@@ -89,7 +89,7 @@ class BillInfoFragment : Fragment() {
         }
 
         // Количество денег на счету
-        binding.moneyTitle.text = "$moneyOnBill ₽"
+        binding.moneyTitle.text = moneyOnBill
 
         // Кнопка "Пополнить счёт"
         binding.topUpButton.setOnClickListener {
