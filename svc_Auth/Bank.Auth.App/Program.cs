@@ -2,6 +2,7 @@ using System.Reflection;
 using Bank.Auth.App.Setup.Extensions;
 using Bank.Auth.Common.Extensions;
 using Bank.Auth.Http.AuthClient;
+using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,13 @@ builder.Services.AddMvc(o => o.EnableEndpointRouting = false);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o => o.AddAuth().UseXmlComments(Assembly.GetExecutingAssembly()));
 
-builder.AddConfiguration().AddAuth().AddPersistance().AddAuthClient();
+builder
+    .AddConfiguration()
+    .AddAuth()
+    .AddPersistance()
+    .AddAuthClient();
+
+builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 var app = builder.Build();
 await app.UsePersistance();
