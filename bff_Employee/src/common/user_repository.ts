@@ -27,10 +27,19 @@ export class UserRepository {
         // in order to create DB you have to be connected to some DB (e.g., default 'postgres')
         const oneUseClient = new Client({ connectionString: `${this._baseDbUrl}/${process.env.DbConfiguration_DefaultDbName}` });
 
-        const createDbOperation = async (client: Client) =>
-            await client.query(`\
-                SELECT 'CREATE DATABASE ${process.env.DbConfiguration_BffDbName}'\
+        const createDbOperation = async (client: Client) => {
+            let result = await client.query(`\
+                SELECT '1'\
                 WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${process.env.DbConfiguration_BffDbName}')`);
+
+            const baseNotExists = Boolean(Object.values(result.rows[0])[0]);
+
+            if (baseNotExists) {
+                result = await client.query(`CREATE DATABASE ${process.env.DbConfiguration_BffDbName}`);
+            }
+
+            return result;
+        }
         await this.performOperationWithClient(createDbOperation, oneUseClient);
 
         const createTableOperation = async (client: Client) =>
