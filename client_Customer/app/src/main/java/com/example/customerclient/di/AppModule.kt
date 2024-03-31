@@ -13,13 +13,16 @@ import com.example.customerclient.data.api.transactions.TransactionsApi
 import com.example.customerclient.data.remote.database.BillDatabase
 import com.example.customerclient.data.remote.database.CreditDatabase
 import com.example.customerclient.data.repository.AuthRepositoryImpl
+import com.example.customerclient.data.repository.BillHistoryWebSocketRepositoryImpl
 import com.example.customerclient.data.repository.BillRepositoryImpl
 import com.example.customerclient.data.repository.CreditRepositoryImpl
 import com.example.customerclient.data.repository.SharedPreferencesRepositoryImpl
 import com.example.customerclient.data.repository.TransactionRepositoryImpl
 import com.example.customerclient.data.repository.UserRepositoryImpl
 import com.example.customerclient.data.storage.SharedPreferencesStorage
+import com.example.customerclient.data.websocket.BillHistoryWebSocket
 import com.example.customerclient.domain.repositories.AuthRepository
+import com.example.customerclient.domain.repositories.BillHistoryWebSocketRepository
 import com.example.customerclient.domain.repositories.BillRepository
 import com.example.customerclient.domain.repositories.CreditRepository
 import com.example.customerclient.domain.repositories.TransactionRepository
@@ -165,6 +168,8 @@ val appModule = module {
         BillRepositoryImpl(accountsApi = get(), billDao = get())
     }
 
+    single<BillHistoryWebSocket> { BillHistoryWebSocket() }
+
     // - Transactions
     single<TransactionsApi> {
         Retrofit.Builder()
@@ -182,5 +187,8 @@ val appModule = module {
     }
 
     single<TransactionRepository> { TransactionRepositoryImpl(transactionsApi = get()) }
+
+    // - WebSocket
+    single<BillHistoryWebSocketRepository> { BillHistoryWebSocketRepositoryImpl(billHistoryWebSocket = get()) }
 
 }

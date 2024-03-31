@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="programming_languages">
+        <item>AFN</item>
+        <item>EUR</item>
+        <item>IQD</item>
+        <item>NGN</item>
+        <item>RUB</item>
+        <item>USD</item>
+    </string-array>
+</resources>

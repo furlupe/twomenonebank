@@ -5,11 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.customerclient.data.api.dto.toBillHistory
 import com.example.customerclient.domain.usecases.bill.CloseBillUseCase
 import com.example.customerclient.domain.usecases.bill.DepositUseCase
 import com.example.customerclient.domain.usecases.bill.GetBillHistoryUseCase
 import com.example.customerclient.domain.usecases.bill.GetBillInfoUseCase
 import com.example.customerclient.domain.usecases.bill.WithdrawUseCase
+import com.example.customerclient.domain.usecases.websocket.CloseWebSocketUseCase
+import com.example.customerclient.domain.usecases.websocket.OpenWebSocketUseCase
 import com.example.customerclient.ui.home.BillInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +25,10 @@ class BillInfoViewModel(
     handle: SavedStateHandle,
     private val getBillInfoUseCase: GetBillInfoUseCase,
     private val getBillHistoryUseCase: GetBillHistoryUseCase,
+
+    private val openWebSocketUseCase: OpenWebSocketUseCase,
+    private val closeWebSocketUseCase: CloseWebSocketUseCase,
+
     private val depositUseCase: DepositUseCase,
     private val withdrawUseCase: WithdrawUseCase,
     private val closeBillUseCase: CloseBillUseCase
@@ -42,12 +49,29 @@ class BillInfoViewModel(
         viewModelScope.launch { getBillInfo() }
     }
 
+    fun openWebSocket() {
+        viewModelScope.launch {
+            try {
+                billId?.let {
+                    openWebSocketUseCase(billId) { data ->
+                        _billsHistoryState.update { PagingData.from(data.map { it.toBillHistory() }) }
+                    }
+                }
+            } catch (e: Throwable) {
+            }
+        }
+    }
+
+    fun closeWebSocket() {
+        closeWebSocketUseCase()
+    }
+
     private suspend fun getBillInfo() {
         billId?.let {
             try {
                 val billInfo = getBillInfoUseCase(billId)
                 _uiState.update {
-                    BillInfoState.Content(info = billInfo)
+                    BillInfoState.Content(info = billInfo.copy(id = billId))
                 }
             } catch (e: Exception) {
                 e.message?.let {
@@ -80,7 +104,7 @@ class BillInfoViewModel(
                 try {
                     depositUseCase(billId, amount.toDouble())
                     getBillInfo()
-                    getBillsHistory()
+                    //getBillsHistory()
                 } catch (e: Exception) {
                     _uiState.update { BillInfoState.Error(e.message ?: "") }
                 }
@@ -94,7 +118,7 @@ class BillInfoViewModel(
                 try {
                     withdrawUseCase(billId, amount.toDouble())
                     getBillInfo()
-                    getBillsHistory()
+                    //getBillsHistory()
                 } catch (e: Exception) {
                     _uiState.update { BillInfoState.Error(e.message ?: "") }
                 }

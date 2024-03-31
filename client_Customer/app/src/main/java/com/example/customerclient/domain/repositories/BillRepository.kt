@@ -15,10 +15,14 @@ interface BillRepository {
 
     suspend fun getBillInfo(billId: String): BillInfo
 
+    suspend fun getHideBillsIds(): List<String>
+
+    suspend fun addHideBill(billId: String)
+
 
     suspend fun getBillHistory(billId: String): Flow<PagingData<BillHistory>>
 
-    suspend fun openBill(name: String)
+    suspend fun openBill(name: String, currency: String)
 
     suspend fun closeBill(billId: String)
 }
