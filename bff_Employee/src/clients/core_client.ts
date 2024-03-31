@@ -7,7 +7,7 @@ import TYPES from "../types";
 export class CoreClient {
     private readonly _axios: AxiosInstance;
 
-    constructor(@inject(TYPES.CoreClient) axiosProvider: AxiosProvider) {
+    constructor(@inject(TYPES.AxiosProvider) axiosProvider: AxiosProvider) {
         this._axios = axiosProvider.core;
     }
 

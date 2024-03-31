@@ -8,7 +8,7 @@ import { HostsOptions } from "./common/hosts_options";
 import { AuthClient } from "./clients/auth_client";
 import { BaseRouter } from "./routers/base_router";
 import { AuthRouter } from "./routers/impl/auth_router";
-import { UserRepository } from "./common/user_repository";
+import { User, UserRepository } from "./common/user_repository";
 import { CreditClient } from "./clients/credit_client";
 import { CreditRouter } from "./routers/impl/credit_router";
 import { CoreClient } from "./clients/core_client";
@@ -44,11 +44,26 @@ app.use((request, _response, next) => {
     const store = diContainer.get<StoreProvider>(TYPES.StoreProvider).get();
     store.run({ authorizationHeader: request.headers.authorization }, next)
 });
+app.use((request, _response, next) => {
+    const authHeader = request.headers.authorization;
+    const token = authHeader.split(' ')[1];
+    const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+
+    const id = decoded['sub'];
+    const user = new User(id);
+
+    const repo = diContainer.get<UserRepository>(TYPES.UserRepository);
+    repo.create(user).then(next);
+});
 
 // - Endpoints
 app.use('/', diContainer.get<BaseRouter>(TYPES.AuthRouter).create());
 app.use('/', diContainer.get<BaseRouter>(TYPES.CreditRouter).create());
 app.use('/', diContainer.get<BaseRouter>(TYPES.CoreRouter).create());
+
+app.get('/test', (req, res) => {
+    return res.send(200);
+});
 
 // - Start
 diContainer.get<UserRepository>(TYPES.UserRepository)

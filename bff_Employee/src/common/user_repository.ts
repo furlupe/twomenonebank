@@ -32,6 +32,8 @@ export class UserRepository {
                 SELECT '1'\
                 WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${process.env.DbConfiguration_BffDbName}')`);
 
+            if (result.rows.length == 0) return result;
+
             const baseNotExists = Boolean(Object.values(result.rows[0])[0]);
 
             if (baseNotExists) {
@@ -56,7 +58,7 @@ export class UserRepository {
 
     public async create(user: User) {
         const operation = async (client: Client) =>
-            await client.query('INSERT INTO Users (Id, DarkThemeEnabled) VALUES ($1, $2)', [user.Id, `${user.DarkThemeEnabled}`]);
+        await client.query('INSERT INTO Users (Id, DarkThemeEnabled) VALUES ($1, $2) ON CONFLICT (Id) DO NOTHING', [user.Id, `${user.DarkThemeEnabled}`]);
 
         await this.performOperation(operation);
     }

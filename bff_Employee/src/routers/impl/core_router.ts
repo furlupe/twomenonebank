@@ -6,7 +6,7 @@ import { CoreClient } from "../../clients/core_client";
 
 @injectable()
 export class CoreRouter extends BaseRouter {
-    @inject(TYPES.CoreRouter) private readonly _client: CoreClient;
+    @inject(TYPES.CoreClient) private readonly _client: CoreClient;
     
     protected mapRouterEndpoints(router: Router): void {
         router.get('/manage/accounts/:accountId', async (req, res) => {
