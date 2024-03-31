@@ -1,5 +1,6 @@
 ﻿using Bank.Auth.Common.Attributes;
 using Bank.Auth.Common.Extensions;
+using Bank.Auth.Common.Policies;
 using Bank.Credit.App.Dto;
 using Bank.Credit.App.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +20,7 @@ namespace Bank.Credit.App.Controllers
             _userService = userService;
         }
 
-        [HttpGet("me"), CalledByHuman]
+        [HttpGet("me"), CalledByUser, Authorize(Policy = Policies.CreateUserIfNeeded)]
         public Task<UserDto> GetMe() => _userService.GetUser(User.GetId());
 
         [HttpGet("{userId}"), CalledByStaff]
