@@ -1,5 +1,3 @@
-version: "3.4"
-
 services:
   transactions-gateway-app:
     container_name: twomenonebank-transactions-gateway-app

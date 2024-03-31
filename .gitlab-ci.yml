@@ -107,6 +107,7 @@ deploy:
   script:
     - echo 'Deploying services...'
     - docker compose pull
+    - docker compose stop
     - docker compose create
     - docker cp $CORE_APPSETTINGS twomenonebank-core-app:/app/appsettings.Local.json
     - docker cp $AUTH_APPSETTINGS twomenonebank-auth-app:/app/appsettings.Local.json

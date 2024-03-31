@@ -1,6 +1,7 @@
 ﻿using Bank.Attributes.Attributes;
 using Bank.Attributes.Utils;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bank.Common.Extensions;
@@ -11,7 +12,7 @@ public static class OptionsExtensions
         where T : class
     {
         builder.Services.Configure<T>(
-            builder.Configuration.GetSection(
+            builder.Configuration.GetRequiredSection(
                 typeof(T).GetAttribute<ConfigurationModelAttribute>().SectionKey
             )
         );
@@ -24,7 +25,7 @@ public static class OptionsExtensions
     )
         where T : class
     {
-        builder.Services.Configure<T>(builder.Configuration.GetSection(sectionKey));
+        builder.Services.Configure<T>(builder.Configuration.GetRequiredSection(sectionKey));
         return builder;
     }
 }

@@ -1,5 +1,3 @@
-version: "3.4"
-
 services:
   credit-app:
     container_name: twomenonebank-credit-app

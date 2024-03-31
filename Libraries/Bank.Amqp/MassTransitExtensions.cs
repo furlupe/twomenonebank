@@ -24,7 +24,7 @@ public static class MassTransitExtensions
             configure?.Invoke(x);
         });
 
-        builder.BindOptions<RabbitMqTransportOptions>("RabbitMqTransportOptions");
+        builder.BindOptions<RabbitMqTransportOptions>("RabbitMq");
 
         return builder;
     }
