@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Bank.Core.Domain;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,7 +31,20 @@ public static class PersistenceSetup
             using (var db = scope.ServiceProvider.GetRequiredService<CoreDbContext>())
             {
                 await db.Database.MigrateAsync();
+                await db.Seed();
+                await db.SaveChangesAsync();
             }
         }
+    }
+
+    private static async Task Seed(this CoreDbContext db)
+    {
+        if (await db.Accounts.AnyAsync(x => x.IsMaster))
+            return;
+
+        var masterUser = new User(Guid.Empty);
+        masterUser.OpenNewAccount("master", Common.Money.Currency.USD);
+        masterUser.Accounts.Single().IsMaster = true;
+        db.Users.Add(masterUser);
     }
 }

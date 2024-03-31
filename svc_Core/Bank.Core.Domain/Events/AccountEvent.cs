@@ -15,13 +15,12 @@ public class AccountEvent : DomainEvent
         BalanceChange? balanceChange = null,
         Transfer? transfer = null
     )
+        : base(now, state)
     {
         Comment = comment;
         EventType = eventType;
         BalanceChange = balanceChange;
         Transfer = transfer;
-        ResolvedAt = now;
-        State = state;
     }
 
     protected AccountEvent() { }

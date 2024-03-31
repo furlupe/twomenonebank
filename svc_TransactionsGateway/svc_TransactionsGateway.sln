@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.TransactionsGateway.Http", "..\Libraries\Bank.TransactionsGateway.Http\Bank.TransactionsGateway.Http.csproj", "{565F3681-BFB5-4E05-8C4F-1720EE691653}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{81285112-E70A-4867-88EE-B31F30865B57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81285112-E70A-4867-88EE-B31F30865B57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81285112-E70A-4867-88EE-B31F30865B57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{565F3681-BFB5-4E05-8C4F-1720EE691653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{565F3681-BFB5-4E05-8C4F-1720EE691653}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{565F3681-BFB5-4E05-8C4F-1720EE691653}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{565F3681-BFB5-4E05-8C4F-1720EE691653}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{AA3D1178-677E-44EB-A0F1-C878A5E738C7} = {7AE6116B-41A7-4249-B3E4-94883F220A4A}
 		{6F507434-42AF-4E00-A88C-9AED807E11C8} = {7AE6116B-41A7-4249-B3E4-94883F220A4A}
 		{81285112-E70A-4867-88EE-B31F30865B57} = {7AE6116B-41A7-4249-B3E4-94883F220A4A}
+		{565F3681-BFB5-4E05-8C4F-1720EE691653} = {7AE6116B-41A7-4249-B3E4-94883F220A4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D0A227AD-5147-4223-8963-9F26AEC35A13}

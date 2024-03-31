@@ -1,4 +1,5 @@
-﻿using Bank.Auth.Common.Extensions;
+﻿using Bank.Auth.Common.Attributes;
+using Bank.Auth.Common.Extensions;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.Domain;
 using Bank.Exceptions.WebApiException;
@@ -7,9 +8,9 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Bank.Core.App.Hubs;
 
+[Authorize]
 public class TransactionHub(IAccountService accountService) : Hub<ITransactionClient>
 {
-    [Authorize]
     public async Task SubscribeToAccountTransactions(Guid id)
     {
         if (await accountService.IsAccountOwnedBy(id, Context.User!.GetId()))
@@ -18,7 +19,7 @@ public class TransactionHub(IAccountService accountService) : Hub<ITransactionCl
         await Subscribe(id);
     }
 
-    [Authorize()]
+    [CalledByStaff]
     public Task DoSubscribeToAccountTransactions(Guid id) => Subscribe(id);
 
     private Task Subscribe(Guid id) =>

@@ -1,5 +1,5 @@
-﻿using Bank.Auth.Common.Extensions;
-using Bank.Auth.Http.AuthClient;
+﻿using Bank.Auth.Common.Attributes;
+using Bank.Auth.Common.Extensions;
 using Bank.Core.Common;
 using Bank.TransactionsGateway.App.Services;
 using Bank.TransactionsGateway.Http;
@@ -9,84 +9,80 @@ using static Bank.Core.Common.Transfer;
 
 namespace Bank.TransactionsGateway.App.Controllers;
 
-[Route("accounts")]
 [ApiController]
 [Authorize]
-public class TransactionsController(ITransactionService transactionService, AuthClient authClient)
-    : ControllerBase
+public class CreditTransactionsController(ITransactionService transactionService) : ControllerBase
 {
-    [HttpPost("{sourceId}/transfer/p2p/{transfereeIdentifier}")]
-    public async Task TransferP2P(
-        [FromRoute] Guid sourceId,
-        string transfereeIdentifier,
-        [FromBody] TransferDto transaction
-    )
+    [HttpPost("credit/reclaim/{targetId}")]
+    //[CalledByService]
+    public async Task Reclaim([FromRoute] Guid targetId, [FromBody] CreditTransferDto transaction)
     {
         await transactionService.Dispatch(
             new()
             {
                 Value = transaction.Value,
-                InitiatorId = User.GetId(),
-                SourceId = sourceId,
+                InitiatorId = Guid.Empty,
+                SourceId = targetId,
                 Type = Transaction.TransactionType.Transfer,
                 Transfer = new()
                 {
-                    TargetId = await authClient.GetUserIdByPhone(transfereeIdentifier),
-                    Message = transaction.Message,
-                    Type = TransferType.P2P
+                    TargetId = Guid.Empty,
+                    Type = TransferType.Credit,
+                    CreditTransfer = new() { CreditId = transaction.CreditId },
+                    Message = transaction.Message
                 }
             }
         );
     }
 
-    [HttpPost("{sourceId}/transfer/me2me/{targetId}")]
-    public async Task TransferMe2Me(
-        [FromRoute] Guid sourceId,
-        [FromRoute] Guid targetId,
-        [FromBody] TransferDto transaction
-    )
+    [HttpPost("credit/give/{targetId}")]
+    //[CalledByService]
+    public async Task Give([FromRoute] Guid targetId, [FromBody] CreditTransferDto transaction)
     {
         await transactionService.Dispatch(
             new()
             {
                 Value = transaction.Value,
-                InitiatorId = User.GetId(),
-                SourceId = sourceId,
+                InitiatorId = Guid.Empty,
+                SourceId = Guid.Empty,
                 Type = Transaction.TransactionType.Transfer,
                 Transfer = new()
                 {
                     TargetId = targetId,
-                    Message = transaction.Message,
-                    Type = TransferType.Me2Me,
+                    Type = TransferType.Credit,
+                    CreditTransfer = new() { CreditId = transaction.CreditId },
+                    Message = transaction.Message
                 }
             }
         );
     }
 
-    [HttpPost("{id}/deposit")]
-    public async Task Deposit([FromRoute] Guid id, [FromBody] DepositDto transaction)
+    [HttpPost("accounts/master/deposit")]
+    [CalledByStaff]
+    public async Task Deposit([FromBody] DepositDto transaction)
     {
         await transactionService.Dispatch(
             new()
             {
                 Value = transaction.Value,
                 InitiatorId = User.GetId(),
-                SourceId = id,
+                SourceId = Guid.Empty,
                 Type = Transaction.TransactionType.BalanceChange,
                 BalanceChange = new() { Type = BalanceChange.BalanceChangeType.Deposit }
             }
         );
     }
 
-    [HttpPost("{id}/withdraw")]
-    public async Task Withdraw([FromRoute] Guid id, [FromBody] WithdrawalDto transaction)
+    [HttpPost("accounts/master/withdraw")]
+    [CalledByStaff]
+    public async Task Withdraw([FromBody] WithdrawalDto transaction)
     {
         await transactionService.Dispatch(
             new()
             {
                 Value = transaction.Value,
                 InitiatorId = User.GetId(),
-                SourceId = id,
+                SourceId = Guid.Empty,
                 Type = Transaction.TransactionType.BalanceChange,
                 BalanceChange = new() { Type = BalanceChange.BalanceChangeType.Withdrawal }
             }
