@@ -64,14 +64,16 @@ public class SerializableProblemDetails
             Type = details.Type,
         };
 
-    public static implicit operator SerializableProblemDetails(ProblemDetails details) =>
-        new SerializableProblemDetails
-        {
-            Extensions = details.Extensions,
-            Detail = details.Detail,
-            Instance = details.Instance,
-            Status = details.Status,
-            Title = details.Title,
-            Type = details.Type,
-        };
+    public static implicit operator SerializableProblemDetails?(ProblemDetails? details) =>
+        details is null
+            ? null
+            : new SerializableProblemDetails
+            {
+                Extensions = details.Extensions,
+                Detail = details.Detail,
+                Instance = details.Instance,
+                Status = details.Status,
+                Title = details.Title,
+                Type = details.Type,
+            };
 }
