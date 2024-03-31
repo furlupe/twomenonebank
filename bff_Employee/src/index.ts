@@ -61,10 +61,6 @@ app.use('/', diContainer.get<BaseRouter>(TYPES.AuthRouter).create());
 app.use('/', diContainer.get<BaseRouter>(TYPES.CreditRouter).create());
 app.use('/', diContainer.get<BaseRouter>(TYPES.CoreRouter).create());
 
-app.get('/test', (req, res) => {
-    return res.send(200);
-});
-
 // - Start
 diContainer.get<UserRepository>(TYPES.UserRepository)
     .init()
