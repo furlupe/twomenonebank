@@ -23,8 +23,8 @@ public static class ApplicationServicesSetup
         services
             .AddScoped<IUserService, UserService>()
             .AddScoped<IAccountService, AccountService>()
-            .AddScoped<ITransactionService, TransactionService>()
-            .AddScoped<ITransactionFactory, TransactionFactory>();
+            .AddScoped<ITransactionsService, TransactionsService>()
+            .AddScoped<ITransactionsFactory, TransactionsFactory>();
 
         services.AddScoped<ICurrencyConversionRatesCacheBackingStore, CoreDbContext>();
         builder.AddCurrencyConverter();

@@ -7,11 +7,11 @@ using Bank.Exceptions.WebApiException;
 
 namespace Bank.Core.App.Services;
 
-public class TransactionFactory(
+public class TransactionsFactory(
     IAccountService accountService,
     IDateTimeProvider timeProvider,
     ICurrencyConverter currencyConverter
-) : ITransactionFactory
+) : ITransactionsFactory
 {
     private async Task CheckAccountOwnerhsip(Common.Transaction transaction)
     {

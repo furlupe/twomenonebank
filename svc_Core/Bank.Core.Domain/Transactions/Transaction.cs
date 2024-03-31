@@ -8,7 +8,7 @@ public abstract class Transaction(Money value, DateTime now)
 {
     public Money Value { get; protected init; } = value;
     public DateTime Now { get; protected init; } = now;
-    public abstract Task Perform();
+    public abstract Task<AccountEvent> Perform();
     internal abstract Task<AccountEvent> PerformTransient();
 
     protected void ValidateValue() =>

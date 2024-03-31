@@ -2,7 +2,7 @@
 
 namespace Bank.Core.App.Services.Contracts;
 
-public interface ITransactionFactory
+public interface ITransactionsFactory
 {
     public Task<Transaction> Create(Common.Transaction transaction);
 }

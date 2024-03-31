@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bank.Core.App.Services.Amqp;
 
-public class TransactionsConsumer(ITransactionService transactionService) : IConsumer<Transaction>
+public class TransactionsConsumer(ITransactionsService transactionService) : IConsumer<Transaction>
 {
     public async Task Consume(ConsumeContext<Transaction> context)
     {

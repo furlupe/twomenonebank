@@ -18,11 +18,12 @@ public class Transfer(
     public Account Target { get; protected init; } = target;
     public string Message { get; protected init; } = message ?? "Transferred.";
 
-    public override async Task Perform()
+    public override async Task<AccountEvent> Perform()
     {
         var @event = await PerformTransient();
         Source.AddEvent(@event);
         Target.AddEvent(@event);
+        return @event;
     }
 
     internal override async Task<AccountEvent> PerformTransient()
