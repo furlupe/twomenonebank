@@ -1,6 +1,7 @@
 package com.example.customerclient.di
 
 import com.example.customerclient.domain.usecases.auth.AuthorizeUseCase
+import com.example.customerclient.domain.usecases.auth.GetTokenUseCase
 import com.example.customerclient.domain.usecases.auth.SignInUseCase
 import com.example.customerclient.domain.usecases.bill.CloseBillUseCase
 import com.example.customerclient.domain.usecases.bill.DepositUseCase
@@ -26,6 +27,8 @@ import com.example.customerclient.domain.usecases.transaction.Me2MeTransactionUs
 import com.example.customerclient.domain.usecases.transaction.P2PTransactionUseCase
 import com.example.customerclient.domain.usecases.user.GetUserInfoUseCase
 import com.example.customerclient.domain.usecases.user.GetUserThemeUseCase
+import com.example.customerclient.domain.usecases.websocket.CloseWebSocketUseCase
+import com.example.customerclient.domain.usecases.websocket.OpenWebSocketUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -34,6 +37,7 @@ val useCaseModule = module {
     // - Auth
     single<SignInUseCase> { SignInUseCase(authRepository = get()) }
     single<AuthorizeUseCase> { AuthorizeUseCase(authRepository = get()) }
+    single<GetTokenUseCase> { GetTokenUseCase(sharedPreferencesRepositoryImpl = get()) }
 
     // - Bill
     single<GetUserBillsInfoUseCase> { GetUserBillsInfoUseCase(billRepository = get()) }
@@ -72,8 +76,16 @@ val useCaseModule = module {
     // - User
     single<GetUserInfoUseCase> { GetUserInfoUseCase(userRepository = get()) }
     single<GetUserThemeUseCase> { GetUserThemeUseCase(sharedPreferencesRepositoryImpl = get()) }
-
     // - Transaction
     single<P2PTransactionUseCase> { P2PTransactionUseCase(transactionRepository = get()) }
     single<Me2MeTransactionUseCase> { Me2MeTransactionUseCase(transactionRepository = get()) }
+
+    // - WebSocket
+    single<OpenWebSocketUseCase> {
+        OpenWebSocketUseCase(
+            billHistoryWebSocketRepository = get(),
+            getTokenUseCase = get()
+        )
+    }
+    single<CloseWebSocketUseCase> { CloseWebSocketUseCase(billHistoryWebSocketRepository = get()) }
 }

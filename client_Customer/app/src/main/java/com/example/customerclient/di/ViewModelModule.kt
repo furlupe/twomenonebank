@@ -50,7 +50,9 @@ val viewModelModule = module {
             getBillHistoryUseCase = get(),
             depositUseCase = get(),
             withdrawUseCase = get(),
-            closeBillUseCase = get()
+            closeBillUseCase = get(),
+            openWebSocketUseCase = get(),
+            closeWebSocketUseCase = get()
         )
     }
 
