@@ -5,6 +5,7 @@ using Bank.Auth.Http.AuthClient;
 using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
 using Bank.Common.Middlewares;
+using Bank.Common.Middlewares.Conditional500Error;
 using Bank.Core.Http.Client;
 using Bank.Credit.App.Services;
 using Bank.Credit.App.Setup;
@@ -44,6 +45,7 @@ var app = builder.Build();
 await app.UsePersistance();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseConditional500ErrorMiddleware();
 
 app.UseSwagger();
 app.UseSwaggerUI();
