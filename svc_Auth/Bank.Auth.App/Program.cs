@@ -32,7 +32,7 @@ var app = builder.Build();
 await app.UsePersistance();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
-app.UseConditional500ErrorMiddleware();
+app.UseConditional500ErrorMiddleware(_ => true);
 
 app.UseSwagger();
 app.UseSwaggerUI();
