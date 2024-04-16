@@ -4,6 +4,8 @@ plugins {
     id("androidx.navigation.safeargs")
     id("kotlin-parcelize")
     id("kotlin-kapt")
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -81,4 +83,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
     androidTestImplementation("androidx.room:room-testing:$room_version")
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
 }
