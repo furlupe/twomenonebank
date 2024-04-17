@@ -1,6 +1,7 @@
 ﻿using Bank.Auth.Common.Options;
 using Bank.Auth.Http.TokenClient;
 using Bank.Common.Extensions;
+using Bank.Common.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +20,7 @@ namespace Bank.Auth.Http.AuthClient
                 {
                     ServerCertificateCustomValidationCallback = (msg, cert, chain, sslErrs) => true
                 })
+                .AddHttpMessageHandler<TracingHandler>()
                 .AddHttpMessageHandler<AuthorizationHandler>();
 
             return builder;
