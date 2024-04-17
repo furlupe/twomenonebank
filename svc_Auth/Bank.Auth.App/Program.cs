@@ -6,6 +6,7 @@ using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
 using Bank.Common.Middlewares;
 using Bank.Common.Middlewares.Conditional500Error;
+using Bank.Common.Middlewares.Tracing;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -21,6 +22,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o => o.AddAuth().UseXmlComments(Assembly.GetExecutingAssembly()));
 
 builder
+    .AddLogging()
     .AddConfiguration()
     .AddAuth()
     .AddPersistance()
@@ -29,6 +31,9 @@ builder
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 var app = builder.Build();
+
+app.UseTracing();
+
 await app.UsePersistance();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
