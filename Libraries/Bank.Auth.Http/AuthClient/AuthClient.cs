@@ -1,17 +1,17 @@
 ﻿using Bank.Auth.Common.Options;
+using Bank.Common.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
 namespace Bank.Auth.Http.AuthClient
 {
-    public class AuthClient
+    public class AuthClient : BaseHttpClient
     {
-        private readonly HttpClient _httpClient;
         private readonly string _rootUrl;
 
-        public AuthClient(HttpClient httpClient, IOptions<AuthOptions> options)
+        public AuthClient(HttpClient httpClient, IHttpContextAccessor httpContextAccessor , IOptions<AuthOptions> options)
+            : base(httpClient, httpContextAccessor)
         {
-            _httpClient = httpClient;
             _rootUrl = options.Value.Host;
         }
 

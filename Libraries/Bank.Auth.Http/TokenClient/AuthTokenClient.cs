@@ -1,13 +1,14 @@
 ﻿using Bank.Auth.Common.Options;
 using Bank.Common.DateTimeProvider;
+using Bank.Common.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace Bank.Auth.Http.TokenClient
 {
-    public class AuthTokenClient
+    public class AuthTokenClient : BaseHttpClient
     {
-        private readonly HttpClient _httpClient;
         private readonly TokenCache _cache;
         private readonly IDateTimeProvider _dateTimeProvider;
 
@@ -18,12 +19,13 @@ namespace Bank.Auth.Http.TokenClient
 
         public AuthTokenClient(
             HttpClient httpClient,
+            IHttpContextAccessor httpContextAccessor,
             IOptions<AuthOptions> options,
             TokenCache cache,
             IDateTimeProvider dateTimeProvider
-        )
+        ) 
+            : base(httpClient, httpContextAccessor)
         {
-            _httpClient = httpClient;
             _rootUrl = options.Value.Host;
             _secret = options.Value.Secret;
             _cache = cache;

@@ -10,6 +10,7 @@ namespace Bank.Auth.Http.AuthClient
     {
         public static WebApplicationBuilder AddAuthClient(this WebApplicationBuilder builder)
         {
+            builder.Services.AddHttpContextAccessor();
             builder.BindOptions<AuthOptions>();
             builder.AddAuthTokenClient();
 
