@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Bank.Common.Extensions;
 using Bank.Exceptions;
 using Bank.Exceptions.WebApiException;
 using Microsoft.AspNetCore.Http;
@@ -56,7 +57,7 @@ public class ErrorHandlingMiddleware(RequestDelegate next, IHostEnvironment env)
 
     private static void AddTraceId(HttpContext context, ProblemDetails details)
     {
-        string traceId = Activity.Current?.Id ?? context.TraceIdentifier;
+        string traceId = context.GetTraceId();
         Console.WriteLine($"TraceId: {traceId}");
         if (traceId is { })
         {
