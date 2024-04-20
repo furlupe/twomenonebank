@@ -1,6 +1,7 @@
 package com.example.employeeclient.common
 
 object Constants {
+
     const val SHARED_PREFS_THEME = "theme"
 
     const val DEEP_LINK = "myschema://twomenonebank.com/employee"
@@ -24,5 +25,9 @@ object Constants {
     const val BAN_TABLE = "ban"
     const val TARIFF_TABLE = "tariff"
     const val USER_TABLE = "user"
+
+    // Firebase local notifications
+    const val LOCAL_CHANNEL_ID = "firebase-local"
+    const val LOCAL_CHANNEL = "firebase-local"
 
 }
