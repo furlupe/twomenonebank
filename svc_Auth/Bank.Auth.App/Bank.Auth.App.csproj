@@ -37,6 +37,7 @@
     <ProjectReference Include="..\..\Libraries\Bank.Auth.Common\Bank.Auth.Common.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Auth.Http\Bank.Auth.Http.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Common\Bank.Common.csproj" />
+    <ProjectReference Include="..\..\Libraries\Bank.Logging\Bank.Logging.csproj" />
     <ProjectReference Include="..\Bank.Auth.Domain\Bank.Auth.Domain.csproj" />
     <ProjectReference Include="..\Bank.Auth.Messages\Bank.Auth.Messages.csproj" />
   </ItemGroup>
