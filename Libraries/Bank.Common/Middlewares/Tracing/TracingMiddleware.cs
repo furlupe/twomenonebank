@@ -1,6 +1,4 @@
-﻿using Bank.Common.Extensions;
-using Microsoft.AspNetCore.Http;
-using Serilog.Context;
+﻿using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 
 namespace Bank.Common.Middlewares.Tracing
@@ -22,10 +20,7 @@ namespace Bank.Common.Middlewares.Tracing
                 context.Request.Headers.TraceParent = Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier;
             }
 
-            using (LogContext.PushProperty("BankTraceId", context.GetTraceId()))
-            {
-                await _next(context);
-            }
+            await _next(context);
         }
     }
 }
