@@ -5,9 +5,8 @@ services:
     image: happypiece/twomenonebank:monitoring
     depends_on:
       - elasticsearch
-    ports:
-      - "0.0.0.0:32000:32000"
-      - "0.0.0.0:32001:32001"
+    expose:
+      - 32000
     environment:
       ASPNETCORE_HTTP_PORT: https://+:32001
       ASPNETCORE_URLS: http://+:32000
