@@ -8,6 +8,7 @@ variables:
   AUTH_TAG: auth
   CREDIT_TAG: credit
   TRANSACTIONS_GATEWAY_TAG: transactions-gateway
+  MONITORING_TAG: monitoring
 
 .build:
   tags:
@@ -93,6 +94,22 @@ build-transactions-gateway:
     - docker push $IMAGE_NAME:$TRANSACTIONS_GATEWAY_TAG
     - echo 'Build completed.'
 
+build-monitoring:
+  extends: .build
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "develop"
+      changes:
+        - Libraries/**/*
+        - svc_Monitoring/**/*
+    - when: manual
+      allow_failure: true
+  script:
+    - echo 'Building Monitoring service...'
+    - docker build . --rm -f svc_Monitoring/Monitoring.dockerfile -t $IMAGE_NAME:$MONITORING_TAG
+    - echo 'Builds completed, pushing to registry...'
+    - docker push $IMAGE_NAME:$MONITORING_TAG
+    - echo 'Build completed.'
+
 deploy:
   tags:
     - deploy
@@ -113,6 +130,7 @@ deploy:
     - docker cp $AUTH_APPSETTINGS twomenonebank-auth-app:/app/appsettings.Local.json
     - docker cp $CREDIT_APPSETTINGS twomenonebank-credit-app:/app/appsettings.Local.json
     - docker cp $TRANSACTIONS_GATEWAY_APPSETTINGS twomenonebank-transactions-gateway-app:/app/appsettings.Local.json
+    - docker cp $MONITORING_APPSETTINGS twomenonebank-monitoring-app:/app/appsettings.Local.json
     - docker compose start
     - echo 'Deploy completed.'
   after_script:
