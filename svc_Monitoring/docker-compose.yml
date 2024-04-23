@@ -1,0 +1,23 @@
+services:
+  monitoring-app:
+    container_name: twomenonebank-monitoring-app
+    hostname: twomenonebank-monitoring-host
+    image: happypiece/twomenonebank:monitoring
+    depends_on:
+      - elasticsearch
+    ports:
+      - "0.0.0.0:32000:32000"
+      - "0.0.0.0:32001:32001"
+    environment:
+      ASPNETCORE_HTTP_PORT: https://+:32001
+      ASPNETCORE_URLS: http://+:32000
+      ASPNETCORE_ENVIRONMENT: Development
+    restart: always
+    networks:
+      - twomenonebank-network
+
+volumes:
+  twomenonebank-db:
+
+networks:
+  twomenonebank-network:

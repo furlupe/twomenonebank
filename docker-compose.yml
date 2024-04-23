@@ -3,6 +3,7 @@ include:
   - svc_Auth/docker-compose.yml
   - svc_Credit/docker-compose.yml
   - svc_TransactionsGateway/docker-compose.yml
+  - svc_Monitoring/docker-compose.yml
 
 services:
   db:
@@ -34,6 +35,22 @@ services:
     volumes:
       - twomenonebank-rabbit:/var/lib/rabbitmq/
     restart: always
+    networks:
+      - twomenonebank-network
+  
+  elasticsearch:
+    container_name: twomenonebank-elasticsearch
+    hostname: twomenonebank-elasticsearch-host
+    image: elasticsearch:8.13.0
+    expose:
+      - 9200
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - "ES_JAVA_OPTS=-Xms128m -Xmx128m"
+      - discovery.type=single-node
+      - xpack.security.enabled=false
     networks:
       - twomenonebank-network
 
