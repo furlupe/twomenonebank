@@ -9,12 +9,18 @@ namespace Bank.Common.Extensions;
 public static class ConfigurationExtensions
 {
     public static T GetConfigurationValue<T>(this WebApplicationBuilder builder) =>
-        builder.GetConfigurationValue<T>(
+        builder.Configuration.GetConfigurationValue<T>();
+
+    public static T GetConfigurationValue<T>(this IConfiguration configuration) =>
+        configuration.GetConfigurationValue<T>(
             typeof(T).GetAttribute<ConfigurationModelAttribute>().SectionKey
         );
 
     public static T GetConfigurationValue<T>(this WebApplicationBuilder builder, string key) =>
-        builder.Configuration.GetSection(key).Get<T>()
+        builder.Configuration.GetConfigurationValue<T>(key);
+
+    public static T GetConfigurationValue<T>(this IConfiguration configuration, string key) =>
+        configuration.GetSection(key).Get<T>()
         ?? throw new ConfigurationException(
             $"Configuration failed: could not get value for {typeof(T).Name} by section key '{key}'"
         );

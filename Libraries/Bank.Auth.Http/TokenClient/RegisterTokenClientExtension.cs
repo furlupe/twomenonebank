@@ -1,4 +1,5 @@
-﻿using Bank.Common.Http;
+﻿using Bank.Common.Extensions;
+using Bank.Common.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,7 +16,9 @@ namespace Bank.Auth.Http.TokenClient
             services.AddHttpContextAccessor();
 
             services.AddSingleton<TokenCache>();
-            services.AddHttpClient<AuthTokenClient>()
+            services
+                .AddHttpClient<AuthTokenClient>()
+                .AddResilience()
                 .AddHttpMessageHandler<TracingHandler>();
 
             return builder;

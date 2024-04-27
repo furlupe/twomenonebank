@@ -1,17 +1,24 @@
-﻿using Bank.Common.Extensions;
+﻿using System.Net.Http;
+using Bank.Common;
+using Bank.Common.Extensions;
 using Bank.Common.Money;
 using Bank.Common.Money.Converter;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Bank.Core.App.Controllers;
 
 [Route("test")]
-public class TestController(TestClient service, ICurrencyConverter converter) : ControllerBase
+public class TestController(
+    TestClient client,
+    ICurrencyConverter converter,
+    IOptions<FeaturesOptions> options
+) : ControllerBase
 {
     [HttpGet("error")]
     public async Task Error()
     {
-        await service.MakeErrorRequest();
+        await client.MakeErrorRequest();
     }
 
     [HttpGet("convert")]
@@ -19,12 +26,29 @@ public class TestController(TestClient service, ICurrencyConverter converter) : 
     {
         return await converter.Convert(value, target);
     }
+
+    [HttpGet("request")]
+    public async Task<object?> TestRequest()
+    {
+        return await client.MakeRequest();
+    }
+
+    [HttpGet("features")]
+    public FeaturesOptions Features()
+    {
+        return options.Value;
+    }
 }
 
 public class TestClient(HttpClient httpClient)
 {
-    public async Task<object> MakeErrorRequest()
+    public async Task<object?> MakeErrorRequest()
     {
-        return await httpClient.GetAsJson<object>("https://localhost:7200/test/error");
+        return await httpClient.GetAsJson<object>("http://localhost:30000/test/error");
+    }
+
+    public async Task<object?> MakeRequest()
+    {
+        return await httpClient.GetAsJson<object>("http://localhost:30000/test/rates/USD");
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Bank.Amqp;
+using Bank.Common;
 using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
+using Bank.Common.Middlewares.Tracing;
 using Bank.Common.Money.Cache;
 using Bank.Common.Money.Converter;
 using Bank.Core.App.Services;
@@ -8,6 +10,7 @@ using Bank.Core.App.Services.Amqp;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.Persistence;
 using Bank.Exceptions.WebApiException;
+using Bank.Logging.Extensions;
 using MassTransit;
 
 namespace Bank.Core.App.Setup;
@@ -37,10 +40,12 @@ public static class ApplicationServicesSetup
     )
     {
         builder.AddConfiguration();
+        builder.BindFeaturesOptions();
         builder.AddMassTransit(configure: cfg =>
         {
             cfg.AddConsumer<TransactionsConsumer>();
         });
+        builder.AddLogging();
 
         var services = builder.Services;
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
@@ -54,5 +59,7 @@ public static class ApplicationServicesSetup
     public static async Task UseApplicationServices(this WebApplication app)
     {
         await app.UseCoreDbContext();
+        app.UseLogging();
+        app.UseTracing();
     }
 }
