@@ -3,8 +3,6 @@ package com.example.customerclient.ui.bill.info
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.example.customerclient.data.api.dto.toBillHistory
 import com.example.customerclient.domain.usecases.bill.CloseBillUseCase
 import com.example.customerclient.domain.usecases.bill.DepositUseCase
@@ -17,7 +15,6 @@ import com.example.customerclient.ui.home.BillInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -40,9 +37,9 @@ class BillInfoViewModel(
         MutableStateFlow(BillInfoState.Loading)
     val uiState: StateFlow<BillInfoState> = _uiState.asStateFlow()
 
-    private val _billsHistoryState: MutableStateFlow<PagingData<BillHistory>> =
-        MutableStateFlow(value = PagingData.empty())
-    val billsHistoryState: MutableStateFlow<PagingData<BillHistory>> get() = _billsHistoryState
+    private val _billsHistoryState: MutableStateFlow<List<BillHistory>> =
+        MutableStateFlow(value = listOf())
+    val billsHistoryState: StateFlow<List<BillHistory>> = _billsHistoryState.asStateFlow()
 
     init {
         viewModelScope.launch { getBillsHistory() }
@@ -54,7 +51,7 @@ class BillInfoViewModel(
             try {
                 billId?.let {
                     openWebSocketUseCase(billId) { data ->
-                        _billsHistoryState.update { PagingData.from(data.map { it.toBillHistory() }) }
+                        _billsHistoryState.update { it.plus(data.map { newHistoryOperation -> newHistoryOperation.toBillHistory() }) }
                     }
                 }
             } catch (e: Throwable) {
@@ -84,12 +81,7 @@ class BillInfoViewModel(
     private suspend fun getBillsHistory() {
         billId?.let {
             try {
-                getBillHistoryUseCase(billId)
-                    .distinctUntilChanged()
-                    .cachedIn(viewModelScope)
-                    .collect {
-                        _billsHistoryState.value = it
-                    }
+                _billsHistoryState.update { getBillHistoryUseCase(billId) }
             } catch (e: Exception) {
                 e.message?.let {
                     _uiState.update { BillInfoState.Error(e.message ?: "") }

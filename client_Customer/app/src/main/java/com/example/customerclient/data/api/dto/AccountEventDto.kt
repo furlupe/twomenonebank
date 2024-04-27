@@ -23,6 +23,8 @@ fun AccountEventDto.toBillHistory(): BillHistory {
                 eventType = when (this.transfer?.target?.eventType) {
                     "Withdrawal" -> HistoryOperationType.WITHDRAW
                     "Deposit" -> HistoryOperationType.TOP_UP
+                    "0" -> HistoryOperationType.WITHDRAW
+                    "1" -> HistoryOperationType.TOP_UP
                     else -> HistoryOperationType.WITHDRAW
                 },
                 amount = "${this.transfer?.target?.nativeValue?.amount} ${this.transfer?.target?.nativeValue?.currency}",
@@ -38,6 +40,8 @@ fun AccountEventDto.toBillHistory(): BillHistory {
                 eventType = when (this.balanceChange?.eventType) {
                     "Withdrawal" -> HistoryOperationType.WITHDRAW
                     "Deposit" -> HistoryOperationType.TOP_UP
+                    "0" -> HistoryOperationType.WITHDRAW
+                    "1" -> HistoryOperationType.TOP_UP
                     else -> HistoryOperationType.WITHDRAW
                 },
                 amount = "${this.balanceChange?.nativeValue?.amount} ${this.balanceChange?.nativeValue?.currency}",
@@ -52,6 +56,8 @@ fun AccountEventDto.toBillHistory(): BillHistory {
                 eventType = when (this.balanceChange?.eventType) {
                     "Withdrawal" -> HistoryOperationType.WITHDRAW
                     "Deposit" -> HistoryOperationType.TOP_UP
+                    "0" -> HistoryOperationType.WITHDRAW
+                    "1" -> HistoryOperationType.TOP_UP
                     else -> HistoryOperationType.WITHDRAW
                 },
                 amount = "${this.balanceChange?.nativeValue?.amount} ${this.balanceChange?.nativeValue?.currency}",

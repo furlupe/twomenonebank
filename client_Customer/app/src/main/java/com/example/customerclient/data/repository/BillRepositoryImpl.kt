@@ -6,8 +6,8 @@ import androidx.paging.PagingData
 import com.example.customerclient.common.Constants
 import com.example.customerclient.data.api.core.AccountsApi
 import com.example.customerclient.data.api.dto.AccountCreateDto
+import com.example.customerclient.data.api.dto.toBillHistory
 import com.example.customerclient.data.api.dto.toBillInfo
-import com.example.customerclient.data.paging.bill.BillsHistoryPagingSource
 import com.example.customerclient.data.paging.bill.BillsPagingSource
 import com.example.customerclient.data.remote.database.BillDao
 import com.example.customerclient.data.remote.database.entity.BillEntity
@@ -65,11 +65,9 @@ class BillRepositoryImpl(
         billDao.addHideBill(billId)
     }
 
-    override suspend fun getBillHistory(billId: String): Flow<PagingData<BillHistory>> {
-        return Pager(
-            config = PagingConfig(pageSize = Constants.PAGE_BILL_LIMIT),
-            pagingSourceFactory = { BillsHistoryPagingSource(accountsApi, billId) }
-        ).flow
+    override suspend fun getBillHistory(billId: String): List<BillHistory> {
+        return accountsApi.getBillHistory(billId, 1, 30).items?.map { it.toBillHistory() }
+            ?: listOf()
     }
 
     override suspend fun openBill(name: String, currency: String) {

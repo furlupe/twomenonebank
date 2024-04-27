@@ -20,7 +20,7 @@ interface BillRepository {
     suspend fun addHideBill(billId: String)
 
 
-    suspend fun getBillHistory(billId: String): Flow<PagingData<BillHistory>>
+    suspend fun getBillHistory(billId: String): List<BillHistory>
 
     suspend fun openBill(name: String, currency: String)
 
