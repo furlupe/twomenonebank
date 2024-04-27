@@ -1,11 +1,15 @@
 ﻿using System.Reflection;
 using Bank.Auth.Common.Extensions;
 using Bank.Auth.Common.Policies.Handlers;
+using Bank.Common;
 using Bank.Common.Constants;
 using Bank.Common.Extensions;
 using Bank.Common.Middlewares;
+using Bank.Common.Middlewares.Conditional500Error;
 using Bank.Core.App.Hubs;
 using Bank.Core.App.Services;
+using Bank.Core.Persistence;
+using Microsoft.Extensions.Options;
 
 namespace Bank.Core.App.Setup;
 
@@ -39,6 +43,8 @@ public static class FrontlineServicesSetup
 
     public static void UseFrontlineServices(this WebApplication app)
     {
+        if (app.TransientErrorsEnabled())
+            app.UseConditional500ErrorMiddleware();
         app.UseMiddleware<ErrorHandlingMiddleware>();
 
         app.UseSwagger();

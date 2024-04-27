@@ -15,7 +15,9 @@ namespace Bank.Auth.Http.AuthClient
             builder.BindOptions<AuthOptions>();
             builder.AddAuthTokenClient();
 
-            builder.Services.AddHttpClient<AuthClient>()
+            builder
+                .Services.AddHttpClient<AuthClient>()
+                .AddResilience()
                 .ConfigurePrimaryHttpMessageHandler(c => new HttpClientHandler
                 {
                     ServerCertificateCustomValidationCallback = (msg, cert, chain, sslErrs) => true

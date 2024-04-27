@@ -2,7 +2,9 @@
 using Bank.Auth.Http.AuthClient;
 using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
+using Bank.Common.Middlewares.Tracing;
 using Bank.Exceptions.WebApiException;
+using Bank.Logging.Extensions;
 using Bank.TransactionsGateway.App.Services;
 using MassTransit;
 
@@ -27,6 +29,7 @@ public static class ApplicationServicesSetup
         builder.AddConfiguration();
         builder.AddMassTransit();
         builder.AddAuthClient();
+        builder.AddLogging();
 
         var services = builder.Services;
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
@@ -35,5 +38,9 @@ public static class ApplicationServicesSetup
         return builder;
     }
 
-    public static async Task UseApplicationServices(this WebApplication app) { }
+    public static async Task UseApplicationServices(this WebApplication app)
+    {
+        app.UseLogging();
+        app.UseTracing();
+    }
 }

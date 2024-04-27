@@ -18,6 +18,7 @@
     <ProjectReference Include="..\..\Libraries\Bank.Common\Bank.Common.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Core.Common\Bank.Core.Common.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Exceptions\Bank.Exceptions.csproj" />
+    <ProjectReference Include="..\..\Libraries\Bank.Logging\Bank.Logging.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.TransactionsGateway.Http\Bank.TransactionsGateway.Http.csproj" />
   </ItemGroup>
 

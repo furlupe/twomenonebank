@@ -1,3 +1,4 @@
+using Bank.Common.Extensions;
 using Bank.Core.App.Controllers;
 using Bank.Core.App.Setup;
 
@@ -7,7 +8,7 @@ builder.AddApplicationServices();
 builder.AddFrontlineServices();
 
 // TODO: remove
-builder.Services.AddHttpClient<TestClient>();
+builder.Services.AddHttpClient<TestClient>().AddResilience();
 
 var app = builder.Build();
 

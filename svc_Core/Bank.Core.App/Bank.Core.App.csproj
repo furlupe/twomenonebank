@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\Libraries\Bank.Core.Common\Bank.Core.Common.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Core.Http\Bank.Core.Http.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Exceptions\Bank.Exceptions.csproj" />
+    <ProjectReference Include="..\..\Libraries\Bank.Logging\Bank.Logging.csproj" />
     <ProjectReference Include="..\Bank.Core.Domain\Bank.Core.Domain.csproj" />
     <ProjectReference Include="..\Bank.Core.Persistence\Bank.Core.Persistence.csproj" />
   </ItemGroup>

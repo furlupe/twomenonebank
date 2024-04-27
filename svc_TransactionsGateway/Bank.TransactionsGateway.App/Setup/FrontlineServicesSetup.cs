@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
 using Bank.Auth.Common.Extensions;
+using Bank.Common;
 using Bank.Common.Constants;
 using Bank.Common.Extensions;
 using Bank.Common.Middlewares;
+using Bank.Common.Middlewares.Conditional500Error;
 
 namespace Bank.TransactionsGateway.App.Setup;
 
@@ -24,6 +26,8 @@ public static class FrontlineServicesSetup
 
     public static void UseFrontlineServices(this WebApplication app)
     {
+        if (app.TransientErrorsEnabled())
+            app.UseConditional500ErrorMiddleware();
         app.UseMiddleware<ErrorHandlingMiddleware>();
 
         app.UseSwagger();
