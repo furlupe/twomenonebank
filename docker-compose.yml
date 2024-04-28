@@ -4,6 +4,7 @@ include:
   - svc_Credit/docker-compose.yml
   - svc_TransactionsGateway/docker-compose.yml
   - svc_Monitoring/docker-compose.yml
+  - svc_Notifications/docker-compose.yml
 
 services:
   db:
