@@ -8,11 +8,12 @@ namespace Bank.Core.Domain.Transactions;
 public class Transfer(
     Money value,
     DateTime now,
+    Guid idempotenceKey,
     Account source,
     Account target,
     ICurrencyConverter converter,
     string? message = null
-) : Transaction(value, now)
+) : Transaction(value, now, idempotenceKey)
 {
     public Account Source { get; protected init; } = source;
     public Account Target { get; protected init; } = target;
@@ -29,8 +30,20 @@ public class Transfer(
     internal override async Task<AccountEvent> PerformTransient()
     {
         ValidateCircuit();
-        var withdrawal = await new Withdrawal(Value, Now, Source, converter).PerformTransient()!;
-        var deposit = await new Deposit(Value, Now, Target, converter).PerformTransient()!;
+        var withdrawal = await new Withdrawal(
+            Value,
+            Now,
+            IdempotenceKey,
+            Source,
+            converter
+        ).PerformTransient()!;
+        var deposit = await new Deposit(
+            Value,
+            Now,
+            IdempotenceKey,
+            Target,
+            converter
+        ).PerformTransient()!;
         ValidateEquality(
             withdrawal.BalanceChange!.ForeignValue,
             deposit.BalanceChange!.ForeignValue
@@ -40,6 +53,7 @@ public class Transfer(
             Message,
             AccountEventType.Transfer,
             Now,
+            IdempotenceKey,
             transfer: new Events.Transfer(withdrawal.BalanceChange, deposit.BalanceChange) { }
         );
     }

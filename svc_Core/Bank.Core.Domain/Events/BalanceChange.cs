@@ -6,9 +6,9 @@ namespace Bank.Core.Domain.Events;
 [Owned]
 public class BalanceChange
 {
-    public Money NativeValue { get; protected set; }
-    public Money ForeignValue { get; protected set; }
-    public Account Account { get; protected set; }
+    public Money NativeValue { get; protected set; } = null!;
+    public Money ForeignValue { get; protected set; } = null!;
+    public Account Account { get; protected set; } = null!;
     public Guid AccountId { get; protected set; }
 
     public BalanceChangeType EventType { get; protected set; }

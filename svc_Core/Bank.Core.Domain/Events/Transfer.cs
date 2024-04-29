@@ -5,8 +5,8 @@ namespace Bank.Core.Domain.Events;
 [Owned]
 public class Transfer
 {
-    public BalanceChange Source { get; protected set; }
-    public BalanceChange Target { get; protected set; }
+    public BalanceChange Source { get; protected set; } = null!;
+    public BalanceChange Target { get; protected set; } = null!;
     public TransferType Type { get; protected set; }
     public CreditTransfer? CreditTransfer { get; protected set; }
 
