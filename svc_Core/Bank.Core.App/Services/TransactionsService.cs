@@ -1,4 +1,5 @@
-﻿using Bank.Common.Pagination;
+﻿using Bank.Common.DateTimeProvider;
+using Bank.Common.Pagination;
 using Bank.Core.App.Hubs;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.App.Utils;
@@ -46,6 +47,15 @@ public class TransactionsService(
 
     public async Task Perform(Common.Transaction model)
     {
+        var completed = await db
+            .Accounts.Where(x =>
+                x.Id == model.SourceId
+                && x.Events.Any(x => x.IdempotenceKey == model.IdempotenceKey)
+            )
+            .AnyAsync();
+        if (completed)
+            return;
+
         var transaction = await transactionFactory.Create(model);
         var @event = await transaction.Perform();
         await db.SaveChangesAsync();

@@ -5,8 +5,8 @@ namespace Bank.Core.Http.Dto.Events;
 
 public class BalanceChangeDto
 {
-    public Money NativeValue { get; protected set; }
-    public Money ForeignValue { get; protected set; }
+    public Money NativeValue { get; protected set; } = null!;
+    public Money ForeignValue { get; protected set; } = null!;
     public Guid AccountId { get; protected set; }
 
     public BalanceChangeType EventType { get; protected set; }

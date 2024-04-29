@@ -4,7 +4,7 @@ namespace Bank.TransactionsGateway.Http;
 
 public abstract class TransactionDto
 {
-    public Money Value { get; set; }
+    public Money Value { get; set; } = null!;
 }
 
 public class DepositDto : TransactionDto { }

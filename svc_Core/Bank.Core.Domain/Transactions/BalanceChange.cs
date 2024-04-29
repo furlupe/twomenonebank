@@ -8,9 +8,10 @@ namespace Bank.Core.Domain.Transactions;
 public abstract class BalanceChange(
     Money value,
     DateTime now,
+    Guid idempotenceKey,
     Account target,
     ICurrencyConverter converter
-) : Transaction(value, now)
+) : Transaction(value, now, idempotenceKey)
 {
     public Account Target { get; protected init; } = target;
     protected ICurrencyConverter _converter = converter;

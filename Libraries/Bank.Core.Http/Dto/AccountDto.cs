@@ -6,8 +6,8 @@ namespace Bank.Core.Http.Dto;
 public class AccountDto
 {
     public Guid Id { get; set; }
-    public Money Balance { get; set; }
-    public string Name { get; set; }
+    public Money Balance { get; set; } = null!;
+    public string Name { get; set; } = null!;
     public bool IsDefault { get; set; }
     public bool IsClosed { get; set; }
 

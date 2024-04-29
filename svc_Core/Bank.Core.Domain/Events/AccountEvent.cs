@@ -2,7 +2,7 @@
 
 public class AccountEvent : DomainEvent
 {
-    public string Comment { get; protected set; }
+    public string Comment { get; protected set; } = null!;
     public AccountEventType EventType { get; protected set; }
     public BalanceChange? BalanceChange { get; protected set; }
     public Transfer? Transfer { get; protected set; }
@@ -11,11 +11,12 @@ public class AccountEvent : DomainEvent
         string comment,
         AccountEventType eventType,
         DateTime now,
+        Guid idempotenceKey,
         EventState state = EventState.Completed,
         BalanceChange? balanceChange = null,
         Transfer? transfer = null
     )
-        : base(now, state)
+        : base(now, idempotenceKey, state)
     {
         Comment = comment;
         EventType = eventType;

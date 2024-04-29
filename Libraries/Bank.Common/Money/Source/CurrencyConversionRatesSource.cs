@@ -32,7 +32,7 @@ public class CurrencyConversionRatesDto
     public string Result { get; set; } = "failure";
 
     [JsonPropertyName("base_code")]
-    public string Source { get; set; }
+    public string Source { get; set; } = null!;
 
     [JsonPropertyName("conversion_rates")]
     public Dictionary<string, decimal> ConversionRates { get; set; } = [];

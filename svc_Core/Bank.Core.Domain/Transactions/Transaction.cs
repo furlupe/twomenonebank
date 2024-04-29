@@ -4,10 +4,11 @@ using Bank.Core.Domain.Events;
 
 namespace Bank.Core.Domain.Transactions;
 
-public abstract class Transaction(Money value, DateTime now)
+public abstract class Transaction(Money value, DateTime now, Guid idempotenceKey)
 {
     public Money Value { get; protected init; } = value;
     public DateTime Now { get; protected init; } = now;
+    public Guid IdempotenceKey { get; protected init; } = idempotenceKey;
     public abstract Task<AccountEvent> Perform();
     internal abstract Task<AccountEvent> PerformTransient();
 

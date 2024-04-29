@@ -5,8 +5,8 @@ namespace Bank.Auth.Common.Options
     [ConfigurationModel("Auth")]
     public class AuthOptions
     {
-        public string Host { get; set; }
-        public string Key { get; set; }
-        public string Secret { get; set; }
+        public string Host { get; set; } = null!;
+        public string Key { get; set; } = null!;
+        public string Secret { get; set; } = null!;
     }
 }

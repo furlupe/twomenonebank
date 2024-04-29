@@ -58,6 +58,7 @@ public class TransactionsFactory(
                 => new Deposit(
                     transaction.Value,
                     timeProvider.UtcNow,
+                    transaction.IdempotenceKey,
                     sourceAccount,
                     currencyConverter
                 ),
@@ -65,6 +66,7 @@ public class TransactionsFactory(
                 => new Withdrawal(
                     transaction.Value,
                     timeProvider.UtcNow,
+                    transaction.IdempotenceKey,
                     sourceAccount,
                     currencyConverter
                 ),
@@ -84,6 +86,7 @@ public class TransactionsFactory(
         return new Transfer(
             transaction.Value,
             timeProvider.UtcNow,
+            transaction.IdempotenceKey,
             sourceAccount,
             targetAccount,
             currencyConverter,
@@ -99,6 +102,7 @@ public class TransactionsFactory(
             ? new CreditIssuance(
                 transaction.Value,
                 timeProvider.UtcNow,
+                transaction.IdempotenceKey,
                 sourceAccount,
                 await accountService.GetAccount(transaction.Transfer!.TargetId),
                 transaction.Transfer.CreditTransfer!.CreditId,
@@ -107,6 +111,7 @@ public class TransactionsFactory(
             : new CreditPayment(
                 transaction.Value,
                 timeProvider.UtcNow,
+                transaction.IdempotenceKey,
                 sourceAccount,
                 await accountService.GetMasterAccount(),
                 transaction.Transfer!.CreditTransfer!.CreditId,

@@ -1,15 +1,52 @@
-﻿using Bank.Common.Money;
+﻿using System.Text.Json.Serialization;
+using Bank.Common.Money;
 
 namespace Bank.Core.Common;
 
 public class Transaction
 {
-    public Money Value { get; set; }
+    public Money Value { get; set; } = null!;
     public Guid InitiatorId { get; set; }
+    public Guid IdempotenceKey { get; set; }
     public Guid SourceId { get; set; }
     public TransactionType Type { get; set; }
     public BalanceChange? BalanceChange { get; set; }
     public Transfer? Transfer { get; set; }
+
+    public Transaction(
+        Money value,
+        Guid initiatorId,
+        Guid idempotenceKey,
+        Guid sourceId,
+        BalanceChange? balanceChange
+    )
+    {
+        Value = value;
+        InitiatorId = initiatorId;
+        IdempotenceKey = idempotenceKey;
+        SourceId = sourceId;
+        Type = TransactionType.BalanceChange;
+        BalanceChange = balanceChange;
+    }
+
+    public Transaction(
+        Money value,
+        Guid initiatorId,
+        Guid idempotenceKey,
+        Guid sourceId,
+        Transfer? transfer
+    )
+    {
+        Value = value;
+        InitiatorId = initiatorId;
+        IdempotenceKey = idempotenceKey;
+        SourceId = sourceId;
+        Type = TransactionType.Transfer;
+        Transfer = transfer;
+    }
+
+    [JsonConstructor]
+    protected Transaction() { }
 
     public enum TransactionType
     {
