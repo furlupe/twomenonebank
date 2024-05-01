@@ -26,7 +26,7 @@ public class Transfer
     }
 
     protected TransferType GetTransferType(BalanceChange source, BalanceChange target) =>
-        source.Account.UserId == target.Account.UserId ? TransferType.Me2Me : TransferType.P2P;
+        source.Account.OwnerId == target.Account.OwnerId ? TransferType.Me2Me : TransferType.P2P;
 
     protected Transfer() { }
 }

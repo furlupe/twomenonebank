@@ -31,10 +31,10 @@ public partial class CoreDbContext : DbContext
 
         modelBuilder.Entity<Account>(a =>
         {
-            a.HasOne(x => x.User).WithMany(x => x.Accounts).HasForeignKey(x => x.UserId);
+            a.HasOne(x => x.User).WithMany(x => x.Accounts).HasForeignKey(x => x.OwnerId);
             a.Navigation(x => x.User).AutoInclude();
-            a.HasIndex(x => new { x.Name, x.UserId }).IsUnique();
-            a.HasMany(x => x.Events).WithMany();
+            a.HasIndex(x => new { x.Name, x.OwnerId }).IsUnique();
+            a.HasMany(x => x.Transactions).WithMany();
             a.Property(x => x.ClosedAt).IsRequired(false);
         });
 
@@ -45,7 +45,7 @@ public partial class CoreDbContext : DbContext
                 .HasForeignKey<User>(x => x.DefaultTransferAccountId);
         });
 
-        modelBuilder.Entity<AccountEvent>(a =>
+        modelBuilder.Entity<TransactionEvent>(a =>
         {
             a.OwnsOne(
                 x => x.BalanceChange,

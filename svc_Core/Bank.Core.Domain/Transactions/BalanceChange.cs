@@ -16,10 +16,10 @@ public abstract class BalanceChange(
     public Account Target { get; protected init; } = target;
     protected ICurrencyConverter _converter = converter;
 
-    public override async Task<AccountEvent> Perform()
+    public override async Task<TransactionEvent> Perform()
     {
         var @event = await PerformTransient();
-        Target.AddEvent(@event);
+        Target.AddTransaction(@event);
         return @event;
     }
 

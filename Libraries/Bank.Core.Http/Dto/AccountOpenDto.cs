@@ -3,7 +3,7 @@ using Bank.Common.Money;
 
 namespace Bank.Core.Http.Dto;
 
-public class AccountCreateDto
+public class AccountOpenDto
 {
     [Required]
     [Length(3, 255)]

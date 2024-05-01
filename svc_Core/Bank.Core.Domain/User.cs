@@ -11,9 +11,9 @@ public class User : StoredModel
     public Account? DefaultTransferAccount { get; protected set; }
     public Guid? DefaultTransferAccountId { get; protected set; }
 
-    public void OpenNewAccount(string name, Currency currency)
+    public void OpenNewAccount(string name, Currency currency, DateTime now, Guid idempotenceKey)
     {
-        var account = new Account(this, name, currency);
+        var account = new Account(this, name, currency, now, idempotenceKey);
         Accounts.Add(account);
     }
 
