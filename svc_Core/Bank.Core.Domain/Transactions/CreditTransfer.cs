@@ -17,15 +17,14 @@ public abstract class CreditTransfer(
 {
     public Guid CreditId { get; protected init; } = creditId;
 
-    internal override async Task<AccountEvent> PerformTransient()
+    internal override async Task<TransactionEvent> PerformTransient()
     {
         var @event = await base.PerformTransient();
         Events.BalanceChange source = @event.Transfer!.Source,
             target = @event.Transfer!.Target;
 
-        return new AccountEvent(
+        return new TransactionEvent(
             Message,
-            AccountEventType.Transfer,
             Now,
             IdempotenceKey,
             transfer: new Events.Transfer(source, target, new(source, target, CreditId)) { }

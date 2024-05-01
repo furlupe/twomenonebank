@@ -12,7 +12,7 @@ public class CreditTransfer
     {
         CreditId = creditId;
         Type =
-            source.Account.UserId == Guid.Empty
+            source.Account.OwnerId == Guid.Empty
                 ? CreditTransferType.CreditIssued
                 : CreditTransferType.CreditRepayed;
     }

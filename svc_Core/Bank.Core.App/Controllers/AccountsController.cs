@@ -1,6 +1,7 @@
 ﻿using Bank.Auth.Common.Attributes;
 using Bank.Auth.Common.Extensions;
 using Bank.Auth.Common.Policies;
+using Bank.Common.Http;
 using Bank.Common.Pagination;
 using Bank.Core.App.Services.Contracts;
 using Bank.Core.Http.Dto;
@@ -46,16 +47,12 @@ public class AccountsController(
     }
 
     [HttpPost("open")]
-    public async Task<Guid> CreateAccount([FromBody] AccountCreateDto dto)
-    {
-        return await accountService.CreateAccountFor(User.GetId(), dto);
-    }
+    public Task<Guid> OpenAccount([FromBody] AccountOpenDto dto) =>
+        accountService.OpenAccountFor(User.GetId(), dto, HttpContext.GetIdempotenceKey());
 
     [HttpPost("{id}/set-default")]
-    public async Task SetDefault([FromRoute] Guid id)
-    {
-        await accountService.SetDefaultAccount(User.GetId(), id);
-    }
+    public Task SetDefault([FromRoute] Guid id) =>
+        accountService.SetDefaultAccount(User.GetId(), id);
 
     [HttpDelete("close/{id}")]
     public async Task CloseAccount([FromRoute] Guid id)
@@ -63,6 +60,6 @@ public class AccountsController(
         if (!await accountService.IsAccountOwnedBy(id, User.GetId()))
             throw new NotFoundException();
 
-        await accountService.CloseAccount(id);
+        await accountService.CloseAccount(id, HttpContext.GetIdempotenceKey());
     }
 }

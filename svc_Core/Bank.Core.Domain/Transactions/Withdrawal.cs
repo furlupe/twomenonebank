@@ -13,7 +13,7 @@ public class Withdrawal(
     ICurrencyConverter converter
 ) : BalanceChange(value, now, idempotenceKey, target, converter)
 {
-    internal override async Task<AccountEvent> PerformTransient()
+    internal override async Task<TransactionEvent> PerformTransient()
     {
         ValidateTargetOpen();
         ValidateValue();
@@ -23,7 +23,6 @@ public class Withdrawal(
 
         return new(
             $"Withdrew {FormatValues(nativeValue, Value)}.",
-            AccountEventType.BalanceChange,
             Now,
             IdempotenceKey,
             balanceChange: new Events.BalanceChange(

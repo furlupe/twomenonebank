@@ -19,15 +19,15 @@ public class Transfer(
     public Account Target { get; protected init; } = target;
     public string Message { get; protected init; } = message ?? "Transferred.";
 
-    public override async Task<AccountEvent> Perform()
+    public override async Task<TransactionEvent> Perform()
     {
         var @event = await PerformTransient();
-        Source.AddEvent(@event);
-        Target.AddEvent(@event);
+        Source.AddTransaction(@event);
+        Target.AddTransaction(@event);
         return @event;
     }
 
-    internal override async Task<AccountEvent> PerformTransient()
+    internal override async Task<TransactionEvent> PerformTransient()
     {
         ValidateCircuit();
         var withdrawal = await new Withdrawal(
@@ -49,9 +49,8 @@ public class Transfer(
             deposit.BalanceChange!.ForeignValue
         );
 
-        return new AccountEvent(
+        return new TransactionEvent(
             Message,
-            AccountEventType.Transfer,
             Now,
             IdempotenceKey,
             transfer: new Events.Transfer(withdrawal.BalanceChange, deposit.BalanceChange) { }

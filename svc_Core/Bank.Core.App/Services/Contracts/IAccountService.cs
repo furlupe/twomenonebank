@@ -12,9 +12,9 @@ public interface IAccountService
     Task SetDefaultAccount(Guid userId, Guid accountId);
     Task<Account> GetUserDefaultAccount(Guid userId);
     Task<PageDto<Account>> GetAccountsFor(Guid id, AccountQueryParameters queryParameters);
-    Task<Guid> CreateAccountFor(Guid id, AccountCreateDto dto);
+    Task<Guid> OpenAccountFor(Guid id, AccountOpenDto dto, Guid idempotenceKey);
+    Task CloseAccount(Guid id, Guid idempotenceKey);
     Task<bool> IsAccountOwnedBy(Guid accountId, Guid userId);
     Task<Account> GetAccountIfOwnedBy(Guid accountId, Guid userId);
     Task CheckAccountOwnedBy(Guid accountId, Guid userId);
-    Task CloseAccount(Guid id);
 }

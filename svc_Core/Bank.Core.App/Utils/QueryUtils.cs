@@ -15,8 +15,8 @@ public static class QueryUtils
         await queryable.SingleOrDefaultAsync(predicate)
         ?? throw NotFoundException.ForModel<TSource>();
 
-    public static IQueryable<AccountEvent> WhereResolvedAt(
-        this IQueryable<AccountEvent> query,
+    public static IQueryable<TransactionEvent> WhereResolvedAt(
+        this IQueryable<TransactionEvent> query,
         TransactionQueryParameters parameters
     )
     {

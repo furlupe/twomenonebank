@@ -12,7 +12,7 @@ public class Deposit(
     ICurrencyConverter converter
 ) : BalanceChange(value, now, idempotenceKey, target, converter)
 {
-    internal override async Task<AccountEvent> PerformTransient()
+    internal override async Task<TransactionEvent> PerformTransient()
     {
         ValidateTargetOpen();
         ValidateValue();
@@ -21,7 +21,6 @@ public class Deposit(
 
         return new(
             $"Deposited {FormatValues(nativeValue, Value)}.",
-            AccountEventType.BalanceChange,
             Now,
             IdempotenceKey,
             balanceChange: new Events.BalanceChange(
