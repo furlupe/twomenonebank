@@ -2,14 +2,17 @@ using System.Reflection;
 using Bank.Auth.Common.Extensions;
 using Bank.Auth.Common.Policies.Handlers;
 using Bank.Auth.Http.AuthClient;
+using Bank.Common;
 using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
 using Bank.Common.Middlewares;
 using Bank.Common.Middlewares.Conditional500Error;
+using Bank.Common.Middlewares.Tracing;
 using Bank.Core.Http.Client;
 using Bank.Credit.App.Services;
 using Bank.Credit.App.Setup;
 using Bank.Credit.Persistance.Extensions;
+using Bank.Logging.Extensions;
 using Bank.TransactionsGateway.Http.Client;
 using Hangfire;
 
@@ -40,12 +43,20 @@ builder
     .AddCoreClient()
     .AddTransactionsClient();
 
+builder.AddLogging();
+
 var app = builder.Build();
+
+app.UseTracing();
+app.UseLogging();
 
 await app.UsePersistance();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
-app.UseConditional500ErrorMiddleware();
+if (app.TransientErrorsEnabled())
+{
+    app.UseConditional500ErrorMiddleware();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();

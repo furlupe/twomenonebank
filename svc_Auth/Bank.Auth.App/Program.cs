@@ -2,6 +2,7 @@ using System.Reflection;
 using Bank.Auth.App.Setup.Extensions;
 using Bank.Auth.Common.Extensions;
 using Bank.Auth.Http.AuthClient;
+using Bank.Common;
 using Bank.Common.DateTimeProvider;
 using Bank.Common.Extensions;
 using Bank.Common.Middlewares;
@@ -39,7 +40,10 @@ app.UseLogging();
 await app.UsePersistance();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
-app.UseConditional500ErrorMiddleware(_ => true);
+if (app.TransientErrorsEnabled())
+{
+    app.UseConditional500ErrorMiddleware(_ => true);
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
