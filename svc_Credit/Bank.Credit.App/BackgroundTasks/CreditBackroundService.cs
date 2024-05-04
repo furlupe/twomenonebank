@@ -20,7 +20,6 @@ namespace Bank.Credit.App.Services
             BankCreditDbContext dbContext,
             IDateTimeProvider dateTimeProvider,
             TransactionsClient transactionsClient
-
         )
         {
             _dbContext = dbContext;
@@ -31,10 +30,14 @@ namespace Bank.Credit.App.Services
         private async Task Pay(Guid userId, Guid creditId)
         {
             var credit = await _dbContext
-            .Credits.Include(x => x.Tariff)
+                .Credits.Include(x => x.Tariff)
                 .SingleAsync(x => x.User.Id == userId && x.Id == creditId);
 
-            await _transactionsClient.ReclaimCreditPayment(credit.WithdrawalAccountId, credit.Id, new Money(credit.PeriodicPayment, Currency.RUB));
+            await _transactionsClient.ReclaimCreditPayment(
+                credit.WithdrawalAccountId,
+                credit.Id,
+                new Money(credit.PeriodicPayment, Currency.RUB)
+            );
             await _dbContext.SaveChangesAsync();
         }
 
@@ -71,9 +74,13 @@ namespace Bank.Credit.App.Services
                     await _dbContext.ExecuteInTransaction(
                         () =>
                         {
-                            if (wasPaymentSuccessfull) { credit.Pay(now); }
+                            if (wasPaymentSuccessfull)
+                            {
+                                credit.Pay(now);
+                            }
 
-                            if (credit.IsClosed) return;
+                            if (credit.IsClosed)
+                                return;
 
                             credit.MoveNextPaymentDate(now);
                             credit.ApplyRate(now);

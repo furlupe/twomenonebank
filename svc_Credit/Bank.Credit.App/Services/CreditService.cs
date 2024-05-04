@@ -37,16 +37,29 @@ namespace Bank.Credit.App.Services
             var masterAccount = await _coreClient.GetMasterAccountInfo();
             if (masterAccount.Balance < money)
             {
-                throw new InvalidOperationException("Bank is broke: master account has less money, then requested");
+                throw new InvalidOperationException(
+                    "Bank is broke: master account has less money, then requested"
+                );
             }
 
             var user = await _dbContext.Users.SingleAsync(x => x.Id == userId);
             var tariff = await _dbContext.Tariffs.SingleAsync(x => x.Id == dto.TariffId);
 
-            var credit = new Credits.Credit(user, tariff, dto.Amount, dto.Days, dto.WithdrawalAccountId , _dateTimeProvider.UtcNow);
+            var credit = new Credits.Credit(
+                user,
+                tariff,
+                dto.Amount,
+                dto.Days,
+                dto.WithdrawalAccountId,
+                _dateTimeProvider.UtcNow
+            );
             user.AddCredit(credit);
 
-            await _transactionsClient.WithdrawFromMasterAccount(dto.DestinationAccountId, credit.Id, money);
+            await _transactionsClient.WithdrawFromMasterAccount(
+                dto.DestinationAccountId,
+                credit.Id,
+                money
+            );
 
             await _dbContext.SaveChangesAsync();
         }

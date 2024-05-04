@@ -11,9 +11,7 @@ namespace Bank.Credit.App.BackgroundTasks
         private readonly BankCreditDbContext _bankCreditDbContext;
         private readonly int Gap = 100;
 
-        public CreditRatingBackgroundService(
-            BankCreditDbContext bankCreditDbContext
-        )
+        public CreditRatingBackgroundService(BankCreditDbContext bankCreditDbContext)
         {
             _bankCreditDbContext = bankCreditDbContext;
         }

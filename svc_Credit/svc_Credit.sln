@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Logging", "..\Librarie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Monitoring.Http", "..\Libraries\Bank.Monitoring.Http\Bank.Monitoring.Http.csproj", "{95E9B607-C17E-44CB-8048-5E89E9D7A65B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Idempotency", "..\Libraries\Bank.Idempotency\Bank.Idempotency.csproj", "{8C0F2C9B-688D-4AF8-B48E-4C59CC366270}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{95E9B607-C17E-44CB-8048-5E89E9D7A65B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95E9B607-C17E-44CB-8048-5E89E9D7A65B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95E9B607-C17E-44CB-8048-5E89E9D7A65B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C0F2C9B-688D-4AF8-B48E-4C59CC366270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C0F2C9B-688D-4AF8-B48E-4C59CC366270}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C0F2C9B-688D-4AF8-B48E-4C59CC366270}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C0F2C9B-688D-4AF8-B48E-4C59CC366270}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,6 +117,7 @@ Global
 		{CBD1FED9-7AA4-4A35-B31A-D6D9E2498471} = {43D986E9-C7AD-4742-9EA8-E7399AAD5CAA}
 		{4CA61DC4-5395-4DA4-9A48-443A1B835076} = {43D986E9-C7AD-4742-9EA8-E7399AAD5CAA}
 		{95E9B607-C17E-44CB-8048-5E89E9D7A65B} = {43D986E9-C7AD-4742-9EA8-E7399AAD5CAA}
+		{8C0F2C9B-688D-4AF8-B48E-4C59CC366270} = {43D986E9-C7AD-4742-9EA8-E7399AAD5CAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FE67398-D11B-4EA3-AA65-2FA515E808CE}

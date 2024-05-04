@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Bank.Common.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
 namespace Bank.Common.Middlewares.Conditional500Error
@@ -35,10 +36,7 @@ namespace Bank.Common.Middlewares.Conditional500Error
         /// <param name="requestPermitter">A delegate that determines whether or not the request should proceed further</param>
         public static WebApplication UseConditional500ErrorMiddleware(this WebApplication app, Func<HttpContext, bool> requestPermitter)
         {
-            app.UseWhen(
-                context => !context.Request.Path.StartsWithSegments("/swagger"),
-                builder => builder.UseMiddleware<Conditional500ErrorMiddleware>(requestPermitter)
-            );
+            app.UseMiddlewareIgnoreSwagger<Conditional500ErrorMiddleware>(requestPermitter);
 
             return app;
         }

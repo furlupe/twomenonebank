@@ -31,6 +31,7 @@
     <ProjectReference Include="..\..\Libraries\Bank.Auth.Http\Bank.Auth.Http.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Common\Bank.Common.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Core.Http\Bank.Core.Http.csproj" />
+    <ProjectReference Include="..\..\Libraries\Bank.Idempotency\Bank.Idempotency.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.Logging\Bank.Logging.csproj" />
     <ProjectReference Include="..\..\Libraries\Bank.TransactionsGateway.Http\Bank.TransactionsGateway.Http.csproj" />
     <ProjectReference Include="..\Bank.Credit.Domain\Bank.Credit.Domain.csproj" />

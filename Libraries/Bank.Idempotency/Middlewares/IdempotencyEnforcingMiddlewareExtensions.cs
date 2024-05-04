@@ -1,0 +1,21 @@
+﻿using Bank.Common.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Bank.Idempotency.Middlewares
+{
+    public static class IdempotencyEnforcingMiddlewareExtensions
+    {
+        public static WebApplicationBuilder AddIdempotency<T>(this WebApplicationBuilder builder) where T : class, IActionService
+        {
+            builder.Services.AddScoped<IActionService, T>();
+
+            return builder;
+        }
+        public static WebApplication UseIdempotency(this WebApplication app)
+        {
+            app.UseMiddlewareIgnoreSwagger<IdempotencyEnforcingMiddleware>();
+            return app;
+        }
+    }
+}

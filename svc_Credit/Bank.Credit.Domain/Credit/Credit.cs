@@ -23,9 +23,9 @@ namespace Bank.Credit.Domain.Credit
         private Credit() { }
 
         public Credit(
-            User user, 
-            Tariff tariff, 
-            int amount, 
+            User user,
+            Tariff tariff,
+            int amount,
             int days,
             Guid withdrawalAccount,
             DateTime now
@@ -59,8 +59,10 @@ namespace Bank.Credit.Domain.Credit
         public void AddPenalty(DateTime happendAt)
         {
             var amount =
-                (int)Math.Floor(Amount * Tariff.PenaltyRate * (happendAt - LastPaymentDate).Days / 100.0)
-                - Penalty;
+                (int)
+                    Math.Floor(
+                        Amount * Tariff.PenaltyRate * (happendAt - LastPaymentDate).Days / 100.0
+                    ) - Penalty;
 
             if (amount < 1)
                 return;
