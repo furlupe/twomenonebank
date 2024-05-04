@@ -29,7 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Logging", "Bank.Loggin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Monitoring.Http", "Bank.Monitoring.Http\Bank.Monitoring.Http.csproj", "{85D7383C-82B8-402F-9A7B-58CA3C5BEACE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.Notifications.Http", "Bank.Notifications.Http\Bank.Notifications.Http.csproj", "{3FC8E9F8-C99B-4422-9A04-183E04A245DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Notifications.Http", "Bank.Notifications.Http\Bank.Notifications.Http.csproj", "{3FC8E9F8-C99B-4422-9A04-183E04A245DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.Idempotency", "Bank.Idempotency\Bank.Idempotency.csproj", "{8B587E32-EB2C-401E-A314-170005612758}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +91,10 @@ Global
 		{3FC8E9F8-C99B-4422-9A04-183E04A245DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FC8E9F8-C99B-4422-9A04-183E04A245DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FC8E9F8-C99B-4422-9A04-183E04A245DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B587E32-EB2C-401E-A314-170005612758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B587E32-EB2C-401E-A314-170005612758}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B587E32-EB2C-401E-A314-170005612758}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B587E32-EB2C-401E-A314-170005612758}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
