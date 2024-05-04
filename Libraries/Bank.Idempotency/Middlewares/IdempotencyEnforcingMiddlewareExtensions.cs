@@ -1,5 +1,4 @@
-﻿using Bank.Common.Extensions;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bank.Idempotency.Middlewares
@@ -12,9 +11,14 @@ namespace Bank.Idempotency.Middlewares
 
             return builder;
         }
-        public static WebApplication UseIdempotency(this WebApplication app)
+        public static WebApplication UseIdempotency(this WebApplication app, params string[] excludePaths)
         {
-            app.UseMiddlewareIgnoreSwagger<IdempotencyEnforcingMiddleware>();
+            app.UseWhen(
+                context => { 
+                    return !(excludePaths.Contains(context.Request.Path.ToString()) || context.Request.Path.StartsWithSegments("/swagger")); 
+                },
+                builder => builder.UseMiddleware<IdempotencyEnforcingMiddleware>()
+            );
             return app;
         }
     }

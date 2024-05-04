@@ -47,7 +47,7 @@ if (app.TransientErrorsEnabled())
     app.UseConditional500ErrorMiddleware(_ => true);
 }
 
-app.UseIdempotency();
+app.UseIdempotency("/connect/token", "/connect/authorize", "/login");
 
 app.UseSwagger();
 app.UseSwaggerUI();
