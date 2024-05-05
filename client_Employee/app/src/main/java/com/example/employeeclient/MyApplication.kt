@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import com.example.employeeclient.common.Constants.EMPLOYEE_TOPIC
 import com.example.employeeclient.common.Constants.LOCAL_CHANNEL
 import com.example.employeeclient.common.Constants.LOCAL_CHANNEL_ID
 import com.example.employeeclient.di.appModule
@@ -23,7 +24,7 @@ class MyApplication : Application() {
 
         createNotificationChannel()
 
-        Firebase.messaging.subscribeToTopic("test")
+        Firebase.messaging.subscribeToTopic(EMPLOYEE_TOPIC)
             .addOnCompleteListener { task ->
                 var msg = "Subscribed"
                 if (!task.isSuccessful) {

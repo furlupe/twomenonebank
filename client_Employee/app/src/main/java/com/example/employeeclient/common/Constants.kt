@@ -26,6 +26,9 @@ object Constants {
     const val TARIFF_TABLE = "tariff"
     const val USER_TABLE = "user"
 
+    // Firebase
+    const val EMPLOYEE_TOPIC = "employee"
+
     // Firebase local notifications
     const val LOCAL_CHANNEL_ID = "firebase-local"
     const val LOCAL_CHANNEL = "firebase-local"
