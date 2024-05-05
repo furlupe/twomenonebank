@@ -6,6 +6,8 @@ using Bank.Core.Domain.Events;
 using Bank.Core.Http.Dto.Events;
 using Bank.Core.Http.Dto.Pagination;
 using Bank.Core.Persistence;
+using Bank.Notifications.Http.Client;
+using FirebaseAdmin.Messaging;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +16,8 @@ namespace Bank.Core.App.Services;
 public class TransactionsService(
     CoreDbContext db,
     ITransactionsFactory transactionFactory,
-    IHubContext<TransactionsHub, ITransactionsClient> transactionsHub
+    IHubContext<TransactionsHub, ITransactionsClient> transactionsHub,
+    NotificationsClient notificationsClient
 ) : ITransactionsService
 {
     public async Task<PageDto<TransactionEvent>> GetAccountTransactions(
@@ -59,9 +62,40 @@ public class TransactionsService(
         var @event = await transaction.Perform();
         await db.SaveChangesAsync();
 
+        await SendTransactionNotifications(@event);
+    }
+
+    private async Task SendTransactionNotifications(TransactionEvent @event)
+    {
         await transactionsHub
             .Clients.Groups(GetAffectedAccountIds(@event))
             .ReceiveTransactions([AccountEventDto.From(@event)]);
+
+        var messageTitle = "New transaction";
+        try
+        {
+            foreach (
+                (Guid clientId, Notification message) in @event
+                    .GetClientMessages()
+                    .Select(x =>
+                        (x.Key, new Notification() { Title = messageTitle, Body = x.Value })
+                    )
+            )
+            {
+                await notificationsClient.NotifyCustomer(clientId, [message]);
+            }
+            await notificationsClient.NotifyEmployees(
+                [
+                    new Notification()
+                    {
+                        Title = messageTitle,
+                        Body =
+                            $"Affected accounts: {string.Join(", ", GetAffectedAccountIds(@event))}"
+                    }
+                ]
+            );
+        }
+        catch (Exception ex) { }
     }
 
     private static List<string> GetAffectedAccountIds(TransactionEvent @event)

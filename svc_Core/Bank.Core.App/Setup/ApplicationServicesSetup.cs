@@ -11,6 +11,7 @@ using Bank.Core.App.Services.Contracts;
 using Bank.Core.Persistence;
 using Bank.Exceptions.WebApiException;
 using Bank.Logging.Extensions;
+using Bank.Notifications.Http.Client;
 using MassTransit;
 
 namespace Bank.Core.App.Setup;
@@ -28,6 +29,8 @@ public static class ApplicationServicesSetup
             .AddScoped<IAccountService, AccountService>()
             .AddScoped<ITransactionsService, TransactionsService>()
             .AddScoped<ITransactionsFactory, TransactionsFactory>();
+
+        builder.AddNotificationsClient();
 
         services.AddScoped<ICurrencyConversionRatesCacheBackingStore, CoreDbContext>();
         builder.AddCurrencyConverter();
