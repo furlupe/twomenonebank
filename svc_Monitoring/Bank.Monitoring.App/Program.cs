@@ -1,4 +1,6 @@
+using Bank.Common;
 using Bank.Common.Extensions;
+using Bank.Common.Middlewares.Conditional500Error;
 using Bank.Monitoring.App.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+if (app.TransientErrorsEnabled())
+{
+    app.UseConditional500ErrorMiddleware();
 }
 
 app.UseAuthorization();

@@ -22,22 +22,50 @@ namespace Bank.Core.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AccountAccountEvent", b =>
+            modelBuilder.Entity("AccountTransactionEvent", b =>
                 {
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("EventsId")
+                    b.Property<Guid>("TransactionsId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("AccountId", "EventsId");
+                    b.HasKey("AccountId", "TransactionsId");
 
-                    b.HasIndex("EventsId");
+                    b.HasIndex("TransactionsId");
 
-                    b.ToTable("AccountAccountEvent", (string)null);
+                    b.ToTable("AccountTransactionEvent");
                 });
 
             modelBuilder.Entity("Bank.Core.Domain.Events.AccountEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AccountId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("EventType")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("IdempotenceKey")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ResolvedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("State")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("AccountEvent");
+                });
+
+            modelBuilder.Entity("Bank.Core.Domain.Events.TransactionEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,6 +78,9 @@ namespace Bank.Core.Persistence.Migrations
                     b.Property<int>("EventType")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("IdempotenceKey")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("ResolvedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -58,7 +89,7 @@ namespace Bank.Core.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AccountEvent", (string)null);
+                    b.ToTable("TransactionEvent");
                 });
 
             modelBuilder.Entity("Bank.Core.Domain.StoredModel", b =>
@@ -99,7 +130,7 @@ namespace Bank.Core.Persistence.Migrations
 
                     b.HasKey("Source", "Target");
 
-                    b.ToTable("CurrencyExhangeRates", (string)null);
+                    b.ToTable("CurrencyExhangeRates");
                 });
 
             modelBuilder.Entity("Bank.Core.Domain.Account", b =>
@@ -116,15 +147,15 @@ namespace Bank.Core.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("OwnerId")
                         .HasColumnType("uuid");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("OwnerId");
 
-                    b.HasIndex("Name", "UserId")
+                    b.HasIndex("Name", "OwnerId")
                         .IsUnique();
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("Bank.Core.Domain.User", b =>
@@ -137,10 +168,10 @@ namespace Bank.Core.Persistence.Migrations
                     b.HasIndex("DefaultTransferAccountId")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("AccountAccountEvent", b =>
+            modelBuilder.Entity("AccountTransactionEvent", b =>
                 {
                     b.HasOne("Bank.Core.Domain.Account", null)
                         .WithMany()
@@ -148,18 +179,25 @@ namespace Bank.Core.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Bank.Core.Domain.Events.AccountEvent", null)
+                    b.HasOne("Bank.Core.Domain.Events.TransactionEvent", null)
                         .WithMany()
-                        .HasForeignKey("EventsId")
+                        .HasForeignKey("TransactionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Bank.Core.Domain.Events.AccountEvent", b =>
                 {
-                    b.OwnsOne("Bank.Core.Domain.Events.AccountEvent.BalanceChange#Bank.Core.Domain.Events.BalanceChange", "BalanceChange", b1 =>
+                    b.HasOne("Bank.Core.Domain.Account", null)
+                        .WithMany("Events")
+                        .HasForeignKey("AccountId");
+                });
+
+            modelBuilder.Entity("Bank.Core.Domain.Events.TransactionEvent", b =>
+                {
+                    b.OwnsOne("Bank.Core.Domain.Events.BalanceChange", "BalanceChange", b1 =>
                         {
-                            b1.Property<Guid>("AccountEventId")
+                            b1.Property<Guid>("TransactionEventId")
                                 .HasColumnType("uuid");
 
                             b1.Property<Guid>("AccountId")
@@ -168,14 +206,11 @@ namespace Bank.Core.Persistence.Migrations
                             b1.Property<int>("EventType")
                                 .HasColumnType("integer");
 
-                            b1.HasKey("AccountEventId");
+                            b1.HasKey("TransactionEventId");
 
                             b1.HasIndex("AccountId");
 
-                            b1.ToTable("AccountEvent", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("AccountEventId");
+                            b1.ToTable("TransactionEvent");
 
                             b1.HasOne("Bank.Core.Domain.Account", "Account")
                                 .WithMany()
@@ -183,9 +218,12 @@ namespace Bank.Core.Persistence.Migrations
                                 .OnDelete(DeleteBehavior.Cascade)
                                 .IsRequired();
 
-                            b1.OwnsOne("Bank.Core.Domain.Events.AccountEvent.BalanceChange#Bank.Core.Domain.Events.BalanceChange.ForeignValue#Bank.Common.Money.Money", "ForeignValue", b2 =>
+                            b1.WithOwner()
+                                .HasForeignKey("TransactionEventId");
+
+                            b1.OwnsOne("Bank.Common.Money.Money", "ForeignValue", b2 =>
                                 {
-                                    b2.Property<Guid>("BalanceChangeAccountEventId")
+                                    b2.Property<Guid>("BalanceChangeTransactionEventId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<decimal>("Amount")
@@ -194,17 +232,17 @@ namespace Bank.Core.Persistence.Migrations
                                     b2.Property<int>("Currency")
                                         .HasColumnType("integer");
 
-                                    b2.HasKey("BalanceChangeAccountEventId");
+                                    b2.HasKey("BalanceChangeTransactionEventId");
 
-                                    b2.ToTable("AccountEvent", (string)null);
+                                    b2.ToTable("TransactionEvent");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("BalanceChangeAccountEventId");
+                                        .HasForeignKey("BalanceChangeTransactionEventId");
                                 });
 
-                            b1.OwnsOne("Bank.Core.Domain.Events.AccountEvent.BalanceChange#Bank.Core.Domain.Events.BalanceChange.NativeValue#Bank.Common.Money.Money", "NativeValue", b2 =>
+                            b1.OwnsOne("Bank.Common.Money.Money", "NativeValue", b2 =>
                                 {
-                                    b2.Property<Guid>("BalanceChangeAccountEventId")
+                                    b2.Property<Guid>("BalanceChangeTransactionEventId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<decimal>("Amount")
@@ -213,12 +251,12 @@ namespace Bank.Core.Persistence.Migrations
                                     b2.Property<int>("Currency")
                                         .HasColumnType("integer");
 
-                                    b2.HasKey("BalanceChangeAccountEventId");
+                                    b2.HasKey("BalanceChangeTransactionEventId");
 
-                                    b2.ToTable("AccountEvent", (string)null);
+                                    b2.ToTable("TransactionEvent");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("BalanceChangeAccountEventId");
+                                        .HasForeignKey("BalanceChangeTransactionEventId");
                                 });
 
                             b1.Navigation("Account");
@@ -230,24 +268,24 @@ namespace Bank.Core.Persistence.Migrations
                                 .IsRequired();
                         });
 
-                    b.OwnsOne("Bank.Core.Domain.Events.AccountEvent.Transfer#Bank.Core.Domain.Events.Transfer", "Transfer", b1 =>
+                    b.OwnsOne("Bank.Core.Domain.Events.Transfer", "Transfer", b1 =>
                         {
-                            b1.Property<Guid>("AccountEventId")
+                            b1.Property<Guid>("TransactionEventId")
                                 .HasColumnType("uuid");
 
                             b1.Property<int>("Type")
                                 .HasColumnType("integer");
 
-                            b1.HasKey("AccountEventId");
+                            b1.HasKey("TransactionEventId");
 
-                            b1.ToTable("AccountEvent", (string)null);
+                            b1.ToTable("TransactionEvent");
 
                             b1.WithOwner()
-                                .HasForeignKey("AccountEventId");
+                                .HasForeignKey("TransactionEventId");
 
-                            b1.OwnsOne("Bank.Core.Domain.Events.AccountEvent.Transfer#Bank.Core.Domain.Events.Transfer.CreditTransfer#Bank.Core.Domain.Events.CreditTransfer", "CreditTransfer", b2 =>
+                            b1.OwnsOne("Bank.Core.Domain.Events.CreditTransfer", "CreditTransfer", b2 =>
                                 {
-                                    b2.Property<Guid>("TransferAccountEventId")
+                                    b2.Property<Guid>("TransferTransactionEventId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<Guid>("CreditId")
@@ -256,17 +294,17 @@ namespace Bank.Core.Persistence.Migrations
                                     b2.Property<int>("Type")
                                         .HasColumnType("integer");
 
-                                    b2.HasKey("TransferAccountEventId");
+                                    b2.HasKey("TransferTransactionEventId");
 
-                                    b2.ToTable("AccountEvent", (string)null);
+                                    b2.ToTable("TransactionEvent");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("TransferAccountEventId");
+                                        .HasForeignKey("TransferTransactionEventId");
                                 });
 
-                            b1.OwnsOne("Bank.Core.Domain.Events.AccountEvent.Transfer#Bank.Core.Domain.Events.Transfer.Source#Bank.Core.Domain.Events.BalanceChange", "Source", b2 =>
+                            b1.OwnsOne("Bank.Core.Domain.Events.BalanceChange", "Source", b2 =>
                                 {
-                                    b2.Property<Guid>("TransferAccountEventId")
+                                    b2.Property<Guid>("TransferTransactionEventId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<Guid>("AccountId")
@@ -275,11 +313,11 @@ namespace Bank.Core.Persistence.Migrations
                                     b2.Property<int>("EventType")
                                         .HasColumnType("integer");
 
-                                    b2.HasKey("TransferAccountEventId");
+                                    b2.HasKey("TransferTransactionEventId");
 
                                     b2.HasIndex("AccountId");
 
-                                    b2.ToTable("AccountEvent", (string)null);
+                                    b2.ToTable("TransactionEvent");
 
                                     b2.HasOne("Bank.Core.Domain.Account", "Account")
                                         .WithMany()
@@ -288,11 +326,11 @@ namespace Bank.Core.Persistence.Migrations
                                         .IsRequired();
 
                                     b2.WithOwner()
-                                        .HasForeignKey("TransferAccountEventId");
+                                        .HasForeignKey("TransferTransactionEventId");
 
-                                    b2.OwnsOne("Bank.Core.Domain.Events.AccountEvent.Transfer#Bank.Core.Domain.Events.Transfer.Source#Bank.Core.Domain.Events.BalanceChange.ForeignValue#Bank.Common.Money.Money", "ForeignValue", b3 =>
+                                    b2.OwnsOne("Bank.Common.Money.Money", "ForeignValue", b3 =>
                                         {
-                                            b3.Property<Guid>("BalanceChangeTransferAccountEventId")
+                                            b3.Property<Guid>("BalanceChangeTransferTransactionEventId")
                                                 .HasColumnType("uuid");
 
                                             b3.Property<decimal>("Amount")
@@ -301,17 +339,17 @@ namespace Bank.Core.Persistence.Migrations
                                             b3.Property<int>("Currency")
                                                 .HasColumnType("integer");
 
-                                            b3.HasKey("BalanceChangeTransferAccountEventId");
+                                            b3.HasKey("BalanceChangeTransferTransactionEventId");
 
-                                            b3.ToTable("AccountEvent", (string)null);
+                                            b3.ToTable("TransactionEvent");
 
                                             b3.WithOwner()
-                                                .HasForeignKey("BalanceChangeTransferAccountEventId");
+                                                .HasForeignKey("BalanceChangeTransferTransactionEventId");
                                         });
 
-                                    b2.OwnsOne("Bank.Core.Domain.Events.AccountEvent.Transfer#Bank.Core.Domain.Events.Transfer.Source#Bank.Core.Domain.Events.BalanceChange.NativeValue#Bank.Common.Money.Money", "NativeValue", b3 =>
+                                    b2.OwnsOne("Bank.Common.Money.Money", "NativeValue", b3 =>
                                         {
-                                            b3.Property<Guid>("BalanceChangeTransferAccountEventId")
+                                            b3.Property<Guid>("BalanceChangeTransferTransactionEventId")
                                                 .HasColumnType("uuid");
 
                                             b3.Property<decimal>("Amount")
@@ -320,12 +358,12 @@ namespace Bank.Core.Persistence.Migrations
                                             b3.Property<int>("Currency")
                                                 .HasColumnType("integer");
 
-                                            b3.HasKey("BalanceChangeTransferAccountEventId");
+                                            b3.HasKey("BalanceChangeTransferTransactionEventId");
 
-                                            b3.ToTable("AccountEvent", (string)null);
+                                            b3.ToTable("TransactionEvent");
 
                                             b3.WithOwner()
-                                                .HasForeignKey("BalanceChangeTransferAccountEventId");
+                                                .HasForeignKey("BalanceChangeTransferTransactionEventId");
                                         });
 
                                     b2.Navigation("Account");
@@ -337,9 +375,9 @@ namespace Bank.Core.Persistence.Migrations
                                         .IsRequired();
                                 });
 
-                            b1.OwnsOne("Bank.Core.Domain.Events.AccountEvent.Transfer#Bank.Core.Domain.Events.Transfer.Target#Bank.Core.Domain.Events.BalanceChange", "Target", b2 =>
+                            b1.OwnsOne("Bank.Core.Domain.Events.BalanceChange", "Target", b2 =>
                                 {
-                                    b2.Property<Guid>("TransferAccountEventId")
+                                    b2.Property<Guid>("TransferTransactionEventId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<Guid>("AccountId")
@@ -348,11 +386,11 @@ namespace Bank.Core.Persistence.Migrations
                                     b2.Property<int>("EventType")
                                         .HasColumnType("integer");
 
-                                    b2.HasKey("TransferAccountEventId");
+                                    b2.HasKey("TransferTransactionEventId");
 
                                     b2.HasIndex("AccountId");
 
-                                    b2.ToTable("AccountEvent", (string)null);
+                                    b2.ToTable("TransactionEvent");
 
                                     b2.HasOne("Bank.Core.Domain.Account", "Account")
                                         .WithMany()
@@ -361,11 +399,11 @@ namespace Bank.Core.Persistence.Migrations
                                         .IsRequired();
 
                                     b2.WithOwner()
-                                        .HasForeignKey("TransferAccountEventId");
+                                        .HasForeignKey("TransferTransactionEventId");
 
-                                    b2.OwnsOne("Bank.Core.Domain.Events.AccountEvent.Transfer#Bank.Core.Domain.Events.Transfer.Target#Bank.Core.Domain.Events.BalanceChange.ForeignValue#Bank.Common.Money.Money", "ForeignValue", b3 =>
+                                    b2.OwnsOne("Bank.Common.Money.Money", "ForeignValue", b3 =>
                                         {
-                                            b3.Property<Guid>("BalanceChangeTransferAccountEventId")
+                                            b3.Property<Guid>("BalanceChangeTransferTransactionEventId")
                                                 .HasColumnType("uuid");
 
                                             b3.Property<decimal>("Amount")
@@ -374,17 +412,17 @@ namespace Bank.Core.Persistence.Migrations
                                             b3.Property<int>("Currency")
                                                 .HasColumnType("integer");
 
-                                            b3.HasKey("BalanceChangeTransferAccountEventId");
+                                            b3.HasKey("BalanceChangeTransferTransactionEventId");
 
-                                            b3.ToTable("AccountEvent", (string)null);
+                                            b3.ToTable("TransactionEvent");
 
                                             b3.WithOwner()
-                                                .HasForeignKey("BalanceChangeTransferAccountEventId");
+                                                .HasForeignKey("BalanceChangeTransferTransactionEventId");
                                         });
 
-                                    b2.OwnsOne("Bank.Core.Domain.Events.AccountEvent.Transfer#Bank.Core.Domain.Events.Transfer.Target#Bank.Core.Domain.Events.BalanceChange.NativeValue#Bank.Common.Money.Money", "NativeValue", b3 =>
+                                    b2.OwnsOne("Bank.Common.Money.Money", "NativeValue", b3 =>
                                         {
-                                            b3.Property<Guid>("BalanceChangeTransferAccountEventId")
+                                            b3.Property<Guid>("BalanceChangeTransferTransactionEventId")
                                                 .HasColumnType("uuid");
 
                                             b3.Property<decimal>("Amount")
@@ -393,12 +431,12 @@ namespace Bank.Core.Persistence.Migrations
                                             b3.Property<int>("Currency")
                                                 .HasColumnType("integer");
 
-                                            b3.HasKey("BalanceChangeTransferAccountEventId");
+                                            b3.HasKey("BalanceChangeTransferTransactionEventId");
 
-                                            b3.ToTable("AccountEvent", (string)null);
+                                            b3.ToTable("TransactionEvent");
 
                                             b3.WithOwner()
-                                                .HasForeignKey("BalanceChangeTransferAccountEventId");
+                                                .HasForeignKey("BalanceChangeTransferTransactionEventId");
                                         });
 
                                     b2.Navigation("Account");
@@ -428,11 +466,11 @@ namespace Bank.Core.Persistence.Migrations
                 {
                     b.HasOne("Bank.Core.Domain.User", "User")
                         .WithMany("Accounts")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Bank.Core.Domain.Account.Balance#Bank.Common.Money.Money", "Balance", b1 =>
+                    b.OwnsOne("Bank.Common.Money.Money", "Balance", b1 =>
                         {
                             b1.Property<Guid>("AccountId")
                                 .HasColumnType("uuid");
@@ -451,7 +489,7 @@ namespace Bank.Core.Persistence.Migrations
 
                             b1.HasKey("AccountId");
 
-                            b1.ToTable("Accounts", (string)null);
+                            b1.ToTable("Accounts");
 
                             b1.WithOwner()
                                 .HasForeignKey("AccountId");
@@ -470,6 +508,11 @@ namespace Bank.Core.Persistence.Migrations
                         .HasForeignKey("Bank.Core.Domain.User", "DefaultTransferAccountId");
 
                     b.Navigation("DefaultTransferAccount");
+                });
+
+            modelBuilder.Entity("Bank.Core.Domain.Account", b =>
+                {
+                    b.Navigation("Events");
                 });
 
             modelBuilder.Entity("Bank.Core.Domain.User", b =>

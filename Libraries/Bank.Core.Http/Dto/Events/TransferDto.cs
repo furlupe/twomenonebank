@@ -4,8 +4,8 @@ namespace Bank.Core.Http.Dto.Events;
 
 public class TransferDto
 {
-    public BalanceChangeDto Source { get; protected set; }
-    public BalanceChangeDto Target { get; protected set; }
+    public BalanceChangeDto Source { get; protected set; } = null!;
+    public BalanceChangeDto Target { get; protected set; } = null!;
 
     public static TransferDto? From(Transfer? model) =>
         model == null

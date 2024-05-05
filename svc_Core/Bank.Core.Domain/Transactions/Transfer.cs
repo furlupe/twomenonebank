@@ -8,38 +8,51 @@ namespace Bank.Core.Domain.Transactions;
 public class Transfer(
     Money value,
     DateTime now,
+    Guid idempotenceKey,
     Account source,
     Account target,
     ICurrencyConverter converter,
     string? message = null
-) : Transaction(value, now)
+) : Transaction(value, now, idempotenceKey)
 {
     public Account Source { get; protected init; } = source;
     public Account Target { get; protected init; } = target;
     public string Message { get; protected init; } = message ?? "Transferred.";
 
-    public override async Task<AccountEvent> Perform()
+    public override async Task<TransactionEvent> Perform()
     {
         var @event = await PerformTransient();
-        Source.AddEvent(@event);
-        Target.AddEvent(@event);
+        Source.AddTransaction(@event);
+        Target.AddTransaction(@event);
         return @event;
     }
 
-    internal override async Task<AccountEvent> PerformTransient()
+    internal override async Task<TransactionEvent> PerformTransient()
     {
         ValidateCircuit();
-        var withdrawal = await new Withdrawal(Value, Now, Source, converter).PerformTransient()!;
-        var deposit = await new Deposit(Value, Now, Target, converter).PerformTransient()!;
+        var withdrawal = await new Withdrawal(
+            Value,
+            Now,
+            IdempotenceKey,
+            Source,
+            converter
+        ).PerformTransient()!;
+        var deposit = await new Deposit(
+            Value,
+            Now,
+            IdempotenceKey,
+            Target,
+            converter
+        ).PerformTransient()!;
         ValidateEquality(
             withdrawal.BalanceChange!.ForeignValue,
             deposit.BalanceChange!.ForeignValue
         );
 
-        return new AccountEvent(
+        return new TransactionEvent(
             Message,
-            AccountEventType.Transfer,
             Now,
+            IdempotenceKey,
             transfer: new Events.Transfer(withdrawal.BalanceChange, deposit.BalanceChange) { }
         );
     }

@@ -1,10 +1,7 @@
 ﻿using Bank.Auth.Common.Attributes;
 using Bank.Auth.Common.Extensions;
 using Bank.Core.App.Services.Contracts;
-using Bank.Core.Domain;
-using Bank.Exceptions.WebApiException;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Bank.Core.App.Hubs;

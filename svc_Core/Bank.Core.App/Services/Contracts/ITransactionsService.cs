@@ -6,12 +6,12 @@ namespace Bank.Core.App.Services.Contracts;
 
 public interface ITransactionsService
 {
-    Task<PageDto<AccountEvent>> GetAccountTransactions(
+    Task<PageDto<TransactionEvent>> GetAccountTransactions(
         Guid id,
         TransactionQueryParameters queryParameters
     );
 
-    Task<PageDto<AccountEvent>> GetMasterAccountTransactions(
+    Task<PageDto<TransactionEvent>> GetMasterAccountTransactions(
         TransactionQueryParameters queryParameters
     );
     Task Perform(Common.Transaction model);

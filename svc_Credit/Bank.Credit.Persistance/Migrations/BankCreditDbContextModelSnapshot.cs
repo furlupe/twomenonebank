@@ -166,6 +166,21 @@ namespace Bank.Credit.Persistance.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Bank.Idempotency.ActionDescriptor", b =>
+                {
+                    b.Property<Guid>("IdempotencyKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("IdempotencyKey");
+
+                    b.ToTable("ActionDescriptors");
+                });
+
             modelBuilder.Entity("Bank.Credit.Domain.Credit.Events.CreditClosedEvent", b =>
                 {
                     b.HasBaseType("Bank.Credit.Domain.Credit.Events.CreditEvent");

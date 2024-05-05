@@ -8,8 +8,7 @@ using Bank.Common.Middlewares;
 using Bank.Common.Middlewares.Conditional500Error;
 using Bank.Core.App.Hubs;
 using Bank.Core.App.Services;
-using Bank.Core.Persistence;
-using Microsoft.Extensions.Options;
+using Bank.Idempotency.Extensions.Swagger;
 
 namespace Bank.Core.App.Setup;
 
@@ -36,7 +35,7 @@ public static class FrontlineServicesSetup
             });
         });
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(o => o.AddAuth().UseXmlComments(Assembly.GetExecutingAssembly()));
+        services.AddSwaggerGen(o => o.AddAuth().AddIdempotencyHeader().UseXmlComments(Assembly.GetExecutingAssembly()));
 
         return builder;
     }

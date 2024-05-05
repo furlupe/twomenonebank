@@ -122,6 +122,21 @@ namespace Bank.Auth.Domain.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
+            modelBuilder.Entity("Bank.Idempotency.ActionDescriptor", b =>
+                {
+                    b.Property<Guid>("IdempotencyKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("IdempotencyKey");
+
+                    b.ToTable("ActionDescriptors");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")

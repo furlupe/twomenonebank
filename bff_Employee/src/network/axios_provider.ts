@@ -50,8 +50,13 @@ export class AxiosProvider {
     private _createAxiosInstance(baseUrl: string): AxiosInstance {
         const instance = axios.create({baseURL: baseUrl});
         instance.interceptors.request.use(cfg => {
-            const authHeader = this._store.getStore().authorizationHeader
-            cfg.headers.Authorization = authHeader
+            const store = this._store.getStore();
+            const authHeader = store.headers['authorization'];
+            const idempotenceKey = store.headers['idempotenceKey'];
+
+            cfg.headers.Authorization = authHeader;
+            cfg.headers["Idempotence-Key"] = idempotenceKey;
+
             return cfg
         });
 

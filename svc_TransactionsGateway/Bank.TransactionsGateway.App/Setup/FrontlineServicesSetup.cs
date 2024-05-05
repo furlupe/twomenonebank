@@ -5,6 +5,7 @@ using Bank.Common.Constants;
 using Bank.Common.Extensions;
 using Bank.Common.Middlewares;
 using Bank.Common.Middlewares.Conditional500Error;
+using Bank.Idempotency.Extensions.Swagger;
 
 namespace Bank.TransactionsGateway.App.Setup;
 
@@ -19,7 +20,7 @@ public static class FrontlineServicesSetup
         services.AddHealthChecks();
         services.AddControllers().AddJsonOptions(JsonConfigurationDefaults.JsonOptions);
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(o => o.AddAuth().UseXmlComments(Assembly.GetExecutingAssembly()));
+        services.AddSwaggerGen(o => o.AddAuth().AddIdempotencyHeader().UseXmlComments(Assembly.GetExecutingAssembly()));
 
         return builder;
     }

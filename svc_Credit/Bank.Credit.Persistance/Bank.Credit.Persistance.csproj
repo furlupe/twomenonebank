@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Bank.Common\Bank.Common.csproj" />
+    <ProjectReference Include="..\..\Libraries\Bank.Idempotency\Bank.Idempotency.csproj" />
     <ProjectReference Include="..\Bank.Credit.Domain\Bank.Credit.Domain.csproj" />
   </ItemGroup>
 

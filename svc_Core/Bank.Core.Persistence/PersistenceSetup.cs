@@ -43,7 +43,7 @@ public static class PersistenceSetup
             return;
 
         var masterUser = new User(Guid.Empty);
-        masterUser.OpenNewAccount("master", Common.Money.Currency.USD);
+        masterUser.OpenNewAccount("master", Common.Money.Currency.USD, DateTime.UtcNow, Guid.Empty);
         masterUser.Accounts.Single().IsMaster = true;
         db.Users.Add(masterUser);
     }

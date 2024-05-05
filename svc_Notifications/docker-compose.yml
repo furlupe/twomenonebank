@@ -1,0 +1,23 @@
+services:
+  notifications-app:
+    container_name: twomenonebank-notifications-app
+    hostname: twomenonebank-notifications-host
+    image: happypiece/twomenonebank:notifications
+    depends_on:
+      - db
+    ports:
+      - "0.0.0.0:33000:33000"
+      - "0.0.0.0:33001:33001"
+    environment:
+      ASPNETCORE_HTTP_PORT: https://+:33001
+      ASPNETCORE_URLS: http://+:33000
+      ASPNETCORE_ENVIRONMENT: Development
+    restart: always
+    networks:
+      - twomenonebank-network
+
+volumes:
+  twomenonebank-db:
+
+networks:
+  twomenonebank-network:

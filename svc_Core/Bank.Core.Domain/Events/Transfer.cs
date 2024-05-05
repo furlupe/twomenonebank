@@ -5,8 +5,8 @@ namespace Bank.Core.Domain.Events;
 [Owned]
 public class Transfer
 {
-    public BalanceChange Source { get; protected set; }
-    public BalanceChange Target { get; protected set; }
+    public BalanceChange Source { get; protected set; } = null!;
+    public BalanceChange Target { get; protected set; } = null!;
     public TransferType Type { get; protected set; }
     public CreditTransfer? CreditTransfer { get; protected set; }
 
@@ -26,7 +26,7 @@ public class Transfer
     }
 
     protected TransferType GetTransferType(BalanceChange source, BalanceChange target) =>
-        source.Account.UserId == target.Account.UserId ? TransferType.Me2Me : TransferType.P2P;
+        source.Account.OwnerId == target.Account.OwnerId ? TransferType.Me2Me : TransferType.P2P;
 
     protected Transfer() { }
 }

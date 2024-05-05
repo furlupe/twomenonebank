@@ -1,11 +1,13 @@
 ﻿using Bank.Credit.Domain;
 using Bank.Credit.Domain.Credit.Events;
+using Bank.Idempotency;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bank.Credit.Persistance
 {
     public class BankCreditDbContext : DbContext
     {
+        public DbSet<ActionDescriptor> ActionDescriptors { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Tariff> Tariffs { get; set; }
         public DbSet<Domain.Credit.Credit> Credits { get; set; }

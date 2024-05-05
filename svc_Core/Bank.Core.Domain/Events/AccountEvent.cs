@@ -2,25 +2,17 @@
 
 public class AccountEvent : DomainEvent
 {
-    public string Comment { get; protected set; }
     public AccountEventType EventType { get; protected set; }
-    public BalanceChange? BalanceChange { get; protected set; }
-    public Transfer? Transfer { get; protected set; }
 
     public AccountEvent(
-        string comment,
-        AccountEventType eventType,
         DateTime now,
-        EventState state = EventState.Completed,
-        BalanceChange? balanceChange = null,
-        Transfer? transfer = null
+        Guid idempotenceKey,
+        AccountEventType type,
+        EventState state = EventState.Completed
     )
-        : base(now, state)
+        : base(now, idempotenceKey, state)
     {
-        Comment = comment;
-        EventType = eventType;
-        BalanceChange = balanceChange;
-        Transfer = transfer;
+        EventType = type;
     }
 
     protected AccountEvent() { }
@@ -28,6 +20,6 @@ public class AccountEvent : DomainEvent
 
 public enum AccountEventType
 {
-    BalanceChange,
-    Transfer,
+    Open,
+    Close
 }

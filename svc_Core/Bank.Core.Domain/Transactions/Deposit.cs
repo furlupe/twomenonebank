@@ -4,10 +4,15 @@ using Bank.Core.Domain.Events;
 
 namespace Bank.Core.Domain.Transactions;
 
-public class Deposit(Money value, DateTime now, Account target, ICurrencyConverter converter)
-    : BalanceChange(value, now, target, converter)
+public class Deposit(
+    Money value,
+    DateTime now,
+    Guid idempotenceKey,
+    Account target,
+    ICurrencyConverter converter
+) : BalanceChange(value, now, idempotenceKey, target, converter)
 {
-    internal override async Task<AccountEvent> PerformTransient()
+    internal override async Task<TransactionEvent> PerformTransient()
     {
         ValidateTargetOpen();
         ValidateValue();
@@ -16,8 +21,8 @@ public class Deposit(Money value, DateTime now, Account target, ICurrencyConvert
 
         return new(
             $"Deposited {FormatValues(nativeValue, Value)}.",
-            AccountEventType.BalanceChange,
             Now,
+            IdempotenceKey,
             balanceChange: new Events.BalanceChange(
                 Target,
                 nativeValue,

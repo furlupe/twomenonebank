@@ -1,5 +1,6 @@
 ﻿using Bank.Auth.Common.Extensions;
 using Bank.Auth.Http.AuthClient;
+using Bank.Common.Http;
 using Bank.Core.Common;
 using Bank.TransactionsGateway.App.Services;
 using Bank.TransactionsGateway.Http;
@@ -23,19 +24,18 @@ public class TransactionsController(ITransactionService transactionService, Auth
     )
     {
         await transactionService.Dispatch(
-            new()
-            {
-                Value = transaction.Value,
-                InitiatorId = User.GetId(),
-                SourceId = sourceId,
-                Type = Transaction.TransactionType.Transfer,
-                Transfer = new()
+            new(
+                transaction.Value,
+                User.GetId(),
+                HttpContext.GetIdempotenceKey(),
+                sourceId,
+                transfer: new()
                 {
                     TargetId = await authClient.GetUserIdByPhone(transfereeIdentifier),
                     Message = transaction.Message,
                     Type = TransferType.P2P
                 }
-            }
+            )
         );
     }
 
@@ -47,19 +47,18 @@ public class TransactionsController(ITransactionService transactionService, Auth
     )
     {
         await transactionService.Dispatch(
-            new()
-            {
-                Value = transaction.Value,
-                InitiatorId = User.GetId(),
-                SourceId = sourceId,
-                Type = Transaction.TransactionType.Transfer,
-                Transfer = new()
+            new(
+                transaction.Value,
+                User.GetId(),
+                HttpContext.GetIdempotenceKey(),
+                sourceId,
+                transfer: new()
                 {
                     TargetId = targetId,
                     Message = transaction.Message,
                     Type = TransferType.Me2Me,
                 }
-            }
+            )
         );
     }
 
@@ -67,14 +66,13 @@ public class TransactionsController(ITransactionService transactionService, Auth
     public async Task Deposit([FromRoute] Guid id, [FromBody] DepositDto transaction)
     {
         await transactionService.Dispatch(
-            new()
-            {
-                Value = transaction.Value,
-                InitiatorId = User.GetId(),
-                SourceId = id,
-                Type = Transaction.TransactionType.BalanceChange,
-                BalanceChange = new() { Type = BalanceChange.BalanceChangeType.Deposit }
-            }
+            new(
+                transaction.Value,
+                User.GetId(),
+                HttpContext.GetIdempotenceKey(),
+                id,
+                balanceChange: new() { Type = BalanceChange.BalanceChangeType.Deposit }
+            )
         );
     }
 
@@ -82,14 +80,13 @@ public class TransactionsController(ITransactionService transactionService, Auth
     public async Task Withdraw([FromRoute] Guid id, [FromBody] WithdrawalDto transaction)
     {
         await transactionService.Dispatch(
-            new()
-            {
-                Value = transaction.Value,
-                InitiatorId = User.GetId(),
-                SourceId = id,
-                Type = Transaction.TransactionType.BalanceChange,
-                BalanceChange = new() { Type = BalanceChange.BalanceChangeType.Withdrawal }
-            }
+            new(
+                transaction.Value,
+                User.GetId(),
+                HttpContext.GetIdempotenceKey(),
+                id,
+                balanceChange: new() { Type = BalanceChange.BalanceChangeType.Withdrawal }
+            )
         );
     }
 }

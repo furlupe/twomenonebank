@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using Bank.Common;
+﻿using Bank.Common;
 using Bank.Common.Extensions;
 using Bank.Common.Money;
 using Bank.Common.Money.Converter;
