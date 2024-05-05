@@ -1,7 +1,7 @@
 export class IsDarkThemeDto {
     isDark: boolean;
 
-    constructor(enabled: boolean) {
-        this.isDark = enabled;
+    constructor(isDark: boolean) {
+        this.isDark = isDark;
     }
 }
