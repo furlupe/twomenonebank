@@ -2,7 +2,7 @@ export class UserInfoWithRatingDto {
     id: string;
     email: string;
     name: string;
-    roles: string[];
+    roles: number[];
     phone: string;
     isBanned: boolean;
     creditRating: number;
@@ -11,10 +11,10 @@ export class UserInfoWithRatingDto {
         id: string,
         email: string,
         name: string,
-        roles: string[],
+        roles: number[],
         phone: string,
         isBanned: boolean,
-        creditRating: number
+        creditRating: number,
     ) {
         this.id = id;
         this.email = email;

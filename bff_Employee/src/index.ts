@@ -73,7 +73,7 @@ app.use('/', diContainer.get<BaseRouter>(TYPES.AuthRouter).create());
 app.use('/', diContainer.get<BaseRouter>(TYPES.CreditRouter).create());
 app.use('/', diContainer.get<BaseRouter>(TYPES.CoreRouter).create());
 
-// App theme 
+//#region App theme 
 app.post('/theme/:theme', async (req, res) => {
     const authHeader = req.headers.authorization;
     const token = authHeader?.split(' ')[1];
@@ -102,6 +102,7 @@ app.get('/theme', async (req, res) => {
 
     return res.json(isDark);
 });
+//#endregion
 
 // - Start
 diContainer.get<UserRepository>(TYPES.UserRepository)
@@ -111,3 +112,13 @@ diContainer.get<UserRepository>(TYPES.UserRepository)
         console.log(`Yay server working omg on port: ${port}`);
     })
     .catch((e) => console.log(e));
+
+//#region Firebase
+var admin = require("firebase-admin");
+var serviceAccount = require("../employee-5e226-firebase-adminsdk-s5m5g-bc1abe242b.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+//#endregion
