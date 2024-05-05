@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import { AsyncLocalStorage } from 'node:async_hooks';
 
 export type Store = {
-    authorizationHeader?: string;
+    headers?: { [name: string]: string };
 }
 
 @injectable()

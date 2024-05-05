@@ -44,18 +44,28 @@ const port = process.env.Port || 5000;
 app.use(express.json()); // to convert all request bodies to json
 app.use((request, _response, next) => {
     const store = diContainer.get<StoreProvider>(TYPES.StoreProvider).get();
-    store.run({ authorizationHeader: request.headers.authorization }, next)
+    store.run(
+        { headers: {
+            authorization: request.headers.authorization,
+            idempotenceKey: request.headers["idempotence-key"] as string
+        }}
+    , next)
 });
 app.use((request, _response, next) => {
     const authHeader = request.headers.authorization;
-    const token = authHeader.split(' ')[1];
-    const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const token = authHeader?.split(' ')[1];
+    if (token != null) {
+        const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    
+        const id = decoded['sub'];
+        const user = new User(id);
+    
+        const repo = diContainer.get<UserRepository>(TYPES.UserRepository);
+        repo.create(user).then(next);
 
-    const id = decoded['sub'];
-    const user = new User(id);
-
-    const repo = diContainer.get<UserRepository>(TYPES.UserRepository);
-    repo.create(user).then(next);
+    } else {
+        next();
+    }
 });
 
 // - Endpoints
@@ -66,7 +76,7 @@ app.use('/', diContainer.get<BaseRouter>(TYPES.CoreRouter).create());
 // App theme 
 app.post('/theme/:theme', async (req, res) => {
     const authHeader = req.headers.authorization;
-    const token = authHeader.split(' ')[1];
+    const token = authHeader?.split(' ')[1];
     const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 
     const id = decoded['sub'];
