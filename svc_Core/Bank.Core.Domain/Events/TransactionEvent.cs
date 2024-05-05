@@ -7,6 +7,28 @@ public class TransactionEvent : DomainEvent
     public BalanceChange? BalanceChange { get; protected set; }
     public Transfer? Transfer { get; protected set; }
 
+    public Dictionary<Guid, string> GetClientMessages()
+    {
+        Dictionary<Guid, string> result = [];
+        if (
+            EventType is TransactionEventType.BalanceChange
+            && BalanceChange!.Account.OwnerId != Guid.Empty
+        )
+        {
+            result.Add(
+                BalanceChange.Account.OwnerId,
+                $"Your account {BalanceChange.Account.Name} has new transactions"
+            );
+        }
+
+        if (EventType is TransactionEventType.Transfer)
+        {
+            if (Transfer!.Type is TransferType.Credit) { }
+        }
+
+        return result;
+    }
+
     public TransactionEvent(
         string comment,
         DateTime now,
