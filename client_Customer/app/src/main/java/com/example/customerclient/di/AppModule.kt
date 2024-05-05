@@ -9,6 +9,7 @@ import com.example.customerclient.data.api.auth.AuthenticationApi
 import com.example.customerclient.data.api.auth.UserApi
 import com.example.customerclient.data.api.core.AccountsApi
 import com.example.customerclient.data.api.credit.CreditsApi
+import com.example.customerclient.data.api.notification.UserTokenApi
 import com.example.customerclient.data.api.transactions.TransactionsApi
 import com.example.customerclient.data.remote.database.BillDatabase
 import com.example.customerclient.data.remote.database.CreditDatabase
@@ -19,6 +20,7 @@ import com.example.customerclient.data.repository.CreditRepositoryImpl
 import com.example.customerclient.data.repository.SharedPreferencesRepositoryImpl
 import com.example.customerclient.data.repository.TransactionRepositoryImpl
 import com.example.customerclient.data.repository.UserRepositoryImpl
+import com.example.customerclient.data.repository.UserTokenRepositoryImpl
 import com.example.customerclient.data.storage.SharedPreferencesStorage
 import com.example.customerclient.data.websocket.BillHistoryWebSocket
 import com.example.customerclient.domain.repositories.AuthRepository
@@ -27,6 +29,7 @@ import com.example.customerclient.domain.repositories.BillRepository
 import com.example.customerclient.domain.repositories.CreditRepository
 import com.example.customerclient.domain.repositories.TransactionRepository
 import com.example.customerclient.domain.repositories.UserRepository
+import com.example.customerclient.domain.repositories.UserTokenRepository
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -190,5 +193,28 @@ val appModule = module {
 
     // - WebSocket
     single<BillHistoryWebSocketRepository> { BillHistoryWebSocketRepositoryImpl(billHistoryWebSocket = get()) }
+
+    // - Notification
+    single<UserTokenApi> {
+        Retrofit.Builder()
+            .baseUrl(Constants.BASE_NOTIFICATION_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(
+                OkHttpClient.Builder()
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .addInterceptor(AccessInterceptor(get(), get()))
+                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                    .build()
+            )
+            .build().create(UserTokenApi::class.java)
+    }
+
+    single<UserTokenRepository> {
+        UserTokenRepositoryImpl(
+            userTokenApi = get(),
+            sharedPreferencesRepositoryImpl = get()
+        )
+    }
 
 }

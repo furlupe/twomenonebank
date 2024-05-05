@@ -5,6 +5,7 @@ import com.example.customerclient.domain.repositories.AuthRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.util.UUID
 
 
 class AccessInterceptor(
@@ -30,6 +31,7 @@ class AccessInterceptor(
             if (refreshedToken != "") {
                 val newRequest = originalRequest.newBuilder()
                     .header("Authorization", "Bearer $refreshedToken")
+                    .header("Idempotence-Key", UUID.randomUUID().toString())
                     .build()
 
                 return chain.proceed(newRequest)
@@ -38,6 +40,7 @@ class AccessInterceptor(
 
         val authorizedRequest = originalRequest.newBuilder()
             .header("Authorization", "Bearer $accessToken")
+            .header("Idempotence-Key", UUID.randomUUID().toString())
             .build()
 
         return chain.proceed(authorizedRequest)

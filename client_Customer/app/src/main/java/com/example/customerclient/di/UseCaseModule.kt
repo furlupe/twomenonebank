@@ -25,6 +25,8 @@ import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoPagin
 import com.example.customerclient.domain.usecases.credit.GetUserCreditsInfoUseCase
 import com.example.customerclient.domain.usecases.credit.PayCreditUseCase
 import com.example.customerclient.domain.usecases.credit.SaveUserCreditInfoToDatabaseUseCase
+import com.example.customerclient.domain.usecases.notification.SaveUserTokenUseCase
+import com.example.customerclient.domain.usecases.notification.SubscribeToNotificationsUseCase
 import com.example.customerclient.domain.usecases.transaction.Me2MeTransactionUseCase
 import com.example.customerclient.domain.usecases.transaction.P2PTransactionUseCase
 import com.example.customerclient.domain.usecases.user.GetUserInfoUseCase
@@ -92,4 +94,8 @@ val useCaseModule = module {
         )
     }
     single<CloseWebSocketUseCase> { CloseWebSocketUseCase(billHistoryWebSocketRepository = get()) }
+
+    // - Notification
+    single<SaveUserTokenUseCase> { SaveUserTokenUseCase(sharedPreferencesRepositoryImpl = get()) }
+    single<SubscribeToNotificationsUseCase> { SubscribeToNotificationsUseCase(userTokenRepository = get()) }
 }

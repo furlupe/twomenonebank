@@ -18,7 +18,14 @@ val viewModelModule = module {
     includes(appModule)
     includes(useCaseModule)
 
-    viewModel { MainViewModel(signInUseCase = get(), getUserThemeUseCase = get()) }
+    viewModel {
+        MainViewModel(
+            signInUseCase = get(),
+            getUserThemeUseCase = get(),
+            saveUserTokenUseCase = get(),
+            subscribeToNotificationsUseCase = get()
+        )
+    }
 
     viewModel { SignInViewModel(authorizeUseCase = get()) }
 

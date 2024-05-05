@@ -29,4 +29,8 @@
     <string name="top_up_amount">Сумма зачисления</string>
     <string name="withdraw_amount">Сумма снятия</string>
     <string name="credit_amount">Сумма кредита</string>
+
+    <!-- Channel -->
+    <string name="default_notification_channel_id">notification</string>
+
 </resources>

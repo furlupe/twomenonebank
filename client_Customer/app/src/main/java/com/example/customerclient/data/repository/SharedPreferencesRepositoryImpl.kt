@@ -39,4 +39,8 @@ class SharedPreferencesRepositoryImpl(
     fun swipeUserTheme() = sharedPreferencesStorage.swipeUserTheme()
 
     fun getUserTheme(): UserTheme = sharedPreferencesStorage.getCurrentUserTheme()
+
+    fun getUserToken(): String = sharedPreferencesStorage.getUserToken()
+
+    fun saveUserToken(userToken: String) = sharedPreferencesStorage.saveUserToken(userToken)
 }

@@ -81,4 +81,12 @@ class SharedPreferencesStorage(context: Context) : TokenStorage, UserStorage {
             else -> UserTheme.DARK
         }
     }
+
+    override fun saveUserToken(userToken: String) {
+        sharedPreferences.edit().putString(UserStorage.USER_TOKEN, userToken).apply()
+    }
+
+    override fun getUserToken(): String {
+        return sharedPreferences.getString(UserStorage.USER_TOKEN, "").toString()
+    }
 }
