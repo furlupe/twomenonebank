@@ -23,7 +23,8 @@ class AuthActivity : ThemeChangeActivity() {
 
         requestNotificationPermission()
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("MY", "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
